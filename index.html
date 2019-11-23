@@ -211,8 +211,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="V1签名过程"><a href="#V1签名过程" class="headerlink" title="V1签名过程"></a>V1签名过程</h2><p>随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。</p>
-<ul>
+          <h2 id="V1签名过程"><a href="#V1签名过程" class="headerlink" title="V1签名过程"></a>V1签名过程</h2><p>随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。</p><ul>
 <li><p>MANIFEST.MF</p>
 <p>  这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-value，写入到MANIFEST.MF文件中。示例如下：</p>
 <pre><code>Manifest-Version: 1.0
@@ -258,70 +257,14 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
 <p>  首先这里需要一个证书，其实就是平时开发用到签名文件，然后利用这个证书里面的私钥对CERT.SF计算得到签名，然后把这个签名和证书写入到CERT.RSA中，注意写入的证书包含了公钥信息，私钥是不会写进去的。这里用到的证书是自签名的，也就是开发者自己生成，不用要求必须是CA机构发布的。</p>
 </li>
 </ul>
-<h2 id="V1验证过程"><a href="#V1验证过程" class="headerlink" title="V1验证过程"></a>V1验证过程</h2><ul>
-<li><p>遍历apk中的所有文件，执行SHA1+Base64，判断能否跟MANIFEST.MF对应得上，对应不上，就说明校验失败。（这一步是为了判断apk是否被修改过）</p>
-</li>
-<li><p>遍历MANIFEST.MF中所有条目，执行SHA1+Base64，判断能否跟CERT.SF对应得上，对应不上，就说明校验失败。（这一步是为了判断MANIFEST.MF文件是否被修改过）</p>
-</li>
-<li><p>读取CERT.RSA里面的证书公钥和签名信息，用公钥对签名信息进行解密，得到的结果看是否跟CERT.SF对应得上，对应不上，就说明校验失败。（这一步是为了判断CERT.SF文件是否被修改过）</p>
-</li>
-</ul>
-<p>可以看到，这里会依次校验各个文件是否被修改过：apk –&gt; MANIFEST.MF –&gt; CERT.SF<br>假如修改了apk，MANIFEST.MF和CERT.SF也是能做对应的修改，但这时第三步校验会失败，因为CERT.SF已经被修改了，会导致校验失败，而我们没有私钥，无法计算出新的签名信息，因此CERT.RSA修改不了，除非重新签名。</p>
-<p>对于非对称加密，有：</p>
-<p><strong>公钥用于加密，私钥用于解密</strong></p>
-<p><strong>私钥用于签名，公钥用于校验</strong></p>
-<h2 id="V1签名举例"><a href="#V1签名举例" class="headerlink" title="V1签名举例"></a>V1签名举例</h2><ol>
-<li><p>下载微信的apk，解压</p>
-</li>
-<li><p>找到MANIFEST.MF文件，找到AndroidManifest.xml文件的SHA1-Digest值为Lb4Rq2prbYpUiXh4uAbxGts4s74=。</p>
-</li>
-<li><p>使用Hash.exe（下载链接<a href="http://www.keir.net/hash.html" target="_blank" rel="noopener" title="http://www.keir.net/hash.html">http://www.keir.net/hash.html</a>）计算AndroidManifest.xml文件的SHA1值为2DBE11AB6A6B6D8A54897878B806F11ADB38B3BE。</p>
-</li>
-<li><p>去网站<a href="https://the-x.cn/base64/" target="_blank" rel="noopener" title="https://the-x.cn/base64/">https://the-x.cn/base64/</a>计算这个SHA1值的Base64值，记得编码源格式要选HEX，结果为Lb4Rq2prbYpUiXh4uAbxGts4s74=，跟MANIFEST.MF中的一样。</p>
-</li>
-<li><p>找到COM_TENC.SF文件，找到AndroidManifest.xml文件的SHA1-Digest值为c3JzQyDWuk4UK9Bzf2Z8RGootiM=。</p>
-</li>
-<li><p>直接运行下面的代码</p>
-<pre><code>String s = &quot;Name: AndroidManifest.xml\r\nSHA1-Digest: Lb4Rq2prbYpUiXh4uAbxGts4s74=\r\n\r\n&quot;;
-MessageDigest messageDigest = MessageDigest.getInstance(&quot;SHA1&quot;);
-messageDigest.update(s.getBytes());
-byte[] digest = messageDigest.digest();
-System.out.println(new String(Base64.getEncoder().encode(digest), &quot;ASCII&quot;));</code></pre></li>
-<li><p>最终打印c3JzQyDWuk4UK9Bzf2Z8RGootiM=，跟COM_TENC.SF中的一样。</p>
-</li>
-</ol>
-<h2 id="V1签名存在的问题"><a href="#V1签名存在的问题" class="headerlink" title="V1签名存在的问题"></a>V1签名存在的问题</h2><ul>
-<li><p>验证签名需要先解压，导致安装速度变慢。</p>
-</li>
-<li><p>apk完整性校验不够，因为是基于单个文件做校验，只有在修改了文件内容才会导致校验失败，而修改apk的中央目录等信息后校验还是能校验成功。</p>
-</li>
-</ul>
-<p>因此，Android7.0开始，Google引入V2签名。</p>
-<h2 id="V2原理"><a href="#V2原理" class="headerlink" title="V2原理"></a>V2原理</h2><p>V2会直接对整个zip包进行计算生成签名信息，然后存储到zip的中央目录部分前面，因此在签名前和签名后的数据存放如下：</p>
-<p>签名前：Contents of ZIP entries – Central Directory – End of Central Directory</p>
-<p>签名后：Contents of ZIP entries – APK Signing Block – Central Directory – End of Central Directory</p>
-<p>Apk签名信息被做为zip的第二部分存放，只要zip被修改（不包括签名信息部分），就会导致签名校验失败。</p>
-<p>可以看到V2解决了V1的两个问题，校验前不用解压apk了，而且只有修改apk就会导致校验失败，至于V2具体是怎么校验的，后面有空再研究。</p>
-<h2 id="V1和V2兼容问题"><a href="#V1和V2兼容问题" class="headerlink" title="V1和V2兼容问题"></a>V1和V2兼容问题</h2><p>对开发者来说，可以自己决定apk是采用V1还是V2签名，并不是说强制在Android N以上的都必须用V2，但为了避免V1上面提到的问题，建议是使用V2，而且说不定哪天Google就强制说必须用V2了。另外，如果apk的最小支持sdk在Android N之前，那就必须要有V1签名。</p>
-<p>如果一个apk同时带了V1和V2签名，那么在V1的SF文件中就会有X-Android-APK-Signed: 2这个信息，表示该apk有V2签名，必须用V2签名校验，这么做的原因是为了避免破解者为了把V2签名删掉，想直接用V1签名。所以这里的保护机制为：V1保护V2，V2保护APK。</p>
-<h2 id="多渠道问题"><a href="#多渠道问题" class="headerlink" title="多渠道问题"></a>多渠道问题</h2><p>如果采用V1签名，那么实现多渠道有三种方法：</p>
-<ul>
-<li><p>采用Android Studio的productFlavors，可以在自定义一些变量值，从而能够区分不同apk包，但这个需要分别构建生成apk，效率低。</p>
-</li>
-<li><p>在META-INF目录下新建空文件，文件名就是渠道的唯一标识。META-INF的修改是不会影响到V1签名的，比如美团的Walle。</p>
-</li>
-<li><p>在zip的End of central directory record中的注释字段写入渠道信息，这样也不会影响到V1签名，比如腾讯的VasDolly。</p>
-</li>
-</ul>
-<p>如果采用V2签名，那么实现多渠道有两种方法：</p>
-<ul>
-<li><p>同样还是能用Android Studio的productFlavors。</p>
-</li>
-<li><p>基于V2不会校验APK Signing Block这个区域的数据这个原理，在APK Signing Block中添加新的含渠道信息的键值对，同时修改End of central  directory record的中央目录偏移量。Walle和VasDolly都是采用这个方法实现V2签名多渠道打包的。</p>
-</li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://github.com/Tencent/VasDolly/" target="_blank" rel="noopener" title="https://github.com/Tencent/VasDolly/">https://github.com/Tencent/VasDolly/</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -379,77 +322,15 @@ System.out.println(new String(Base64.getEncoder().encode(digest), &quot;ASCII&qu
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1. 初始化"></a>1. 初始化</h3><pre><code>WebView webView = new WebView(this);</code></pre><p>这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。</p>
-<p>可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。</p>
-<p><strong>这里为了加快显示速度，可以做的优化就是预先创建，又可以延伸到WebView缓存池，但缺点就是会占用一定的内存。</strong></p>
-<h3 id="2-加载"><a href="#2-加载" class="headerlink" title="2. 加载"></a>2. 加载</h3><pre><code>webView.loadUrl(&quot;http://www.baidu.com&quot;);</code></pre><p>这里同样要区分首次和非首次，首次加载可能需要几十ms，而非首次一般为几ms，当然如果在低端机或者比较卡的手机上可能会更慢，所以这个loadUrl最好也是放到子线程中调用。</p>
-<p>loadUrl执行结束，并不代表网页加载结束了，网页内部加载是异步的，因此在网页加载结束这段时间内，WebView会一直处于白屏状态，这体验是很差的，应该尽量缩短白屏时间。这个加载过程，主要做的工作有：</p>
-<ul>
-<li><p>DNS解析</p>
-<p>  将域名解析为IP地址，消耗时间跟网络状况有关，慢的话可能要几百ms或者超过1秒，系统会有DNS缓存。<strong>优化方法：IP直连，或者域名预解析。</strong></p>
-</li>
-<li><p>html下载</p>
-<p>  下载网页资源，跟资源大小和网络状况有关，可能需要几百ms。<strong>优化方法：减小网页资源文件大小，资源压缩。</strong></p>
-</li>
-<li><p>html解析</p>
-<p>  解析html文件构建DOM树，跟html的复杂程度有关。另外，有些js用法会导致阻塞解析过程，应该尽量避免。<strong>优化方法：避免过多的嵌套，内联css，后置js。</strong></p>
-</li>
-<li><p>渲染</p>
-<p>  绘制到界面上，跟DOM树的复杂程度有关。</p>
-</li>
-</ul>
-<p>另外，腾讯开源的VasSonic，采用了边加载边渲染的模式，避免了加载过程中解析渲染空闲的问题，但这个需要服务端支持，成本比较大。</p>
-<h3 id="3-缓存"><a href="#3-缓存" class="headerlink" title="3. 缓存"></a>3. 缓存</h3><p>WebView支持两种缓存：协议缓存和应用缓存</p>
-<ul>
-<li><p>协议缓存</p>
-<p>  这个就是对应http协议头部中的控制缓存字段。通过以下代码设置缓存策略：</p>
-<pre><code>webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);</code></pre></li>
-<li><p>应用缓存</p>
-<p>  应用层缓存，需要Web端和App端同时设置才能生效，Web端需要在html文件中指定缓存清单文件：</p>
-<pre><code>&lt;html manifest=&quot;xxx.appcache&quot;&gt;
-    ......
-&lt;/html&gt;</code></pre><p>  然后清单文件就指定需要缓存的资源文件即可。<br>  App端也要开启应用缓存：</p>
-<pre><code>webView.getSettings().setAppCacheEnabled(true);    </code></pre></li>
-</ul>
-<p>对应WebView缓存，可以参考这两篇文章：</p>
-<p><a href="http://unclechen.github.io/2017/05/13/WebView%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener" title="http://unclechen.github.io/2017/05/13/WebView%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BA%94%E7%94%A8/">http://unclechen.github.io/2017/05/13/WebView%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BA%94%E7%94%A8/</a></p>
-<p><a href="https://cloud.tencent.com/developer/article/1070671" target="_blank" rel="noopener" title="https://cloud.tencent.com/developer/article/1070671">https://cloud.tencent.com/developer/article/1070671</a></p>
-<p><strong>优化：开启缓存机制，避免每次都去网络加载数据，特别是图片资源。</strong></p>
-<h3 id="4-离线包"><a href="#4-离线包" class="headerlink" title="4. 离线包"></a>4. 离线包</h3><p>通过预先下发离线包，实现快速加载，这里主要的技术问题有：</p>
-<ul>
-<li><p>WebView拦截请求</p>
-<p>  这个比较简单，设置WebViewClient对象，重写shouldOverrideUrlLoading和shouldInterceptRequest方法即可。</p>
-</li>
-<li><p>离线包下发</p>
-<p>  推拉结合的方式，但都需要寻找时机点，比如WiFi网络下。</p>
-</li>
-<li><p>离线包压缩</p>
-<p>  选择压缩算法，节省用户流量。</p>
-</li>
-<li><p>增量更新</p>
-<p>  只需要下发差异包，而不是下发完整包，采用bsdiff算法进行差异分析和还原。</p>
-</li>
-<li><p>离线包校验和签名</p>
-<p>  校验离线包的完整性，判断是否在下发过程中离线包损坏；校验离线包的签名，判断是否在下发过程中离线包被篡改。</p>
-</li>
-</ul>
-<p>离线包也存在一些缺点，比如需要开发服务端，这个成本就比较大；另外预先加载，可能会浪费用户流量，占用手机空间；离线包的缓存更新可能也是会存在问题。</p>
-<h3 id="5-独立进程"><a href="#5-独立进程" class="headerlink" title="5. 独立进程"></a>5. 独立进程</h3><p>WebView会占用一定的内存，如果使用WebView缓存池占用的内存更多，因此这里可以将WebView放到独立进程中，而且还可以避免内存泄露。不过存在的问题就是多进程问题，进程间调用比较麻烦。</p>
-<h3 id="6-其它优化"><a href="#6-其它优化" class="headerlink" title="6. 其它优化"></a>6. 其它优化</h3><ul>
-<li><p>静态直出</p>
-<p>  其实就是在一次加载过程中，减少请求次数，服务端提前准备好最终数据，客户端一次拉取就结束，不用先拉html，再拉css和js，拉数据等。这个可以用于首屏的html，对于所有的页面都这样处理不太现实。</p>
-</li>
-<li><p>CDN加速</p>
-<p>  优化网络连接。</p>
-</li>
-<li><p>替换图片格式</p>
-<p>  比如采用webp格式，能够减少图片大小。</p>
-</li>
-<li><p>开启硬件加速</p>
-<p>  能够提供渲染速度。</p>
-</li>
-</ul>
-
+          <h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1. 初始化"></a>1. 初始化</h3><pre><code>WebView webView = new WebView(this);</code></pre><p>这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。</p><p>可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/23/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-WebView%E4%BC%98%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

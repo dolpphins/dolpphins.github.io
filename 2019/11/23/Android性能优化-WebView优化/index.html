@@ -50,12 +50,12 @@
   };
 </script>
 
-  <meta name="description" content="1. 初始化WebView webView = new WebView(this);这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。 可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。 这里为了加快显示速度，可以做的优化就是预先创">
+  <meta name="description" content="1. 初始化WebView webView = new WebView(this);这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android性能优化-WebView优化">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;23&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-WebView%E4%BC%98%E5%8C%96&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="1. 初始化WebView webView = new WebView(this);这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。 可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。 这里为了加快显示速度，可以做的优化就是预先创">
+<meta property="og:description" content="1. 初始化WebView webView = new WebView(this);这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2019-11-23T06:06:42.220Z">
 <meta name="twitter:card" content="summary">
@@ -211,8 +211,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1. 初始化"></a>1. 初始化</h3><pre><code>WebView webView = new WebView(this);</code></pre><p>这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。</p>
-<p>可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。</p>
+        <h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1. 初始化"></a>1. 初始化</h3><pre><code>WebView webView = new WebView(this);</code></pre><p>这里需要区分首次和非首次，首次创建WebView需要几百ms，而非首次创建为几ms到几十ms。</p><p>可以看到，这里初始化是比较耗时的，而我们有时直接把它放到UI线程，或者写在xml中是有问题，会导致打开页面卡死甚至ANR，应该是放到子线程中初始化结束后才添加到View树中。</p><a id="more"></a>
+
 <p><strong>这里为了加快显示速度，可以做的优化就是预先创建，又可以延伸到WebView缓存池，但缺点就是会占用一定的内存。</strong></p>
 <h3 id="2-加载"><a href="#2-加载" class="headerlink" title="2. 加载"></a>2. 加载</h3><pre><code>webView.loadUrl(&quot;http://www.baidu.com&quot;);</code></pre><p>这里同样要区分首次和非首次，首次加载可能需要几十ms，而非首次一般为几ms，当然如果在低端机或者比较卡的手机上可能会更慢，所以这个loadUrl最好也是放到子线程中调用。</p>
 <p>loadUrl执行结束，并不代表网页加载结束了，网页内部加载是异步的，因此在网页加载结束这段时间内，WebView会一直处于白屏状态，这体验是很差的，应该尽量缩短白屏时间。这个加载过程，主要做的工作有：</p>

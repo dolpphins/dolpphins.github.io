@@ -50,12 +50,12 @@
   };
 </script>
 
-  <meta name="description" content="V1签名过程随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。  MANIFEST.MF   这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-val">
+  <meta name="description" content="V1签名过程随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。 MANIFEST.MF   这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-valu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android签名机制原理与多渠道打包">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;23&#x2F;Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="V1签名过程随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。  MANIFEST.MF   这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-val">
+<meta property="og:description" content="V1签名过程随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。 MANIFEST.MF   这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-valu">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2019-11-23T13:00:26.310Z">
 <meta name="twitter:card" content="summary">
@@ -211,8 +211,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="V1签名过程"><a href="#V1签名过程" class="headerlink" title="V1签名过程"></a>V1签名过程</h2><p>随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。</p>
-<ul>
+        <h2 id="V1签名过程"><a href="#V1签名过程" class="headerlink" title="V1签名过程"></a>V1签名过程</h2><p>随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。</p><ul>
 <li><p>MANIFEST.MF</p>
 <p>  这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-value，写入到MANIFEST.MF文件中。示例如下：</p>
 <pre><code>Manifest-Version: 1.0
@@ -257,7 +256,8 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
 <li><p>CERT.RSA</p>
 <p>  首先这里需要一个证书，其实就是平时开发用到签名文件，然后利用这个证书里面的私钥对CERT.SF计算得到签名，然后把这个签名和证书写入到CERT.RSA中，注意写入的证书包含了公钥信息，私钥是不会写进去的。这里用到的证书是自签名的，也就是开发者自己生成，不用要求必须是CA机构发布的。</p>
 </li>
-</ul>
+</ul><a id="more"></a>
+
 <h2 id="V1验证过程"><a href="#V1验证过程" class="headerlink" title="V1验证过程"></a>V1验证过程</h2><ul>
 <li><p>遍历apk中的所有文件，执行SHA1+Base64，判断能否跟MANIFEST.MF对应得上，对应不上，就说明校验失败。（这一步是为了判断apk是否被修改过）</p>
 </li>
