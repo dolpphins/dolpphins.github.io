@@ -172,6 +172,190 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/24/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="Android开发技术及原理">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/24/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">Android屏幕适配方案设计</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-11-24 22:11:14 / Modified: 22:13:15" itemprop="dateCreated datePublished" datetime="2019-11-24T22:11:14+08:00">2019-11-24</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><ul>
+<li><p>屏幕分辨率</p>
+<p>  经常说的1080*1920，表示宽高的像素个数。</p>
+</li>
+<li><p>屏幕尺寸</p>
+<p>  手机对角线的尺寸，单位是英寸，1英寸=2.54cm。</p>
+</li>
+<li><p>dpi</p>
+<p>  每英寸的像素个数，比如1080<em>1920的手机，5.5英寸，那么dpi为sqrt(1080</em>1080+1920*1920)/5.5=354</p>
+<p>  而这里，Android定义了一系列的密度类型，比如mdpi为160，hdpi为240，xhdpi为320，xxhdpi为480。</p>
+</li>
+<li><p>dp</p>
+<p>  密度无关像素，1dp的像素数跟dpi有关，1dp=dpi/160。</p>
+</li>
+<li><p>sp</p>
+<p>  独立比例像素，跟dp类似，但它还跟字体大小相关联。</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/24/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/24/mmap%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="Android开发技术及原理">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/24/mmap%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">mmap原理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-11-24 22:09:29 / Modified: 22:12:32" itemprop="dateCreated datePublished" datetime="2019-11-24T22:09:29+08:00">2019-11-24</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>542</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="普通文件读写过程"><a href="#普通文件读写过程" class="headerlink" title="普通文件读写过程"></a>普通文件读写过程</h2><p>读文件：会先把文件数据拷贝到内核空间中的页缓存中，然后再把页缓存的数据拷贝到用户空间中，这里需要两次数据拷贝。</p><p>写文件：先把用户空间的数据拷贝到内核空间，内核空间再写回磁盘，也是两次数据拷贝。</p><h2 id="mmap实现过程"><a href="#mmap实现过程" class="headerlink" title="mmap实现过程"></a>mmap实现过程</h2><ol>
+<li><p>在当前进程的虚拟地址空间中寻找一段满足要求的虚拟地址，然后创建vm_area_struct结构，对其进行初始化，最后将其插入到进程的虚拟地址区域链表（或者树）中。</p>
+</li>
+<li><p>内核根据fd找到文件磁盘物理地址，建立页表实现文件地址和虚拟地址区域的一一对应。</p>
+</li>
+<li><p>进程对映射的虚拟地址空间发起访问，引发缺页中断，系统会把所缺的页装入主存中。</p>
+</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/24/mmap%E5%8E%9F%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -200,7 +384,21 @@
               <time title="Created: 2019-11-23 20:59:26 / Modified: 21:00:26" itemprop="dateCreated datePublished" datetime="2019-11-23T20:59:26+08:00">2019-11-23</time>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
 
         </div>
       </header>
@@ -311,7 +509,21 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
               <time title="Created: 2019-11-23 14:02:58 / Modified: 14:06:42" itemprop="dateCreated datePublished" datetime="2019-11-23T14:02:58+08:00">2019-11-23</time>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
 
         </div>
       </header>
@@ -392,7 +604,7 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -423,6 +635,16 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
     <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">9k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">8 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
