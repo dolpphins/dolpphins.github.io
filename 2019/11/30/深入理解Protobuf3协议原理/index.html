@@ -57,10 +57,10 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="Protobuf是什么全称为Protocol Buffers，Google推出的序列化框架，用于将自定义数据结构序列化成字节流，和将字节流反序列化为数据结构，该框架不依赖开发语言，也不依赖运行平台，扩展性好，目前支持的语言比较多，包括Java，C++，Python，Ruby等。使用Protobuf在这里使用Windows和Java进行实例演示：">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;30&#x2F;%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86&#x2F;protobuf_wire_type.png">
-<meta property="og:updated_time" content="2019-11-30T03:59:39.487Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;protobuf_wire_type.png">
+<meta property="og:updated_time" content="2019-11-30T04:04:31.506Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;30&#x2F;%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86&#x2F;protobuf_wire_type.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;protobuf_wire_type.png">
 
 <link rel="canonical" href="http://yoursite.com/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/">
 
@@ -199,7 +199,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-11-30 11:59:08 / Modified: 11:59:39" itemprop="dateCreated datePublished" datetime="2019-11-30T11:59:08+08:00">2019-11-30</time>
+              <time title="Created: 2019-11-30 11:59:08 / Modified: 12:04:31" itemprop="dateCreated datePublished" datetime="2019-11-30T11:59:08+08:00">2019-11-30</time>
             </span>
 
           
@@ -299,7 +299,7 @@ message Cat {
 <pre><code>[tag1][value1][tag1][value2][tag3][value3]... </code></pre><p>解码时，会从左往右解析每一个key-value，假如遇到某个key-value无法解析了，那么就直接跳过，不会影响到其它key-value的解析，因此如果你加了新字段，生成字节流，然后用旧版本解析，这时它还是能够解析出旧版本的字段的，新字段只是被忽略而已，这就是protobuf的向后兼容。</p>
 <p>另外注意到，实际上存储的是tag-value，而不是key-value，根据key转换成tag，也是有公式的：</p>
 <pre><code>tag = (key &lt;&lt; 3) | wire_type</code></pre><p>这里的wire_type，其实就是数据类型对应的整数值，它们是预定义好的：</p>
-<p><img src="protobuf_wire_type.png" alt="avatar"></p>
+<p><img src="/images/protobuf_wire_type.png" alt="avatar"></p>
 <p>而value也不是直接转成二进制就完事的，它会针对不同的数据类型做不过压缩编码，从而实现占用更少字节数的目的，实现方法下面会继续分析。</p>
 <h3 id="可变长编码类型"><a href="#可变长编码类型" class="headerlink" title="可变长编码类型"></a>可变长编码类型</h3><p>从上面的字段类型可以看到，像int32这些类型它并不是固定占用4个字节的，如果数值很小，那它可能只占一个字节，这就是可变长编码，很明显这样能够减少占用的空间。protobuf具体的实现方法，就是把每个字节的最高位做为标志位，1表示当前字节不是最末尾的字节，0表示当前字节是最末尾的字节，举个例子，protobuf将404表示为：</p>
 <pre><code>10010100  00000011</code></pre><p>它只占用两个字节，第一个字节的最高位为1，表示还需要读取下个字节，而第二个字节的最高位为0，表示不需要再读取下个字节了，因此这两个字节就是某个数值，那么要怎么计算究竟是哪个数组呢？protobuf的解码是这样的：</p>
