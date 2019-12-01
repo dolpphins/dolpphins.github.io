@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="LeakCanary是什么LeakCanary是square推出的用于检测Android内存泄漏的开源工具，使用起来十分简单，接入成本低，项目地址：https:&#x2F;&#x2F;github.com&#x2F;square&#x2F;leakcanary。使用方法&#x2F;&#x2F; module的build.gradle添加依赖 implementation &amp;apos;com.squareup.leakcanary:leakcanary-an">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-01T04:30:26.767Z">
+<meta property="og:updated_time" content="2019-12-01T04:39:18.198Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/01/Android%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7LeakCanary%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-01 11:11:54 / Modified: 12:30:26" itemprop="dateCreated datePublished" datetime="2019-12-01T11:11:54+08:00">2019-12-01</time>
+              <time title="Created: 2019-12-01 11:11:54 / Modified: 12:39:18" itemprop="dateCreated datePublished" datetime="2019-12-01T11:11:54+08:00">2019-12-01</time>
             </span>
 
           
@@ -243,11 +243,11 @@ public void onCreate() {
     LeakCanary.install(this);
 }</code></pre><a id="more"></a>
 <p>然后运行程序，如果LeakCanary检测到可能存在内存泄露，就会发送一条通知，点击就可以看到内存泄露的引用链，当然你还必须自己去review代码，判定是否真的发生内存泄露，因为LeakCanary是有可能误判的。另外LeakCanary只会默认帮你监控Activity泄露，如果要监控某个对象是否发生内存泄露，就要自己手动去watch该对象。</p>
-<p>这里还有一个问题需要注意，正式包是不能把LeakCanary打到包里面的，我们只是在开发时使用，那这行LeakCanary.install(this)必须手动删掉，或者加一些测试包的判断逻辑，如果是自己手动watch其它对象，可能代码更多，处理起来不是很方法，因此square有提供了一个leakcanary-no-op的库，其实里面就是空实现，用于编译正式包，最终的依赖可以这样子写：</p>
+<p>这里还有一个问题需要注意，正式包是不能把LeakCanary打到包里面的，我们只是在开发包和测试包中使用，那这行LeakCanary.install(this)必须手动删掉，或者加一些测试包的判断逻辑，如果是自己手动watch其它对象，可能代码更多，处理起来不是很方便，因此square又提供了一个leakcanary-no-op的库，其实里面就是空实现，用于编译正式包，最终的依赖可以这样子写：</p>
 <pre><code>// module的build.gradle添加依赖
 testImplementation &apos;com.squareup.leakcanary:leakcanary-android:1.6.3&apos;
 debugImplementation &apos;com.squareup.leakcanary:leakcanary-android:1.6.3&apos;
-releaseImplementation &apos;com.squareup.leakcanary:leakcanary-android-no-op:1.6.3&apos;</code></pre><p>看下leakcanary-android-no-op的RefWatcher代码：</p>
+releaseImplementation &apos;com.squareup.leakcanary:leakcanary-android-no-op:1.6.3&apos;</code></pre><p>leakcanary-android-no-op的RefWatcher代码：</p>
 <pre><code>/**
  * No-op implementation of {@link RefWatcher} for release builds. Please use {@link
  * RefWatcher#DISABLED}.
