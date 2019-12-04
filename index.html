@@ -172,6 +172,86 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/04/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-MultiDex%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/04/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-MultiDex%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">Android性能优化-MultiDex优化</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-04 08:19:06 / Modified: 09:01:57" itemprop="dateCreated datePublished" datetime="2019-12-04T08:19:06+08:00">2019-12-04</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="为什么需要MultiDex"><a href="#为什么需要MultiDex" class="headerlink" title="为什么需要MultiDex"></a>为什么需要MultiDex</h2><p>在Android5.0以下，虚拟机执行的是Dalvik指令，Dalvik指令集的方法索引参数至占用两个字节，也就是最多能区分65536个不同的方法，这个是65536方法数限制的根本原因，当然dx工具在打包时会直接判断方法数是否超过65536，超过就直接抛异常，这个只是表面原因。ART本身就对MultiDex做了支持，因此无需开发者对其做特殊处理。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/04/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-MultiDex%E4%BC%98%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/03/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1113,131 +1193,6 @@ Uptime: 138531332 Realtime: 241333585
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/custom_avatar.jpg">
-      <meta itemprop="name" content="麦田">
-      <meta itemprop="description" content="专注于写有深度的技术文章">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="麦田Coder">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/" class="post-title-link" itemprop="url">Android签名机制原理与多渠道打包</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2019-11-23 20:59:26 / Modified: 21:00:26" itemprop="dateCreated datePublished" datetime="2019-11-23T20:59:26+08:00">2019-11-23</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.7k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="V1签名过程"><a href="#V1签名过程" class="headerlink" title="V1签名过程"></a>V1签名过程</h2><p>随便找个apk解压，会看到有个META-INF文件夹，这个就是跟apk的签名有关的，里面会有三个文件：MANIFEST.MF，ANDROID.SF，ANDROID.RSA。</p><ul>
-<li><p>MANIFEST.MF</p>
-<p>  这个保存了apk中所有文件的消息摘要值，遍历apk所有的文件，对于每一个文件，都用SHA1（或者SHA256）计算其摘要，然后再做Base64编码，得到的值和文件路径组成key-value，写入到MANIFEST.MF文件中。示例如下：</p>
-<pre><code>Manifest-Version: 1.0
-
-Name: AndroidManifest.xml
-SHA1-Digest: bVaU03v/s2D1ZnfNly3inexGx8E=
-
-Name: LICENSE-junit.txt
-SHA1-Digest: xa0kHcW0TK5p5IxSU7ej/t5BXqE=
-
-Name: LICENSE.txt
-SHA1-Digest: dTF36wNXk3NZRvp51lzE8FW7KYQ=
-
-Name: R/a/gu.xml
-SHA1-Digest: EImnskGmHG13zzjLQsBz7AaLVGU=
-
-Name: R/a/hf.xml
-SHA1-Digest: 1UI3hZQyzdEjUG/usTIhx245zDM=
-......</code></pre></li>
-<li><p>CERT.SF</p>
-<p>  这个是对MANIFEST.MF中的所有条目，再次进行SHA1+Base64处理，最终的结果同样组成key-value，写入到CERT.SF文件中。示例如下：</p>
-<pre><code>Signature-Version: 1.0
-Created-By: 1.0 (Android)
-SHA1-Digest-Manifest: ktRWgoJhhmR9UKW2bkvJv9sWbwg=
-X-Android-APK-Signed: 2
-
-Name: AndroidManifest.xml
-SHA1-Digest: vPXU1jU9CV5ThOTQ1dhPspFhSDY=
-
-Name: LICENSE-junit.txt
-SHA1-Digest: i/XNa154J6oo2MWLxVtyjXAag2Q=
-
-Name: LICENSE.txt
-SHA1-Digest: dtxUfw7RZZWDxsyMx++B4WEugqM=
-
-Name: R/a/gu.xml
-SHA1-Digest: QgyDHCXLVsWQFsZVYbvZnimS81w=
-
-Name: R/a/hf.xml
-SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
-......</code></pre></li>
-<li><p>CERT.RSA</p>
-<p>  首先这里需要一个证书，其实就是平时开发用到签名文件，然后利用这个证书里面的私钥对CERT.SF计算得到签名，然后把这个签名和证书写入到CERT.RSA中，注意写入的证书包含了公钥信息，私钥是不会写进去的。这里用到的证书是自签名的，也就是开发者自己生成，不用要求必须是CA机构发布的。</p>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1288,7 +1243,7 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1323,12 +1278,12 @@ SHA1-Digest: N8tGKy5jd9e3TmOtLTmfwtUW1LM=
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">36k</span>
+    <span title="Symbols count total">41k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">32 mins.</span>
+    <span title="Reading time total">37 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
