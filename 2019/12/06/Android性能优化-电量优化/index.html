@@ -57,10 +57,10 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="前言如果应用耗电量过大，就会消耗用户手机过多的电量，甚至发热，现在一般手机都会有耗电量过大的提醒，当用户看到后，也可能会把你的应用卸载掉，因此需要对其进行优化，让应用的耗电量尽可能小。检测工具Battery Historian：https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;battery-historian">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;06&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96&#x2F;mobile_radio_state_machine.png">
-<meta property="og:updated_time" content="2019-12-06T01:02:05.273Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;mobile_radio_state_machine.png">
+<meta property="og:updated_time" content="2019-12-06T01:04:33.876Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;06&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96&#x2F;mobile_radio_state_machine.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;mobile_radio_state_machine.png">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/">
 
@@ -199,7 +199,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-06 08:44:15 / Modified: 09:02:05" itemprop="dateCreated datePublished" datetime="2019-12-06T08:44:15+08:00">2019-12-06</time>
+              <time title="Created: 2019-12-06 08:44:15 / Modified: 09:04:33" itemprop="dateCreated datePublished" datetime="2019-12-06T08:44:15+08:00">2019-12-06</time>
             </span>
 
           
@@ -247,7 +247,7 @@
 </li>
 <li><p>Standby：没有传输数据的状态，耗电量最少。</p>
 <p>另外，状态间的转换，会有一些延迟，比如说Full power数据传输结束后，不会马上转到Low power，而是会等待5s。整个流程可以参考下面的示意图：</p>
-<p><img src="mobile_radio_state_machine.png" alt="image"></p>
+<p><img src="/images/mobile_radio_state_machine.png" alt="image"></p>
 <p>也就是说，传输数据时应该尽量一次性传完，而不是一次传一点，传很多次，这样会导致处于Full power状态的时间变长，耗电量也就增大。</p>
 </li>
 <li><p><em>网络连接优化一：数据尽量一次性打包传输，具体到应用场景，比如阅读新闻，应该采用预加载一次性拉取前几条新闻的数据，在线视频播放，在线音乐播放也是类似。*</em></p>
