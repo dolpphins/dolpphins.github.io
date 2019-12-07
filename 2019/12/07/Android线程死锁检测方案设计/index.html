@@ -50,14 +50,14 @@
   };
 </script>
 
-  <meta name="description" content="前言在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，人工排查起来比较困难，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。WatchDog原理在讨论如何设计一套完整的线程死锁检测方案之前，先了解一下Android系统中的WatchDog实现原理">
+  <meta name="description" content="前言在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，从发现到定位问题都是比较困难的，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。WatchDog原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android线程死锁检测方案设计">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;07&#x2F;Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="前言在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，人工排查起来比较困难，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。WatchDog原理在讨论如何设计一套完整的线程死锁检测方案之前，先了解一下Android系统中的WatchDog实现原理">
+<meta property="og:description" content="前言在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，从发现到定位问题都是比较困难的，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。WatchDog原理">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-07T02:58:09.508Z">
+<meta property="og:updated_time" content="2019-12-07T03:02:27.045Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/07/Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-07 10:18:56 / Modified: 10:58:09" itemprop="dateCreated datePublished" datetime="2019-12-07T10:18:56+08:00">2019-12-07</time>
+              <time title="Created: 2019-12-07 10:18:56 / Modified: 11:02:27" itemprop="dateCreated datePublished" datetime="2019-12-07T10:18:56+08:00">2019-12-07</time>
             </span>
 
           
@@ -232,8 +232,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，人工排查起来比较困难，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。</p><h2 id="WatchDog原理"><a href="#WatchDog原理" class="headerlink" title="WatchDog原理"></a>WatchDog原理</h2><p>在讨论如何设计一套完整的线程死锁检测方案之前，先了解一下Android系统中的WatchDog实现原理。WatchDog的本质是一条死锁检测线程，运行在SystemServer进程中，它的作用是不断地检测AMS，WMS等这些关键服务是否出现死锁，假如死锁了，就停止SystemServer进程，这时Zygote进程也会自杀，然后重启，也就是手机系统重启。</p><a id="more"></a>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，从发现到定位问题都是比较困难的，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。</p><h2 id="WatchDog原理"><a href="#WatchDog原理" class="headerlink" title="WatchDog原理"></a>WatchDog原理</h2><a id="more"></a>
+<p>在讨论如何设计一套完整的线程死锁检测方案之前，先了解一下Android系统中的WatchDog实现原理。WatchDog的本质是一条死锁检测线程，运行在SystemServer进程中，它的作用是不断地检测AMS，WMS等这些关键服务是否出现死锁，假如死锁了，就停止SystemServer进程，这时Zygote进程也会自杀，然后重启，也就是手机系统重启。</p>
 <h5 id="接下来通过源码分析WatchDog的实现原理。"><a href="#接下来通过源码分析WatchDog的实现原理。" class="headerlink" title="接下来通过源码分析WatchDog的实现原理。"></a>接下来通过源码分析WatchDog的实现原理。</h5><ol>
 <li><p>Zygote进程启动SystemServer进程后，会调用到SystemServer类的main静态方法：</p>
 <pre><code>/**
