@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="前言当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。.git目录 hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-07T01:54:47.773Z">
+<meta property="og:updated_time" content="2019-12-07T02:01:18.642Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-07 08:53:33 / Modified: 09:54:47" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
+              <time title="Created: 2019-12-07 08:53:33 / Modified: 10:01:18" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
             </span>
 
           
@@ -213,7 +213,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.4k</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -365,7 +365,6 @@
 <li><p>hotfix：修复分支，用于修复线上紧急bug，从master拉，最终合入到develop和master。注意合入到master时要打tag做标记，比如master-8.1.1之类的命名。</p>
 </li>
 </ul>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p>Git 内部原理：<a href="https://git-scm.com/book/zh/v1/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86" target="_blank" rel="noopener" title="https://git-scm.com/book/zh/v1/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86">https://git-scm.com/book/zh/v1/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86</a></p>
 
     </div>
 
@@ -425,7 +424,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git目录"><span class="nav-number">2.</span> <span class="nav-text">.git目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git中的几种对象"><span class="nav-number">3.</span> <span class="nav-text">Git中的几种对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git提交过程原理"><span class="nav-number">4.</span> <span class="nav-text">Git提交过程原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git数据存储原理"><span class="nav-number">5.</span> <span class="nav-text">Git数据存储原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git传输协议"><span class="nav-number">6.</span> <span class="nav-text">Git传输协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-flow协作流程"><span class="nav-number">7.</span> <span class="nav-text">git flow协作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#稳定分支"><span class="nav-number">7.0.1.</span> <span class="nav-text">稳定分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时分支"><span class="nav-number">7.0.2.</span> <span class="nav-text">临时分支</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">8.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git目录"><span class="nav-number">2.</span> <span class="nav-text">.git目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git中的几种对象"><span class="nav-number">3.</span> <span class="nav-text">Git中的几种对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git提交过程原理"><span class="nav-number">4.</span> <span class="nav-text">Git提交过程原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git数据存储原理"><span class="nav-number">5.</span> <span class="nav-text">Git数据存储原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git传输协议"><span class="nav-number">6.</span> <span class="nav-text">Git传输协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-flow协作流程"><span class="nav-number">7.</span> <span class="nav-text">git flow协作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#稳定分支"><span class="nav-number">7.0.1.</span> <span class="nav-text">稳定分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时分支"><span class="nav-number">7.0.2.</span> <span class="nav-text">临时分支</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
