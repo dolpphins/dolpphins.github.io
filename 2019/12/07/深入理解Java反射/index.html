@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="前言本文主要介绍Java反射的内部原理，反射慢的原因，如何优化反射。源码分析平时开发中反射用得最多的应该是方法调用，下面分析反射调用方法的内部原理，先看getDeclaredMethod方法：@CallerSensitive public Method getDeclaredMethod(String name, Class&amp;lt;?&amp;gt;... parameterTypes)     thro">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-07T14:51:55.854Z">
+<meta property="og:updated_time" content="2019-12-07T14:54:18.340Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%8F%8D%E5%B0%84/">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-07 22:31:56 / Modified: 22:51:55" itemprop="dateCreated datePublished" datetime="2019-12-07T22:31:56+08:00">2019-12-07</time>
+              <time title="Created: 2019-12-07 22:31:56 / Modified: 22:54:18" itemprop="dateCreated datePublished" datetime="2019-12-07T22:31:56+08:00">2019-12-07</time>
             </span>
 
           
@@ -244,9 +244,14 @@ public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
 }</code></pre><a id="more"></a>
 
 <p>这里分为三步：</p>
-<p>1.检查权限。</p>
-<p>2.获取所有Method，这里有一个SoftReference缓存，缓存所有的Fields和Methods信息。</p>
-<p>3.查找对应的Method后复制副本返回。</p>
+<ol>
+<li><p>检查权限。</p>
+</li>
+<li><p>获取所有Method，这里有一个SoftReference缓存，缓存所有的Fields和Methods信息。</p>
+</li>
+<li><p>查找对应的Method后复制副本返回。</p>
+</li>
+</ol>
 <p>因此可以发现getDeclaredMethods和getDeclaredMethod其实性能差别不大，都是会先获取到所有Method信息。</p>
 <p>再看一下getMethod方法：</p>
 <pre><code>@CallerSensitive
@@ -313,9 +318,14 @@ public Method getMethod(String name, Class&lt;?&gt;... parameterTypes)
     // Not found
     return null;
 }</code></pre><p>流程还是一样，分为三步：</p>
-<p>1.检查权限</p>
-<p>2.获取所有public的Method（自身 –&gt; 父类 –&gt; 接口）</p>
-<p>3.查找对应的Method后复制副本返回</p>
+<ol>
+<li><p>检查权限</p>
+</li>
+<li><p>获取所有public的Method（自身 –&gt; 父类 –&gt; 接口）</p>
+</li>
+<li><p>查找对应的Method后复制副本返回</p>
+</li>
+</ol>
 <p>与getDeclaredMethod的区别，就是这里只获取public的Method，但却可以获取到父类，接口的Method。</p>
 <p><strong>注：getDeclaredField和getField流程类似，只是把Method替换成Field，不再分析。</strong></p>
 <p>继续分析Method的invoke方法：</p>
