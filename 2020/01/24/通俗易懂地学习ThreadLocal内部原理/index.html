@@ -57,8 +57,10 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="前言ThreadLocal是JDK中的一个类，很多基础框架和平时开发中都会使用到，因此有必要弄清其内部原理，才能更好地使用它。使用方法要弄清原理，还是要先知道如何使用，ThreadLocal用起来是很简单的，一般都是把ThreadLocal定义为static变量，也就是只有一个实例对象，如下：private static ThreadLocal&amp;lt;Integer&amp;gt; sThreadLoca">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-01-24T03:32:54.318Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;threadlocal.png">
+<meta property="og:updated_time" content="2020-01-24T03:35:36.244Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;threadlocal.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
 
@@ -197,7 +199,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-01-24 11:27:51 / Modified: 11:32:54" itemprop="dateCreated datePublished" datetime="2020-01-24T11:27:51+08:00">2020-01-24</time>
+              <time title="Created: 2020-01-24 11:27:51 / Modified: 11:35:36" itemprop="dateCreated datePublished" datetime="2020-01-24T11:27:51+08:00">2020-01-24</time>
             </span>
 
           
@@ -213,7 +215,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.6k</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -257,13 +259,11 @@
 <p>在Android中，我们知道一个线程对应一个Looper，因此Looper内部就使用到了ThreadLocal，把线程的Looper对象保存在ThreadLocal中。又比如AnimationHandler类，它内部也定义了一个ThreadLocal对象，用于保存线程的AnimationHandler对象，也就是说，线程的动画执行最终都是在被同一个AnimationHandler对象处理的，有兴趣可以自己看源码。</p>
 <p>我们还注意到，定义的ThreadLocal虽然在多个线程中被使用，但不会有线程问题，因为每个线程访问的都是自己的局部对象。</p>
 <h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><ul>
-<li>整体原理图</li>
-</ul>
-<pre><code>![](/images/threadlocal.png)
-
-这个Thread就是线程对象，每个线程只有一个，可以通过Thread.currentThread()方法拿到，也可以在new Thread()时拿到，不管什么方式拿到的都是同个对象，这个对象里面有一个哈希表，每一个Entry的key就是ThreadLocal的弱引用，而value就是set进来的局部对象。
-
-可以看到这个哈希表是线程唯一的，而里面的每一个Entry，对应一个ThreadLocal对象，比如说我在线程A中用到了3个ThreadLocal，都设置了不同的局部对象，那么这个哈希表就有3个Entry对象。</code></pre><ul>
+<li><p>整体原理图</p>
+<p>  <img src="/images/threadlocal.png" alt></p>
+<p>  这个Thread就是线程对象，每个线程只有一个，可以通过Thread.currentThread()方法拿到，也可以在new Thread()时拿到，不管什么方式拿到的都是同个对象，这个对象里面有一个哈希表，每一个Entry的key就是ThreadLocal的弱引用，而value就是set进来的局部对象。</p>
+<p>  可以看到这个哈希表是线程唯一的，而里面的每一个Entry，对应一个ThreadLocal对象，比如说我在线程A中用到了3个ThreadLocal，都设置了不同的局部对象，那么这个哈希表就有3个Entry对象。</p>
+</li>
 <li><p>ThreadLocalMap</p>
 <p>  上面所说的线程Thread对象中的哈希表，其真实类型就是ThreadLocalMap，它其实是一个简化版哈希表，初始容量为16，当然，只有真的放东西Entry数组才会初始化，threshold为容量的2/3，超过了就触发扩容，扩容也是比较简单的，就是直接扩大为原容量的2倍，至于哈希冲突问题，如果冲突就采用线性探测的方法解决。</p>
 <p>  这里还有个问题，就是如何根据key确定放到哪个桶里，可以看下代码：</p>
