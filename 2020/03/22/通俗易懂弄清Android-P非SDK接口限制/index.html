@@ -50,17 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="为什么需要优化Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。常见检测工具有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈">
+  <meta name="description" content="Android P非SDK接口限制1. 三种名单 黑名单：不可使用，否则会抛出异常。  灰名单：如果当前apk的API级别&amp;lt;接口的限制API级别，那么可以用，否则抛出异常。  白名单：受支持的接口，可以使用。  2. 抛出异常如果使用了黑名单的接口，就会抛出异常，调用getDeclaredField()方法会抛出NoSuchFieldException，调用getDeclaredMethod">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android性能优化-布局优化">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;30&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96&#x2F;index.html">
+<meta property="og:title" content="通俗易懂弄清Android P非SDK接口限制">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;22&#x2F;%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="为什么需要优化Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。常见检测工具有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈">
+<meta property="og:description" content="Android P非SDK接口限制1. 三种名单 黑名单：不可使用，否则会抛出异常。  灰名单：如果当前apk的API级别&amp;lt;接口的限制API级别，那么可以用，否则抛出异常。  白名单：受支持的接口，可以使用。  2. 抛出异常如果使用了黑名单的接口，就会抛出异常，调用getDeclaredField()方法会抛出NoSuchFieldException，调用getDeclaredMethod">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-11-30T15:04:26.002Z">
+<meta property="og:updated_time" content="2020-03-22T04:20:51.547Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2019/11/30/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96/">
+<link rel="canonical" href="http://yoursite.com/2020/03/22/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>Android性能优化-布局优化 | 麦田Coder</title>
+  <title>通俗易懂弄清Android P非SDK接口限制 | 麦田Coder</title>
   
 
 
@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/30/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/22/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -186,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Android性能优化-布局优化
+          通俗易懂弄清Android P非SDK接口限制
         </h1>
 
         <div class="post-meta">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-11-30 22:49:38 / Modified: 23:04:26" itemprop="dateCreated datePublished" datetime="2019-11-30T22:49:38+08:00">2019-11-30</time>
+              <time title="Created: 2020-03-22 12:20:21 / Modified: 12:20:51" itemprop="dateCreated datePublished" datetime="2020-03-22T12:20:21+08:00">2020-03-22</time>
             </span>
 
           
@@ -213,14 +213,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.3k</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -232,62 +232,47 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="为什么需要优化"><a href="#为什么需要优化" class="headerlink" title="为什么需要优化"></a>为什么需要优化</h2><p>Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。</p><h2 id="常见检测工具"><a href="#常见检测工具" class="headerlink" title="常见检测工具"></a>常见检测工具</h2><p>有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈现模式分析。</p><a id="more"></a>
+        <h2 id="Android-P非SDK接口限制"><a href="#Android-P非SDK接口限制" class="headerlink" title="Android P非SDK接口限制"></a>Android P非SDK接口限制</h2><h3 id="1-三种名单"><a href="#1-三种名单" class="headerlink" title="1. 三种名单"></a>1. 三种名单</h3><ul>
+<li><p>黑名单：不可使用，否则会抛出异常。</p>
+</li>
+<li><p>灰名单：如果当前apk的API级别&lt;接口的限制API级别，那么可以用，否则抛出异常。</p>
+</li>
+<li><p>白名单：受支持的接口，可以使用。</p>
+</li>
+</ul><h3 id="2-抛出异常"><a href="#2-抛出异常" class="headerlink" title="2. 抛出异常"></a>2. 抛出异常</h3><p>如果使用了黑名单的接口，就会抛出异常，调用getDeclaredField()方法会抛出NoSuchFieldException，调用getDeclaredMethod()方法会抛出NoSuchMethodException。</p><a id="more"></a>
 
-<ul>
-<li><p><strong>开发者选项-调试GPU过度绘制</strong></p>
-<p>  这里有五种颜色，代表过度绘制的严重程度</p>
-<p>  真彩色：没有过度绘制</p>
-<p>  蓝色：过度绘制1次</p>
-<p>  绿色：过度绘制2次</p>
-<p>  粉色：过度绘制3次</p>
-<p>  红色：过度绘制4次或更多</p>
-<p>  优化的目标，应该是让尽量多的区域为真彩色和蓝色。</p>
-<p>  官方文档：<a href="https://developer.android.google.cn/topic/performance/rendering/overdraw" target="_blank" rel="noopener" title="https://developer.android.google.cn/topic/performance/rendering/overdraw">https://developer.android.google.cn/topic/performance/rendering/overdraw</a></p>
+<p>如果是调用了getFields()方法或者getDeclaredFIelds()方法或者getMethods()方法或者getDeclaredMethods()方法，不会抛出异常，但返回的结果都不会包含非SDK接口对应的Field或者Method。</p>
+<h3 id="3-日志"><a href="#3-日志" class="headerlink" title="3. 日志"></a>3. 日志</h3><p>如果使用了黑名单接口，除了会抛出异常外，还会有一行warn级别的日志，日志格式为：</p>
+<pre><code>Accessing hidden method Landroid/content/Intent;-&gt;addMiuiFlags......</code></pre><h3 id="4-分析apk"><a href="#4-分析apk" class="headerlink" title="4. 分析apk"></a>4. 分析apk</h3><p>可以去官网下载veridex工具，然后执行命令：</p>
+<pre><code>./appcompat.sg --dex-file=apk路径</code></pre><p>就可以自动分析apk中用到的哪些接口是在黑名单或者灰名单里，如下：</p>
+<pre><code>......
+20 hidden API(s) used: 0 linked against, 20 through reflection
+13 in greylist
+1 in blacklist
+1 in greylist-max-o
+5 in greylist-max-p</code></pre><p>注意该分析针对的是apk包，也就是编译后的所有代码（包括依赖到的第三方库代码），而且第三方ROM厂商可能会加入新的黑名单接口，这些工具无法检测。</p>
+<h3 id="5-限制原理"><a href="#5-限制原理" class="headerlink" title="5. 限制原理"></a>5. 限制原理</h3><p>其实就是在Method或者Field元信息的标记位access_flags写上限制信息，然后在反射的时候做检查，另外如果调用所在的类的类加载器为BootClassLoader，也会放行。</p>
+<h2 id="绕开方法"><a href="#绕开方法" class="headerlink" title="绕开方法"></a>绕开方法</h2><ol>
+<li><p>在C++层搜索内存，把对应的Method或者Field元信息的标记位修改为公开API接口对应的值。</p>
 </li>
-<li><p><strong>开发者选项-GPU呈现模式分析</strong></p>
-<p>  开启后屏幕底下会有不断移动的柱状图，一条代表一帧，高度代表该帧处理和渲染绘制整个过程花费的总时间，低于水平绿线（16ms）才不会出现卡顿。<br>  对于每一帧，不同颜色代表不同阶段所花费的时间，这里有八种颜色，包括：</p>
-<p>  绘制时间：onDraw执行时间</p>
-<p>  测量和布局时间：onMeasure和onLayout执行时间</p>
-<p>  动画时间：ObjectAnimator等动画执行时间，常见场景比如ListView等列表的fling动画。</p>
-<p>  CPU等GPU缓冲区时间：时间长，说明GPU工作太多</p>
-<p>  输入处理时间：处理用户输入的时间，如果时间太长需要开子线程处理。</p>
-<p>  构建DisplayList时间：构建绘制命令时间</p>
-<p>  位图信息上传给GPU时间：将位图信息上传到GPU所花的时间</p>
-<p>  VSync延迟时间：VSync处理延迟时间，时间太长说明UI线程执行了耗时操作</p>
-<p>  官方文档：<a href="https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html" target="_blank" rel="noopener" title="https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html">https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html</a></p>
+<li><p>把调用非SDK接口对应的Class对象的ClassLoader设置为BootClassLoader，这样系统就不会做出限制了，不过这种直接修改ClassLoader的容易出问题。</p>
 </li>
-</ul>
-<h2 id="常见原因和优化方法"><a href="#常见原因和优化方法" class="headerlink" title="常见原因和优化方法"></a>常见原因和优化方法</h2><ul>
-<li><p><strong>在UI线程执行耗时操作</strong></p>
-<p>  <strong>原因：</strong> 比如读写SharePreferences，读写数据库等。</p>
-<p>  <strong>解决方法：</strong> 耗时操作都应该放到子线程中执行。</p>
+<li><p>其实Java层的VMRuntime中有一个豁免接口setHiddenApiExemptions，直接反射调用把豁免前缀传进入就可以，简单省事，如下：</p>
+<pre><code>try {
+    Class&lt;?&gt; clazz = Class.forName(&quot;dalvik.system.VMRuntime&quot;);
+    Method getDeclaredMethod = Class.class.getDeclaredMethod(&quot;getDeclaredMethod&quot;, String.class, Class[].class);
+    Object vmRuntime = clazz.getDeclaredMethod(&quot;getRuntime&quot;).invoke(null);
+    Method method = (Method) getDeclaredMethod.invoke(clazz, &quot;setHiddenApiExemptions&quot;, new Class[]{String[].class});
+    method.invoke(vmRuntime, new Object[]{new String[]{&quot;L&quot;}});
+} catch (Throwable t) {
+    t.printStackTrace();
+}</code></pre><p> 这里其实有个问题，setHiddenApiExemptions本身就是在黑名单里面，我们无法通过直接反射获取到Method，因此这里先拿到getDeclaredMethod的Method（它的ClassLoader为BootClassLoader），然后再通过它去拿到setHiddenApiExemptions的Method。</p>
+<p> 同理，其实对于任意一个黑名单接口，我们都可以这样去做，也就不需要用到setHiddenApiExemptions这个方法了，只是每个都做就会比较繁琐。</p>
 </li>
-</ul>
-<ul>
-<li><p><strong>布局过于复杂</strong></p>
-<p>  <strong>原因：</strong> 布局嵌套层数过深，以及布局过于复杂，measure，layout，draw需要花费大量时间。</p>
-<p>  <strong>解决方法：</strong> 使用merge标签合并布局，减少一层嵌套；使用ViewStub实现懒加载布局，必要时才inflate布局；使用RelativeLayout减少嵌套层数，相同层数优先用LinearLayout而不是RelativeLayout。</p>
+<li><p>不要用反射了，直接调用，可能需要依赖一个对应的库，该库的目的只是为了编译通过生成相应的代码，当然被调用的方法实际上必须是public的。</p>
 </li>
-</ul>
-<ul>
-<li><p><strong>过度绘制</strong></p>
-<p>  <strong>原因：</strong> 同个位置设置了重复背景，同个像素被绘制多次。</p>
-<p>  <strong>解决方法：</strong> 去除重复背景，去除Window默认背景，自定义View通过Canvas的clipRect指定绘制区域。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>频繁GC导致UI线程被挂起</strong></p>
-<p>  <strong>原因：</strong> 内存抖动。</p>
-<p>  <strong>解决方法：</strong> 排查大量创建短命对象的地方。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>频繁刷新整个UI布局</strong></p>
-<p>  <strong>原因：</strong> 整个UI布局的measure，layout，draw耗时较多。</p>
-<p>  <strong>解决方法：</strong> 只刷新需要刷新的区域即可，比如调用notifyItemChanged刷新RecyclerView某个Item，ListView也类似，最好能拿到某个Item的View进行刷新。</p>
-</li>
-</ul>
+</ol>
+<p>这些方法了解就可以，最好不要真的去绕开这个限制。</p>
 
     </div>
 
@@ -301,17 +286,14 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/" rel="next" title="深入理解Protobuf3协议原理">
-                  <i class="fa fa-chevron-left"></i> 深入理解Protobuf3协议原理
+                <a href="/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" rel="next" title="通俗易懂地学习ThreadLocal内部原理">
+                  <i class="fa fa-chevron-left"></i> 通俗易懂地学习ThreadLocal内部原理
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/12/01/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" rel="prev" title="Android性能优化-内存优化">
-                  Android性能优化-内存优化 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -350,7 +332,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要优化"><span class="nav-number">1.</span> <span class="nav-text">为什么需要优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见检测工具"><span class="nav-number">2.</span> <span class="nav-text">常见检测工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见原因和优化方法"><span class="nav-number">3.</span> <span class="nav-text">常见原因和优化方法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-P非SDK接口限制"><span class="nav-number">1.</span> <span class="nav-text">Android P非SDK接口限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-三种名单"><span class="nav-number">1.1.</span> <span class="nav-text">1. 三种名单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-抛出异常"><span class="nav-number">1.2.</span> <span class="nav-text">2. 抛出异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-日志"><span class="nav-number">1.3.</span> <span class="nav-text">3. 日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-分析apk"><span class="nav-number">1.4.</span> <span class="nav-text">4. 分析apk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-限制原理"><span class="nav-number">1.5.</span> <span class="nav-text">5. 限制原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绕开方法"><span class="nav-number">2.</span> <span class="nav-text">绕开方法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
