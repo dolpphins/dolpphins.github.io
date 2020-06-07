@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="一、简单使用 Application中初始化： @Override protected void attachBaseContext(Context base) {     super.attachBaseContext(base);     ......     ARouter.openLog();     ARouter.openDebug();     ARouter.init(this);">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-06-06T14:40:49.269Z">
+<meta property="og:updated_time" content="2020-06-07T14:27:41.856Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2020/06/06/ARouter%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8BActivity%E8%B7%B3%E8%BD%AC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">
@@ -195,10 +195,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-06-06 22:40:11 / Modified: 22:40:49" itemprop="dateCreated datePublished" datetime="2020-06-06T22:40:11+08:00">2020-06-06</time>
+              <time title="Created: 2020-06-06 22:40:11" itemprop="dateCreated datePublished" datetime="2020-06-06T22:40:11+08:00">2020-06-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-06-07 22:27:41" itemprop="dateModified" datetime="2020-06-07T22:27:41+08:00">2020-06-07</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -213,14 +219,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>9.1k</span>
+              <span>15k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>8 mins.</span>
+              <span>14 mins.</span>
             </span>
 
         </div>
@@ -447,6 +453,214 @@ public synchronized static void init(Context context, ThreadPoolExecutor tpe) th
 }</code></pre><p>这里最关键的代码就是routerMap = ClassUtils.getFileNameByPackageName(mContext, ROUTE_ROOT_PAKCAGE);这一行，它会把<br>com.alibaba.android.arouter.routes包下的所有类的全限定名找出来，然后添加到Warehouse.groupsIndex中，这里注意到有个startInit变量，看日志它是在打印这段逻辑的执行时间，说明这逻辑可能是比较耗时了，而我们是在attachBaseContext方法里进行调用的，初始化过慢就会导致程序启动慢，必要时需要进行优化（比如可以采用插桩进行优化）。</p>
 <p>还有最后一个问题，就是ARouter是如何自动生成com.alibaba.android.arouter.routes包下的类，这个就要看arouter-compiler的源码了，找到RouteProcessor类，可以看到它用来处理Route和Autowired两个注解，所以它的流程是这样的：在编译时，根据javac的编译流程，会调用到RouteProcessor的process方法，这个方法就会获取到所有被加入Route注解的类，然后生成ARouter$$Group$$activity等对应的类，所在的包为com.alibaba.android.arouter.routes，这些自动生成的类，都实现了IRouteGroup接口，因此也就实现了loadInto方法，而这个方法中，比如ARouter$$Group$$activity，就会把路径和具体的Activity类的映射关系存到atlas中。</p>
 <p>再细想一下，其实这个映射关系我们自己手写代码也是可以的，但就是写起来比较麻烦，也可能会写漏，每次新增一个Route注解的类，就要来这里写一下映射关系，时间久了就很容易忘记。</p>
+<h3 id="三、自己动手实现"><a href="#三、自己动手实现" class="headerlink" title="三、自己动手实现"></a>三、自己动手实现</h3><p>弄清楚原理后，就可以自己动手实现一个了，流程如下：</p>
+<ol>
+<li><p>新增MRouterApp工程，做为测试项目。</p>
+</li>
+<li><p>新建Android Library，命名为annotation，这个Module用来放注解，因为待会mrouter和compiler都会用到相关的注解，所以都会依赖到它，这里我们定义注解为Route：</p>
+<pre><code>package com.mtan.mrouter.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface Route {
+
+    String path();
+}</code></pre></li>
+<li><p>新建Java Library，命名为compiler，用于在编译时自动生成代码，首先在build.gradle引入相关第三方依赖库：</p>
+<pre><code>   annotationProcessor &apos;com.google.auto.service:auto-service:1.0-rc3&apos;
+implementation &apos;com.google.auto.service:auto-service:1.0-rc3&apos;
+implementation &apos;com.squareup:javapoet:1.8.0&apos;</code></pre><p> 然后新建RouterProcessor类，继承自AbstractProcessor，实现相关方法：</p>
+<pre><code>package com.mtan.mrouter.compiler;
+
+import com.google.auto.service.AutoService;
+import com.mtan.mrouter.annotation.Route;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeSpec;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+
+@AutoService(Processor.class)
+public class RouterProcessor extends AbstractProcessor {
+
+    private Messager messager;
+    private Filer mFiler;
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnvironment) {
+        super.init(processingEnvironment);
+        messager = processingEnv.getMessager();
+        mFiler = processingEnv.getFiler();
+    }
+
+    @Override
+    public boolean process(Set&lt;? extends TypeElement&gt; set, RoundEnvironment roundEnvironment) {
+        Set&lt;? extends Element&gt; elements = roundEnvironment.getElementsAnnotatedWith(Route.class);
+        if (elements == null || elements.size() &lt;= 0) {
+            return false;
+        }
+
+        ParameterizedTypeName inputMapTypeOfGroup = ParameterizedTypeName.get(
+                ClassName.get(Map.class),
+                ClassName.get(String.class),
+                ClassName.get(Class.class)
+        );
+
+        ParameterSpec param = ParameterSpec.builder(inputMapTypeOfGroup, &quot;atlas&quot;).build();
+
+        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder(&quot;loadInto&quot;)
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(param);
+
+        for (Element e : elements) {
+            messager.printMessage(Diagnostic.Kind.NOTE, e.getSimpleName().toString());
+
+            String path = e.getAnnotation(Route.class).path();
+            ClassName className = ClassName.get((TypeElement) e);
+            loadIntoMethodOfRootBuilder.addStatement(&quot;atlas.put($S, $T.class)&quot;, path, className);
+        }</code></pre></li>
+</ol>
+<pre><code>            try {
+                String rootFileName = &quot;MRouter$$Group$$activity&quot;;
+                JavaFile.builder(&quot;com.mtan.mrouter.apt&quot;,
+                        TypeSpec.classBuilder(rootFileName)
+                                .addJavadoc(&quot;NOT MODIFY!!!&quot;)
+                                .addModifiers(Modifier.PUBLIC)
+                                .addMethod(loadIntoMethodOfRootBuilder.build())
+                                .build()
+                ).build().writeTo(mFiler);
+            } catch (Throwable t) {
+                messager.printMessage(Diagnostic.Kind.ERROR, t.getMessage());
+            }
+
+            return true;
+        }
+
+        @Override
+        public Set&lt;String&gt; getSupportedAnnotationTypes() {
+            Set&lt;String&gt; annotations = new HashSet&lt;&gt;();
+            annotations.add(Route.class.getCanonicalName());
+            return annotations;
+        }
+    }
+
+这里会自动生成一个类为MRouter$$Group$$activity，放在包com.mtan.mrouter.apt下，比如待会在测试项目MRouterApp中为SecondActivity类加了Route注解，那么最终生成的MRouter$$Group$$activity类的代码如下：
+
+    package com.mtan.mrouter.apt;
+
+    import com.mtan.mrouter.SecondActivity;
+    import java.lang.Class;
+    import java.lang.String;
+    import java.util.Map;
+
+    /**
+     * NOT MODIFY!!! */
+    public class MRouter$$Group$$activity {
+      public void loadInto(Map&lt;String, Class&gt; atlas) {
+        atlas.put(&quot;/activity/second&quot;, SecondActivity.class);
+      }
+    }</code></pre><ol start="4">
+<li><p>新建Module，命名为mrouter，新建MRouter类：</p>
+<pre><code>package com.mtan.mrouter;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+public class MRouter {
+
+    private static Map&lt;String, Class&lt;?&gt;&gt; sRouteMap = new HashMap&lt;&gt;();
+
+    public static void init(Context context) {
+        try {
+            Set&lt;String&gt; names = ClassUtils.getFileNameByPackageName(context, &quot;com.mtan.mrouter.apt&quot;);
+            for (String name : names) {
+                Class&lt;?&gt; clazz = Class.forName(name);
+                Object obj = clazz.newInstance();
+                Method method = clazz.getDeclaredMethod(&quot;loadInto&quot;, Map.class);
+                method.invoke(obj, sRouteMap);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private Context mContext;
+
+    public MRouter(Context context) {
+        mContext = context;
+    }
+
+    public void navigation(String path) {
+        Class&lt;?&gt; clazz = sRouteMap.get(path);
+        if (clazz == null) {
+            throw new RuntimeException(&quot;can&apos;t find class for path:&quot; + path);
+        }
+        Intent intent = new Intent(mContext, clazz);
+        if (mContext instanceof Activity) {
+            mContext.startActivity(intent);
+        } else {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        }
+    }
+}</code></pre><p> ClassUtils类是从ARouter中复制过来的，用来加载com.mtan.mrouter.apt包下自动生成的类的名称。</p>
+</li>
+<li><p>来到这里，MRouter库的代码就写好了，最后再梳理下这几个Module的依赖关系，annotation为公共库，不依赖其它Module，compiler会使用到相关注解，因此需要implementation依赖annotation，mrouter虽然目前不会使用到相关注解，但可能以后会使用到，而且使用mrouter的第三方工程也需要用到相关注解，因此mrouter也是需要依赖annotation，而且是api依赖，表示传递依赖。</p>
+</li>
+<li><p>最后在MRouterApp中写测试代码，先把上面写好的库引入进来：</p>
+<pre><code>implementation project(&apos;:mrouter&apos;)
+annotationProcessor project(&apos;:compiler&apos;)</code></pre><p> 然后新建App类，AndroidManifest指定Application为App类，在attachBaseContext中初始化：</p>
+<pre><code>@Override
+protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MRouter.init(this);
+}</code></pre><p> 接着新建SecondActivity类，加上Route注解：</p>
+<pre><code>package com.mtan.mrouterapp;
+
+import android.app.Activity;
+
+import com.mtan.mrouterapp.annotation.Route;
+
+@Route(path = &quot;/activity/second&quot;)
+public class SecondActivity extends Activity {
+
+}</code></pre><p> 最后在MainActivity中触发跳转到SecondActivity：</p>
+<pre><code>findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        new MRouter(MainActivity.this).navigation(&quot;/activity/second&quot;);
+    }
+});</code></pre></li>
+<li><p>真机运行，测试能正常跳转，项目链接：<a href="https://github.com/dolpphins/MRouter" target="_blank" rel="noopener" title="https://github.com/dolpphins/MRouter">https://github.com/dolpphins/MRouter</a>。</p>
+</li>
+</ol>
 
     </div>
 
@@ -506,7 +720,7 @@ public synchronized static void init(Context context, ThreadPoolExecutor tpe) th
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单使用"><span class="nav-number">1.</span> <span class="nav-text">一、简单使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、从navigation方法说起"><span class="nav-number">2.</span> <span class="nav-text">二、从navigation方法说起</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单使用"><span class="nav-number">1.</span> <span class="nav-text">一、简单使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、从navigation方法说起"><span class="nav-number">2.</span> <span class="nav-text">二、从navigation方法说起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、自己动手实现"><span class="nav-number">3.</span> <span class="nav-text">三、自己动手实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -557,12 +771,12 @@ public synchronized static void init(Context context, ThreadPoolExecutor tpe) th
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">98k</span>
+    <span title="Symbols count total">104k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:29</span>
+    <span title="Reading time total">1:35</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
