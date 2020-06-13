@@ -172,6 +172,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入理解Git内部原理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-07 08:53:33 / Modified: 10:01:18" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。</p><h2 id="git目录"><a href="#git目录" class="headerlink" title=".git目录"></a>.git目录</h2><ul>
+<li><p>hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-commit在整个提交过程完成后执行，可以用于发送提交通知等，另外也有服务端钩子，在推送前或者后执行，比如post-receive在推送结束后会被执行，可以用于通知打包平台启动打包任务。关于git钩子更详细的信息可以参考：<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90" target="_blank" rel="noopener" title="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">自定义 Git - Git 钩子</a>。</p>
+</li>
+<li><p>info：保存git的相关信息</p>
+</li>
+<li><p>logs</p>
+<ul>
+<li><p>refs：暂存记录，本地分支记录，远程分支记录</p>
+</li>
+<li><p>HEAD：记录每次的变更操作</p>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1149,86 +1242,6 @@ Uptime: 138531332 Realtime: 241333585
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/custom_avatar.jpg">
-      <meta itemprop="name" content="麦田">
-      <meta itemprop="description" content="专注于写有深度的技术文章">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="麦田Coder">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入理解Protobuf3协议原理</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2019-11-30 11:59:08 / Modified: 12:23:52" itemprop="dateCreated datePublished" datetime="2019-11-30T11:59:08+08:00">2019-11-30</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.9k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Protobuf是什么"><a href="#Protobuf是什么" class="headerlink" title="Protobuf是什么"></a>Protobuf是什么</h2><p>全称为Protocol Buffers，Google推出的序列化框架，用于将自定义数据结构序列化成字节流，和将字节流反序列化为数据结构，该框架不依赖开发语言，也不依赖运行平台，扩展性好，目前支持的语言比较多，包括Java，C++，Python，Ruby等。</p><h2 id="使用Protobuf"><a href="#使用Protobuf" class="headerlink" title="使用Protobuf"></a>使用Protobuf</h2><p>在这里使用Windows和Java进行实例演示：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1279,7 +1292,7 @@ Uptime: 138531332 Realtime: 241333585
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1314,12 +1327,12 @@ Uptime: 138531332 Realtime: 241333585
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">107k</span>
+    <span title="Symbols count total">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:37</span>
+    <span title="Reading time total">1:42</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>

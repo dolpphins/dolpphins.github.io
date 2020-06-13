@@ -172,6 +172,129 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/EventBus%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/13/EventBus%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/" class="post-title-link" itemprop="url">EventBus原理剖析</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-06-13 21:18:07 / Modified: 21:18:37" itemprop="dateCreated datePublished" datetime="2020-06-13T21:18:07+08:00">2020-06-13</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>EventBus是一个开源的事件总线框架，Android中被广泛使用，目前最新的版本为3.2.0，github地址：<a href="https://github.com/greenrobot/EventBus" target="_blank" rel="noopener">https://github.com/greenrobot/EventBus</a>。</p><h3 id="二、简单使用"><a href="#二、简单使用" class="headerlink" title="二、简单使用"></a>二、简单使用</h3><ol>
+<li><p>在build.gradle中引入依赖：</p>
+<pre><code>implementation &apos;org.greenrobot:eventbus:3.2.0&apos;</code></pre></li>
+<li><p>定义事件实体类：</p>
+<pre><code>public class CallEvent {
+}</code></pre></li>
+<li><p>订阅消息：</p>
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    EventBus.getDefault().register(this);
+}
+
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    EventBus.getDefault().unregister(this);
+}
+
+@Subscribe(threadMode = ThreadMode.ASYNC)
+public void onEvent(CallEvent event) {
+    // TODO 
+}</code></pre></li>
+<li><p>发送消息：</p>
+<pre><code>CallEvent event = new CallEvent();
+EventBus.getDefault().post(event);</code></pre></li>
+<li><p>来到这里就可以把EventBus用起来了，不过这里有个问题，注册时会反射遍历注册类的所有被Subscribe注解的方法，这个过程比较耗时会影响性能，因此EventBus又提供了一个eventbus-annotation-processor库来解决该问题，因此我们把它引入进来：</p>
+<pre><code>annotationProcessor &apos;org.greenrobot:eventbus-annotation-processor:3.0.1&apos;</code></pre></li>
+<li><p>这个eventbus-annotation-processor还需要一个key为eventBusIndex的键值对，用来指明自动生成的类的类名：</p>
+<pre><code>android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ eventBusIndex : &apos;org.greenrobot.eventbusperf.MyEventBusIndex&apos; ]
+            }
+        }
+    }</code></pre></li>
+<li><p>然后编译代码，就可以在build/source/apt/debug/下看到自动生成了org.greenrobot.eventbusperf.MyEventBusIndex类，这时我们需要把这个类添加到EventBus中：</p>
+<pre><code>EventBus.builder()
+    .addIndex(new MyEventBusIndex())
+    .installDefaultEventBus();</code></pre></li>
+<li><p>配置到此结束，可以愉快地使用了。</p>
+</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/13/EventBus%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -968,99 +1091,6 @@ public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/custom_avatar.jpg">
-      <meta itemprop="name" content="麦田">
-      <meta itemprop="description" content="专注于写有深度的技术文章">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="麦田Coder">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入理解Git内部原理</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2019-12-07 08:53:33 / Modified: 10:01:18" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。</p><h2 id="git目录"><a href="#git目录" class="headerlink" title=".git目录"></a>.git目录</h2><ul>
-<li><p>hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-commit在整个提交过程完成后执行，可以用于发送提交通知等，另外也有服务端钩子，在推送前或者后执行，比如post-receive在推送结束后会被执行，可以用于通知打包平台启动打包任务。关于git钩子更详细的信息可以参考：<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90" target="_blank" rel="noopener" title="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">自定义 Git - Git 钩子</a>。</p>
-</li>
-<li><p>info：保存git的相关信息</p>
-</li>
-<li><p>logs</p>
-<ul>
-<li><p>refs：暂存记录，本地分支记录，远程分支记录</p>
-</li>
-<li><p>HEAD：记录每次的变更操作</p>
-</li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1111,7 +1141,7 @@ public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1146,12 +1176,12 @@ public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">107k</span>
+    <span title="Symbols count total">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:37</span>
+    <span title="Reading time total">1:42</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
