@@ -50,19 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="前言如果应用耗电量过大，就会消耗用户手机过多的电量，甚至发热，现在一般手机都会有耗电量过大的提醒，当用户看到后，也可能会把你的应用卸载掉，因此需要对其进行优化，让应用的耗电量尽可能小。检测工具Battery Historian：https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;battery-historian">
+  <meta name="description" content="题意 As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them: Correct parentheses sequences can be defined recursive">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android性能优化-电量优化">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;06&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96&#x2F;index.html">
+<meta property="og:title" content="【HDU5831】Rikka with Parenthesis II">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;06&#x2F;13&#x2F;%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="前言如果应用耗电量过大，就会消耗用户手机过多的电量，甚至发热，现在一般手机都会有耗电量过大的提醒，当用户看到后，也可能会把你的应用卸载掉，因此需要对其进行优化，让应用的耗电量尽可能小。检测工具Battery Historian：https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;battery-historian">
+<meta property="og:description" content="题意 As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them: Correct parentheses sequences can be defined recursive">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;mobile_radio_state_machine.png">
-<meta property="og:updated_time" content="2019-12-06T01:04:33.876Z">
+<meta property="og:updated_time" content="2020-06-13T04:24:38.871Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;mobile_radio_state_machine.png">
 
-<link rel="canonical" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/">
+<link rel="canonical" href="http://yoursite.com/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/">
 
 
 <script id="page-configurations">
@@ -76,7 +74,7 @@
   };
 </script>
 
-  <title>Android性能优化-电量优化 | 麦田Coder</title>
+  <title>【HDU5831】Rikka with Parenthesis II | 麦田Coder</title>
   
 
 
@@ -175,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -188,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Android性能优化-电量优化
+          【HDU5831】Rikka with Parenthesis II
         </h1>
 
         <div class="post-meta">
@@ -199,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-06 08:44:15 / Modified: 09:04:33" itemprop="dateCreated datePublished" datetime="2019-12-06T08:44:15+08:00">2019-12-06</time>
+              <time title="Created: 2020-06-13 12:24:09 / Modified: 12:24:38" itemprop="dateCreated datePublished" datetime="2020-06-13T12:24:09+08:00">2020-06-13</time>
             </span>
 
           
@@ -215,14 +213,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.2k</span>
+              <span>2.8k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -234,55 +232,121 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如果应用耗电量过大，就会消耗用户手机过多的电量，甚至发热，现在一般手机都会有耗电量过大的提醒，当用户看到后，也可能会把你的应用卸载掉，因此需要对其进行优化，让应用的耗电量尽可能小。</p><h2 id="检测工具"><a href="#检测工具" class="headerlink" title="检测工具"></a>检测工具</h2><p>Battery Historian：<a href="https://github.com/google/battery-historian" target="_blank" rel="noopener" title="https://github.com/google/battery-historian">https://github.com/google/battery-historian</a></p><a id="more"></a>
+        <h3 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h3><blockquote>
+<p>As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them:</p>
+<p>Correct parentheses sequences can be defined recursively as follows:<br>1.The empty string “” is a correct sequence.<br>2.If “X” and “Y” are correct sequences, then “XY” (the concatenation of X and Y) is a correct sequence.<br>3.If “X” is a correct sequence, then “(X)” is a correct sequence.<br>Each correct parentheses sequence can be derived using the above rules.<br>Examples of correct parentheses sequences include “”, “()”, “()()()”, “(()())”, and “(((())))”.</p>
+<p>Now Yuta has a parentheses sequence S, and he wants Rikka to choose two different position i,j and swap Si,Sj.</p>
+<p>Rikka likes correct parentheses sequence. So she wants to know if she can change S to a correct parentheses sequence after this operation.</p>
+<p>It is too difficult for Rikka. Can you help her?</p>
+</blockquote><a id="more"></a>
+<h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><blockquote>
+<p>The first line contains a number t(1&lt;=t&lt;=1000), the number of the testcases. And there are no more then 10 testcases with n&gt;100</p>
+</blockquote>
+<blockquote>
+<p>For each testcase, the first line contains an integers n(1&lt;=n&lt;=100000), the length of S. And the second line contains a string of length S which only contains ‘(’ and ‘)’.</p>
+</blockquote>
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><blockquote>
+<p>For each testcase, print “Yes” or “No” in a line.</p>
+</blockquote>
+<h3 id="样例输入"><a href="#样例输入" class="headerlink" title="样例输入"></a>样例输入</h3><pre><code>3
+4
+())(
+4
+()()
+6
+)))(((</code></pre><h3 id="样例输出"><a href="#样例输出" class="headerlink" title="样例输出"></a>样例输出</h3><pre><code>Yes
+Yes
+No</code></pre><h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><blockquote>
+<p>For the second sample input, Rikka can choose (1,3) or (2,4) to swap. But do nothing is not allowed.</p>
+</blockquote>
+<h3 id="题解分析"><a href="#题解分析" class="headerlink" title="题解分析"></a>题解分析</h3><p>这题就是判断给定的括号串是否合法的变形题，题目要求必须交换两个位置的字符，因此大的思路还是一样，采用栈保存左括号，然后遍历给定的字符串，分情况处理：</p>
+<ol>
+<li><p>栈为空：</p>
+<p> （1） s[i]为’(‘，一定是进栈。</p>
+<p> （2） s[i]为’)’，一定要交换，显然肯定是跟’(‘交换，因此这里改为’)’，然后进栈，标记为changed置为true，表示已经进行交换了，至于跟谁交换，不用关心。如果changed已经为true，说明之前交换过一次了，按照题意只能交换一次，因此无解直接break跳出循环。</p>
+</li>
+<li><p>栈不为空：</p>
+<p> （1） s[i]为’(‘，一定是进栈。</p>
+<p> （2） s[i]为’)’，跟栈顶的’(‘匹配，栈顶元素出栈。</p>
+</li>
+</ol>
+<p>遍历结束后，对结果进行讨论分析：</p>
+<ol>
+<li><p>遍历完整个字符串，changed为false，栈为空，也就是说输入给的字符串本来就说合法的括号匹配序列，不需要交换，但因为题目要求一定要进行一次交换，因此这里需要特殊处理一下：</p>
+<p> （1）字符串长度&gt;2，显然我可以随便交换两个’)’或者’(‘从而达到题目的要求，因此输出”Yes”。</p>
+<p> （2）字符串长度&lt;=2，那没办法，输出”No”。</p>
+</li>
+<li><p>遍历完整个字符串，changed为true，栈不为空而且元素个数为2，这时如果栈的元素都是’(‘，也就是2个’(‘，因为刚才我们把’)’换成了’(‘，因此这里的第二个’(‘必须换成’)’，也就是说栈的元素最终由两个’(‘变成一个’(‘和一个’)’，刚好匹配，因此输出”Yes”。</p>
+</li>
+<li><p>其它情况都输出”No”。</p>
+</li>
+</ol>
+<h3 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h3><pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;algorithm&gt;
+#include &lt;map&gt;
+#include &lt;stack&gt;
 
-<p>可以按照官方说明文档搭建Battery Historian运行环境，然后检测查看自己应用的耗电量数据。</p>
-<h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><ul>
-<li><p><strong>网络连接</strong></p>
-<p>  首先基于耗电情况，移动网络连接分为三种状态：</p>
-<ul>
-<li><p>Full power：最高速率传输数据状态，这种情况耗电最高。</p>
-</li>
-<li><p>Low power：传输速率下降状态，耗电量也是Full power的一半。</p>
-</li>
-<li><p>Standby：没有传输数据的状态，耗电量最少。</p>
-<p>另外，状态间的转换，会有一些延迟，比如说Full power数据传输结束后，不会马上转到Low power，而是会等待5s。整个流程可以参考下面的示意图：</p>
-<p><img src="/images/mobile_radio_state_machine.png" alt="image"></p>
-<p>也就是说，传输数据时应该尽量一次性传完，而不是一次传一点，传很多次，这样会导致处于Full power状态的时间变长，耗电量也就增大。</p>
-</li>
-<li><p><em>网络连接优化一：数据尽量一次性打包传输，具体到应用场景，比如阅读新闻，应该采用预加载一次性拉取前几条新闻的数据，在线视频播放，在线音乐播放也是类似。*</em></p>
-</li>
-<li><p><em>网络连接优化二：使用连接池缓存连接，因为连接的建立会消耗更多的资源和电量。*</em></p>
-</li>
-<li><p><em>网络连接优化三：长连接心跳包的发生频率也需要限制，或者考虑采用半长连接的方式。*</em></p>
-</li>
-<li><p><em>网络连接优化四：避免下载没必要的数据，或者说减少数据传输时间，比如说图片可以下载压缩版的，请求结果的数据压缩后返回给客户端，本地缓存云端数据等*</em></p>
-</li>
-<li><p><em>网络连接优化五：先检测网络状态和网络类型，因为弱网络和移动网络的传输数据一般比较长，耗电也就会更多，当然速度快的4G或5G移动网络除外。*</em></p>
-</li>
-</ul>
-</li>
-<li><p><strong>GPS</strong></p>
-<p>  定位是比较耗电的，不能频繁进行定位，特别是后台定位。这里优化的方法有：</p>
-<p>  <strong>GPS定位优化一：对于及时性要求不高的场景，可以避免一直监听GPS，获取到GPS信息后，移除监听，设置闹钟触发下次监听。</strong></p>
-<p>  <strong>GPS定位优化二：及时移除GPS监听器。</strong></p>
-<p>  <strong>GPS定位优化三：GPS监听器更新间隔时间设置长一些。</strong></p>
-<p>  <strong>GPS定位优化四：对于精确性要求不高的场景，比如城市定位，可以改为用网络定位。</strong></p>
-<p>  <strong>GPS定位优化五：复用GPS定位信息，特别是对多模块的App，应该统一管理GPS信息。</strong></p>
-</li>
-<li><p><strong>其它传感器</strong></p>
-<p>  同样需要注意使用频率，更新间隔，监听器反注册等问题。</p>
-</li>
-<li><p><strong>唤醒</strong></p>
-<p>  减少屏幕唤醒次数，设备唤醒次数，少用AlarmManager和WakeLock。关于WakeLock可以参考文章：<a href="https://www.cnblogs.com/leipDao/p/8241468.html" target="_blank" rel="noopener" title="https://www.cnblogs.com/leipDao/p/8241468.html">安卓电量优化之WakeLock锁机制全面解析</a></p>
-</li>
-<li><p><strong>其它优化</strong></p>
-<p>  <strong>优化一：耗时操作等到手机在充电时进行，比如备份数据，扫描识别照片等。</strong></p>
-<p>  <strong>优化二：App位于后台时尽量少执行任务，特别是后台常驻服务，任务应延迟到应用位于前台执行，避免了后台耗电，频繁唤醒设备等。</strong></p>
-</li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://developer.android.google.cn/about/versions/pie/power.html" target="_blank" rel="noopener" title="https://developer.android.google.cn/about/versions/pie/power.html">Android电量管理</a></p>
+using namespace std;
 
+int main() {
+
+    int t;
+    int n;
+    string s;
+    cin &gt;&gt; t;
+    while (t--) {
+        cin &gt;&gt; n;
+        cin &gt;&gt; s;
+        stack&lt;char&gt; st;
+        bool changed = false;
+        int i = 0;
+        for (; i &lt; n; i++) {
+            if (st.empty()) {
+                // 栈为空
+                if (s[i] == &apos;(&apos;) {
+                    st.push(&apos;(&apos;);
+                } else {
+                    if (changed) {
+                        break;
+                    }
+                    changed = true;
+                    st.push(&apos;(&apos;);
+                }
+            } else {
+                // 栈不为空
+                if (s[i] == &apos;(&apos;) {
+                    st.push(&apos;(&apos;);
+                } else {
+                    st.pop();
+                }
+            }
+        }
+        if (i == n &amp;&amp; !changed &amp;&amp; st.empty()) {
+            if (n &gt; 2) {
+                cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;
+            } else {
+                cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
+            }
+        } else if (i == n &amp;&amp; changed &amp;&amp; st.size() == 2) {
+            char c1 = st.top();
+            st.pop();
+            char c2 = st.top();
+            if (c1 == &apos;(&apos; &amp;&amp; c2 == &apos;(&apos;) {
+                cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;
+            } else {
+                cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
+            }
+        } else {
+            cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
+        }
+    }
+
+    return 0;
+}</code></pre>
     </div>
 
     
@@ -295,17 +359,14 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" rel="next" title="Android性能优化-数据库优化">
-                  <i class="fa fa-chevron-left"></i> Android性能优化-数据库优化
+                <a href="/2020/06/06/ARouter%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8BActivity%E8%B7%B3%E8%BD%AC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" rel="next" title="ARouter框架原理剖析之Activity跳转实现原理">
+                  <i class="fa fa-chevron-left"></i> ARouter框架原理剖析之Activity跳转实现原理
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" rel="prev" title="深入理解Git内部原理">
-                  深入理解Git内部原理 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -344,7 +405,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测工具"><span class="nav-number">2.</span> <span class="nav-text">检测工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化方法"><span class="nav-number">3.</span> <span class="nav-text">优化方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#题意"><span class="nav-number">1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入"><span class="nav-number">2.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出"><span class="nav-number">3.</span> <span class="nav-text">输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例输入"><span class="nav-number">4.</span> <span class="nav-text">样例输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例输出"><span class="nav-number">5.</span> <span class="nav-text">样例输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提示"><span class="nav-number">6.</span> <span class="nav-text">提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题解分析"><span class="nav-number">7.</span> <span class="nav-text">题解分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AC代码"><span class="nav-number">8.</span> <span class="nav-text">AC代码</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
