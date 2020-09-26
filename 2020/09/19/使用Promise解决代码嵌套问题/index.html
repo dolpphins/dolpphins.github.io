@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="问题现在有多个请求，第一个请求结束后，失败就结束，成功就继续执行第二个请求，第二个请求结束后，失败就结束，成功就继续执行第三个请求，……，这样一直下去，可能会有三个请求，或者五个请求，或者更多。原有的解决方法按照以往的思路，会写出如下的嵌套代码： 123456789101112131415161718192021222324252627282930313233a(function(res) &amp;#1">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-09-19T06:22:36.188Z">
+<meta property="og:updated_time" content="2020-09-26T02:42:47.205Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2020/09/19/%E4%BD%BF%E7%94%A8Promise%E8%A7%A3%E5%86%B3%E4%BB%A3%E7%A0%81%E5%B5%8C%E5%A5%97%E9%97%AE%E9%A2%98/">
@@ -195,10 +195,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-09-19 14:21:44 / Modified: 14:22:36" itemprop="dateCreated datePublished" datetime="2020-09-19T14:21:44+08:00">2020-09-19</time>
+              <time title="Created: 2020-09-19 14:21:44" itemprop="dateCreated datePublished" datetime="2020-09-19T14:21:44+08:00">2020-09-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-26 10:42:47" itemprop="dateModified" datetime="2020-09-26T10:42:47+08:00">2020-09-26</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -241,7 +247,11 @@
 <p>每个函数都不再采用callback进行回调，而是改为返回Promise对象，外部就可以在then里面获取到执行结果，然后继续调用下一个函数，还是返回Promise对象，在下一个then里获取到。</p>
 <p><strong>这里的关键就是：then里面返回的结果，会在下一个then里拿到，这里所说的结果，包括某个值，或者是(resolve, reject)这样的回调。</strong></p>
 <h3 id="如何提前终止Promise链？"><a href="#如何提前终止Promise链？" class="headerlink" title="如何提前终止Promise链？"></a>如何提前终止Promise链？</h3><p>上面的代码还是有问题的，如果在中间某个环节出现了reject，它只会导致下一个then执行到reject分支，下下个then又是执行了resolve分支，很明显，我们期望是只要有一个reject了，后续都要执行reject分支。</p>
-<p>这个问题的原因是因为在reject里没有返回新的Promise，导致下个then默认进入resolve分支，因此改成都返回一个reject状态的Promise对象。</p>
+<p>这个问题的原因是因为在于我们处理了reject分支，但reject里又没有返回新的Promise，导致下个then进入resolve分支，这里解决的方法有两个：</p>
+<ol>
+<li>改成都返回一个reject状态的Promise对象。</li>
+<li>直接把前面的reject分支都去掉，最后面的then才处理reject。</li>
+</ol>
 <h3 id="如何实现延时有序执行？"><a href="#如何实现延时有序执行？" class="headerlink" title="如何实现延时有序执行？"></a>如何实现延时有序执行？</h3><p>如果b()需要延时5s后执行，要怎么写？显然不能写成这样：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b();</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
 <p>setTimeout里面的任务会放到宏任务队列，而Promise的任务会被放到微任务队列，两者之间没有执行顺序约束，而我们是要在b执行后才能执行c，所以并不能实现我们的目的，<strong>这里的解决方法，就是要保证setTimeout里面的任务执行结束，才能继续执行接下来的Promise任务，可以引入一个中间Promise实现，定义delay函数：</strong></p>
@@ -249,7 +259,6 @@
 <p>这里在调用delay函数后，当超时时间到了，setTimeout里的任务执行了，才会回调resolve，然后才继续执行接下来的then里面的代码。</p>
 <h3 id="最终Promise代码"><a href="#最终Promise代码" class="headerlink" title="最终Promise代码"></a>最终Promise代码</h3><p>解决了上面两个常见问题，最终的代码如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">hello().then(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'成功'</span>);</span><br><span class="line">&#125;, reason =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'失败'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'执行a'</span>);</span><br><span class="line">      a().then(</span><br><span class="line">        value =&gt; &#123;</span><br><span class="line">            <span class="keyword">return</span> delay(<span class="number">2000</span>);</span><br><span class="line">        &#125;, reason =&gt; <span class="built_in">Promise</span>.reject(reason)).then(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'执行b'</span>);</span><br><span class="line">            <span class="keyword">return</span> b();</span><br><span class="line">      &#125;, reason =&gt; <span class="built_in">Promise</span>.reject(reason)).then(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'执行c'</span>);</span><br><span class="line">            <span class="keyword">return</span> c();</span><br><span class="line">      &#125;, reason =&gt; <span class="built_in">Promise</span>.reject(reason)).then(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'执行d'</span>);</span><br><span class="line">            <span class="keyword">return</span> d();</span><br><span class="line">      &#125;, reason =&gt; <span class="built_in">Promise</span>.reject(reason)).then(</span><br><span class="line">        resolve, reject</span><br><span class="line">      );</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">          resolve(<span class="string">'a执行成功'</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        reject(<span class="string">'a执行失败，结束'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="literal">false</span>) &#123;</span><br><span class="line">        resolve(<span class="string">'b执行成功'</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        reject(<span class="string">'b执行失败，结束'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">c</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        resolve(<span class="string">'c执行成功'</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        reject(<span class="string">'c执行失败，结束'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">d</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        resolve(<span class="string">'d执行成功'</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        reject(<span class="string">'d执行失败，结束'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">delay</span>(<span class="params">delayTime</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">          resolve();</span><br><span class="line">        &#125;, delayTime);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
     </div>
 
     
@@ -270,6 +279,9 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+                <a href="/2020/09/26/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Promise/" rel="prev" title="深入分析Promise">
+                  深入分析Promise <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
       </footer>
@@ -324,7 +336,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -359,12 +371,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">122k</span>
+    <span title="Symbols count total">126k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:51</span>
+    <span title="Reading time total">1:54</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
