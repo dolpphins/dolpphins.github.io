@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="Android中实现代码热修复有好几种方法，本文将采用Tinker的修复原理，实现代码，资源，so等热修复。 一、代码修复1. 原理原理是比较简单的，本质就是App在运行时，会有个dex数组，当要用到的class不存在时，就顺序从dex数组中寻找，只要找到就停止，因此可以把修复好的dex插入到这个dex数组最前面，那么找的时候就会找到修复好dex中的class，而不再是旧的有问题的class。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-11-20T11:29:26.661Z">
+<meta property="og:updated_time" content="2020-11-21T14:41:33.566Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2020/11/20/%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/">
@@ -195,10 +195,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-11-20 19:28:50 / Modified: 19:29:26" itemprop="dateCreated datePublished" datetime="2020-11-20T19:28:50+08:00">2020-11-20</time>
+              <time title="Created: 2020-11-20 19:28:50" itemprop="dateCreated datePublished" datetime="2020-11-20T19:28:50+08:00">2020-11-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-21 22:41:33" itemprop="dateModified" datetime="2020-11-21T22:41:33+08:00">2020-11-21</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -213,14 +219,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.4k</span>
+              <span>4.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>4 mins.</span>
             </span>
 
         </div>
@@ -314,6 +320,63 @@
 </li>
 </ol>
 <p>注意这里dex会有缓存，因此这个补丁操作必须尽早执行，如果已经用过某个class后再执行补丁操作，就不会生效了。</p>
+<h3 id="二、资源修复"><a href="#二、资源修复" class="headerlink" title="二、资源修复"></a>二、资源修复</h3><h4 id="1-原理-1"><a href="#1-原理-1" class="headerlink" title="1. 原理"></a>1. 原理</h4><p>ActivityThread中有个ArrayMap&lt;String, WeakReference<loadedapk>&gt;变量mPackages，保存包名和LoadedApk的键值对，一般都是只有一个，我们只需要变量这些键值对，拿到对于的LoadedApk对象，然后修改其中的mResDir字符串的值为新的资源包的路径，后面在创建AssetManager时就会指定为新的资源路径，也就实现了资源的替换。</loadedapk></p>
+<h4 id="2-动手写代码-1"><a href="#2-动手写代码-1" class="headerlink" title="2. 动手写代码"></a>2. 动手写代码</h4><pre><code>private void doPatchResources() {
+    try {
+        File patchResDir = getDir(&quot;patch_res&quot;, Context.MODE_PRIVATE);
+        if (!patchResDir.isDirectory()) {
+            patchResDir.mkdirs();
+        }
+        File patchResFile = new File(patchResDir, &quot;fix.apk&quot;);
+        if (!patchResFile.isFile()) {
+            // 没有补丁资源
+            return;
+        }
+        // printFields();
+        // 获取ContextImpl对象
+        Field mBaseField = this.getClass().getSuperclass().getSuperclass().getDeclaredField(&quot;mBase&quot;);
+        mBaseField.setAccessible(true);
+        Object mBase = mBaseField.get(this);
+        Log.i(TAG, &quot;mBase:&quot; + mBase);
+        // 获取ActivityThread对象
+        Field mMainThreadField = mBase.getClass().getDeclaredField(&quot;mMainThread&quot;);
+        mMainThreadField.setAccessible(true);
+        Object mMainThread = mMainThreadField.get(mBase);
+        Log.i(TAG, &quot;mMainThread:&quot; + mMainThread);
+
+        // 获取mPackages
+        Field mPackagesField = mMainThread.getClass().getDeclaredField(&quot;mPackages&quot;);
+        mPackagesField.setAccessible(true);
+        ArrayMap&lt;String, WeakReference&lt;?&gt;&gt; mPackages = (ArrayMap&lt;String, WeakReference&lt;?&gt;&gt;) mPackagesField.get(mMainThread);
+        for (String key : mPackages.keySet()) {
+            Log.i(TAG, &quot;key:&quot; + key);
+            Object value = mPackages.get(key).get();
+            Log.i(TAG, &quot;value:&quot; + value);
+
+            Field mResDirField = value.getClass().getDeclaredField(&quot;mResDir&quot;);
+            mResDirField.setAccessible(true);
+            String mResDir = (String) mResDirField.get(value);
+            Log.i(TAG, &quot;mResDir:&quot; + mResDir);
+            // 修改mResDir的值
+            String newPath = patchResFile.getAbsolutePath();
+            mResDirField.set(value, newPath);
+        }
+    } catch (Throwable t) {
+        t.printStackTrace();
+    }
+}</code></pre><p>这里也是分为几个步骤：</p>
+<ol>
+<li><p>打包好新的资源包fix.apk，手动放到私有目录下。</p>
+</li>
+<li><p>拿到Application对象的ContextImpl对象，再拿到其中的ActivityThread对象，一个进程对应有一个。</p>
+</li>
+<li><p>拿到ActivityThread对象中的mPackages，也就是ArrayMap&lt;String, WeakReference<loadedapk>&gt;表。</loadedapk></p>
+</li>
+<li><p>遍历该表，获取到LoadedApk对象，修改其中的mResDir为fix.apk路径。</p>
+</li>
+<li><p>这样后面在创建AssetManager对象时，资源路径就是这个fix.apk的路径，获取到的资源也就是新的。</p>
+</li>
+</ol>
 
     </div>
 
@@ -373,7 +436,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、代码修复"><span class="nav-number">1.</span> <span class="nav-text">一、代码修复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-原理"><span class="nav-number">1.1.</span> <span class="nav-text">1. 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-动手写代码"><span class="nav-number">1.2.</span> <span class="nav-text">2. 动手写代码</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、代码修复"><span class="nav-number">1.</span> <span class="nav-text">一、代码修复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-原理"><span class="nav-number">1.1.</span> <span class="nav-text">1. 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-动手写代码"><span class="nav-number">1.2.</span> <span class="nav-text">2. 动手写代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、资源修复"><span class="nav-number">2.</span> <span class="nav-text">二、资源修复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-原理-1"><span class="nav-number">2.1.</span> <span class="nav-text">1. 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-动手写代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">2. 动手写代码</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -424,12 +487,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">136k</span>
+    <span title="Symbols count total">138k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:04</span>
+    <span title="Reading time total">2:06</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
