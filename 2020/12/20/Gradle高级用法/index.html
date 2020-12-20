@@ -50,14 +50,14 @@
   };
 </script>
 
-  <meta name="description" content="一、自定义Gradle插件步骤如下： 创建空目录，命名HelloPlugin。  进入HelloPlugin目录下，新建build.gradle，写如下脚本代码： apply plugin: &amp;apos;groovy&amp;apos; apply plugin: &amp;apos;maven&amp;apos; dependencies {     implementation gradleApi()     imp">
+  <meta name="description" content="一、自定义Gradle插件步骤如下： 创建空目录，命名HelloPlugin。  进入HelloPlugin目录下，新建build.gradle，写如下脚本代码： apply plugin: &amp;apos;groovy&amp;apos; apply plugin: &amp;apos;maven&amp;apos;  dependencies {     implementation gradleApi()     im">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gradle高级用法">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;12&#x2F;20&#x2F;Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="一、自定义Gradle插件步骤如下： 创建空目录，命名HelloPlugin。  进入HelloPlugin目录下，新建build.gradle，写如下脚本代码： apply plugin: &amp;apos;groovy&amp;apos; apply plugin: &amp;apos;maven&amp;apos; dependencies {     implementation gradleApi()     imp">
+<meta property="og:description" content="一、自定义Gradle插件步骤如下： 创建空目录，命名HelloPlugin。  进入HelloPlugin目录下，新建build.gradle，写如下脚本代码： apply plugin: &amp;apos;groovy&amp;apos; apply plugin: &amp;apos;maven&amp;apos;  dependencies {     implementation gradleApi()     im">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-12-20T02:57:24.316Z">
+<meta property="og:updated_time" content="2020-12-20T03:01:13.986Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2020/12/20/Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-12-20 10:56:43 / Modified: 10:57:24" itemprop="dateCreated datePublished" datetime="2020-12-20T10:56:43+08:00">2020-12-20</time>
+              <time title="Created: 2020-12-20 10:56:43 / Modified: 11:01:13" itemprop="dateCreated datePublished" datetime="2020-12-20T10:56:43+08:00">2020-12-20</time>
             </span>
 
           
@@ -237,8 +237,9 @@
 </li>
 <li><p>进入HelloPlugin目录下，新建build.gradle，写如下脚本代码：</p>
 <pre><code>apply plugin: &apos;groovy&apos;
-apply plugin: &apos;maven&apos;</code></pre></li>
-</ol><pre><code>dependencies {
+apply plugin: &apos;maven&apos;
+
+dependencies {
     implementation gradleApi()
     implementation localGroovy()
 }
@@ -258,9 +259,7 @@ uploadArchives {
             repository(url: uri(&apos;../repos&apos;))
         }
     }
-}</code></pre><a id="more"></a>
-
-<ol start="3">
+}</code></pre></li>
 <li><p>新增目录src/main/groovy/com/mtan/plugin，新建HelloPlugin.groovy类，代码：</p>
 <pre><code>package com.mtan.plugin;
 
@@ -277,7 +276,8 @@ public class HelloPlugin implements Plugin&lt;Project&gt; {
 <pre><code>implementation-class=com.mtan.plugin.HelloPlugin</code></pre></li>
 <li><p>项目导入idea中，执行uploadArchives任务，即可完成插件上传。</p>
 </li>
-</ol>
+</ol><a id="more"></a>
+
 <h3 id="二、自定义Task"><a href="#二、自定义Task" class="headerlink" title="二、自定义Task"></a>二、自定义Task</h3><ol>
 <li><p>在com.mtan.plugin包下新建task包，然后新建TestTask，注意后缀必须是groovy，不是java，代码如下：</p>
 <pre><code>package com.mtan.plugin.task;

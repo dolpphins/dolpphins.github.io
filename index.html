@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-12-20 10:56:43 / Modified: 10:57:24" itemprop="dateCreated datePublished" datetime="2020-12-20T10:56:43+08:00">2020-12-20</time>
+              <time title="Created: 2020-12-20 10:56:43 / Modified: 11:01:13" itemprop="dateCreated datePublished" datetime="2020-12-20T10:56:43+08:00">2020-12-20</time>
             </span>
 
           <br>
@@ -230,8 +230,9 @@
 </li>
 <li><p>进入HelloPlugin目录下，新建build.gradle，写如下脚本代码：</p>
 <pre><code>apply plugin: &apos;groovy&apos;
-apply plugin: &apos;maven&apos;</code></pre></li>
-</ol><pre><code>dependencies {
+apply plugin: &apos;maven&apos;
+
+dependencies {
     implementation gradleApi()
     implementation localGroovy()
 }
@@ -251,7 +252,24 @@ uploadArchives {
             repository(url: uri(&apos;../repos&apos;))
         }
     }
-}</code></pre>
+}</code></pre></li>
+<li><p>新增目录src/main/groovy/com/mtan/plugin，新建HelloPlugin.groovy类，代码：</p>
+<pre><code>package com.mtan.plugin;
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+public class HelloPlugin implements Plugin&lt;Project&gt; {
+
+    public void apply(Project project) {
+        println &apos;HelloPlugin apply&apos;
+    }
+}</code></pre></li>
+<li><p>新建目录src/main/resources/META-INF/gradle-plugins，新增com.mtan.plugin.properties文件，代码：</p>
+<pre><code>implementation-class=com.mtan.plugin.HelloPlugin</code></pre></li>
+<li><p>项目导入idea中，执行uploadArchives任务，即可完成插件上传。</p>
+</li>
+</ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/12/20/Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/#more" rel="contents">
