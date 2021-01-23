@@ -50,16 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="专注于写有深度的技术文章">
-<meta property="og:type" content="website">
-<meta property="og:title" content="麦田Coder">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;index.html">
+  <meta name="description" content="在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。asyncasync只需要记住两点就可以： async函数最终都将返回一个Promise对象，返回值通过resolve的参数传递。  比如这段代码： async function test() {     return &amp;quot;hello js&amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中的async和await">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;01&#x2F;23&#x2F;Javascript%E4%B8%AD%E7%9A%84async%E5%92%8Cawait&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="专注于写有深度的技术文章">
+<meta property="og:description" content="在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。asyncasync只需要记住两点就可以： async函数最终都将返回一个Promise对象，返回值通过resolve的参数传递。  比如这段代码： async function test() {     return &amp;quot;hello js&amp;quo">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-01-23T03:16:39.023Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/archives/">
+<link rel="canonical" href="http://yoursite.com/2021/01/23/Javascript%E4%B8%AD%E7%9A%84async%E5%92%8Cawait/">
 
 
 <script id="page-configurations">
@@ -67,13 +68,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
-    isArchive: true
+    isArchive: false
   };
 </script>
 
-  <title>Archive | 麦田Coder</title>
+  <title>Javascript中的async和await | 麦田Coder</title>
   
 
 
@@ -167,236 +168,144 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">OK! 34 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/23/Javascript%E4%B8%AD%E7%9A%84async%E5%92%8Cawait/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript中的async和await
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-23 11:16:05 / Modified: 11:16:39" itemprop="dateCreated datePublished" datetime="2021-01-23T11:16:05+08:00">2021-01-23</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2021</h1>
-    </div>
+        <p>在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。</p><h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p>async只需要记住两点就可以：</p><ol>
+<li><p>async函数最终都将返回一个Promise对象，返回值通过resolve的参数传递。</p>
+<p> 比如这段代码：</p>
+<pre><code>async function test() {
+    return &quot;hello js&quot;
+}</code></pre><p> 实际上等价于：</p>
+<pre><code>async function test() {
+    return Promise.resolve(&quot;hello js&quot;);
+}</code></pre><p> 因此在调用test函数时，可以在then中获取到结果：</p>
+<pre><code>test().then(value =&gt; {
+  console.log(value);
+})</code></pre><p> 所以所有的async函数都不会阻塞当前后面代码的执行，结果需要在then中获取。</p>
+</li>
+<li><p>await所在的函数必须加上async。</p>
+<p> 这个是语法规定的，没什么好说。</p>
+</li>
+</ol><a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-01-23T11:16:05+08:00"
-              content="2021-01-23">
-          01-23
-        </time>
-      </div>
+<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>await可以是等表达式，普通函数，或者Promise对象，当表达式计算完成了，普通函数执行结束了，Promise对象resolve了，那么await就等到结果了，继续往下执行async函数内接下来的代码，而async函数外的代码，在await时就会被执行。</p>
+<p>举个例子：</p>
+<pre><code>function a() {
+  return new Promise((resolve, reject) =&gt; {
+    for (let i = 0; i &lt; 100000; i++) {
+      for (let j = 0; j &lt; 100000; j++) {}
+    }
+    resolve(&apos;haha&apos;);
+  });
+}
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2021/01/23/Javascript%E4%B8%AD%E7%9A%84async%E5%92%8Cawait/" itemprop="url">
-            <span itemprop="name">Javascript中的async和await</span>
-          </a>
-      </h2>
+async function b() {
+    let result = await a();
+    console.log(result);
+}
 
-    </header>
-  </article>
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-12-20T10:56:43+08:00"
-              content="2020-12-20">
-          12-20
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/12/20/Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/" itemprop="url">
-            <span itemprop="name">Gradle高级用法</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-11-20T19:28:50+08:00"
-              content="2020-11-20">
-          11-20
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/11/20/%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/" itemprop="url">
-            <span itemprop="name">动手实现Android热修复</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-10-07T22:26:49+08:00"
-              content="2020-10-07">
-          10-07
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/10/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%BA%93DataBinding/" itemprop="url">
-            <span itemprop="name">深入理解Android数据绑定库DataBinding</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-26T10:43:57+08:00"
-              content="2020-09-26">
-          09-26
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/09/26/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Promise/" itemprop="url">
-            <span itemprop="name">深入分析Promise</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-19T14:21:44+08:00"
-              content="2020-09-19">
-          09-19
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/09/19/%E4%BD%BF%E7%94%A8Promise%E8%A7%A3%E5%86%B3%E4%BB%A3%E7%A0%81%E5%B5%8C%E5%A5%97%E9%97%AE%E9%A2%98/" itemprop="url">
-            <span itemprop="name">使用Promise解决代码嵌套问题</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-08-01T17:53:55+08:00"
-              content="2020-08-01">
-          08-01
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/08/01/JavaScript%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" itemprop="url">
-            <span itemprop="name">JavaScript基础知识总结</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-11T18:59:09+08:00"
-              content="2020-07-11">
-          07-11
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/07/11/Android%E4%B8%AD%E7%9A%84Kotlin%E5%9F%BA%E7%A1%80/" itemprop="url">
-            <span itemprop="name">Android中的Kotlin基础</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-13T21:18:07+08:00"
-              content="2020-06-13">
-          06-13
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/06/13/EventBus%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/" itemprop="url">
-            <span itemprop="name">EventBus原理剖析</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-13T12:24:09+08:00"
-              content="2020-06-13">
-          06-13
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/" itemprop="url">
-            <span itemprop="name">【HDU5831】Rikka with Parenthesis II</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
+b();
+console.log(&apos;22222&apos;);</code></pre><p>在函数b里，await了函数a，当Promise对象resolve之后，才继续往下执行代码，打印出haha，而在await的同时，外部代码继续执行，打印2222，因此2222会在haha之前打印。</p>
+<p>可以使用await减少then链的出现，如果上面的例子不用await，又要打印haha，那么就需要这样子写：</p>
+<pre><code>async function b() {
+    a().then(value =&gt; {
+      console.log(value);
+    })
+}</code></pre><p>很明显，这种写法可读性没有上面那种好，如果有很多then，那可读性就更差了。</p>
 
     </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/12/20/Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/" rel="next" title="Gradle高级用法">
+                  <i class="fa fa-chevron-left"></i> Gradle高级用法
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
-  
-  
-  
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
-
 
 
           </div>
@@ -425,6 +334,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">2.</span> <span class="nav-text">await</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
