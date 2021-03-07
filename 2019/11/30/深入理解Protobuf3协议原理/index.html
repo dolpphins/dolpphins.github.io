@@ -58,7 +58,7 @@
 <meta property="og:description" content="Protobuf是什么全称为Protocol Buffers，Google推出的序列化框架，用于将自定义数据结构序列化成字节流，和将字节流反序列化为数据结构，该框架不依赖开发语言，也不依赖运行平台，扩展性好，目前支持的语言比较多，包括Java，C++，Python，Ruby等。使用Protobuf在这里使用Windows和Java进行实例演示：">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;protobuf_wire_type.png">
-<meta property="og:updated_time" content="2019-11-30T04:23:52.689Z">
+<meta property="og:updated_time" content="2021-03-07T11:22:10.313Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;protobuf_wire_type.png">
 
@@ -197,10 +197,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2019-11-30 11:59:08 / Modified: 12:23:52" itemprop="dateCreated datePublished" datetime="2019-11-30T11:59:08+08:00">2019-11-30</time>
+              <time title="Created: 2019-11-30 11:59:08" itemprop="dateCreated datePublished" datetime="2019-11-30T11:59:08+08:00">2019-11-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-07 19:22:10" itemprop="dateModified" datetime="2021-03-07T19:22:10+08:00">2021-03-07</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -215,14 +221,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.9k</span>
+              <span>5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -345,6 +351,7 @@ message Animal {
 <li>可读性差：因为最终是转成二进制流，不像xml和json能够直接查看明文。</li>
 </ul>
 <h2 id="Protobuf使用场景"><a href="#Protobuf使用场景" class="headerlink" title="Protobuf使用场景"></a>Protobuf使用场景</h2><p>最重要的，技术最后还是得应用到具体的场景中，对于protobuf的使用场景，简单来说，业务要求命中其优点越多，缺点越少，就更能够使用Protobuf，比如说在某些场景对消息大小很敏感，或者传输的数据量不大，比如说APP登录场景，那么可以考虑使用Protobuf。</p>
+<p>补充：最新版MMKV库内部也用到了protobuf，用于将数据进行序列化，然后存到映射文件中。</p>
 
     </div>
 
@@ -463,7 +470,7 @@ message Animal {
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:21</span>
+    <span title="Reading time total">2:22</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
