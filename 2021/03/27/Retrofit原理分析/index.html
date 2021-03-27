@@ -50,17 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="题意 As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them: Correct parentheses sequences can be defined recursive">
+  <meta name="description" content="前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。基础用法 定义接口 interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit = new">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【HDU5831】Rikka with Parenthesis II">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;06&#x2F;13&#x2F;%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II&#x2F;index.html">
+<meta property="og:title" content="Retrofit原理分析">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;27&#x2F;Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="题意 As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them: Correct parentheses sequences can be defined recursive">
+<meta property="og:description" content="前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。基础用法 定义接口 interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit = new">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-06-13T04:24:38.871Z">
+<meta property="og:updated_time" content="2021-03-27T02:10:03.827Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/">
+<link rel="canonical" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>【HDU5831】Rikka with Parenthesis II | 麦田Coder</title>
+  <title>Retrofit原理分析 | 麦田Coder</title>
   
 
 
@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E3%80%90HDU5831%E3%80%91Rikka-with-Parenthesis-II/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -186,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          【HDU5831】Rikka with Parenthesis II
+          Retrofit原理分析
         </h1>
 
         <div class="post-meta">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-06-13 12:24:09 / Modified: 12:24:38" itemprop="dateCreated datePublished" datetime="2020-06-13T12:24:09+08:00">2020-06-13</time>
+              <time title="Created: 2021-03-27 10:03:59 / Modified: 10:10:03" itemprop="dateCreated datePublished" datetime="2021-03-27T10:03:59+08:00">2021-03-27</time>
             </span>
 
           
@@ -213,14 +213,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.8k</span>
+              <span>2.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -232,121 +232,106 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h3><blockquote>
-<p>As we know, Rikka is poor at math. Yuta is worrying about this situation, so he gives Rikka some math tasks to practice. There is one of them:</p>
-<p>Correct parentheses sequences can be defined recursively as follows:<br>1.The empty string “” is a correct sequence.<br>2.If “X” and “Y” are correct sequences, then “XY” (the concatenation of X and Y) is a correct sequence.<br>3.If “X” is a correct sequence, then “(X)” is a correct sequence.<br>Each correct parentheses sequence can be derived using the above rules.<br>Examples of correct parentheses sequences include “”, “()”, “()()()”, “(()())”, and “(((())))”.</p>
-<p>Now Yuta has a parentheses sequence S, and he wants Rikka to choose two different position i,j and swap Si,Sj.</p>
-<p>Rikka likes correct parentheses sequence. So she wants to know if she can change S to a correct parentheses sequence after this operation.</p>
-<p>It is too difficult for Rikka. Can you help her?</p>
-</blockquote><a id="more"></a>
-<h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><blockquote>
-<p>The first line contains a number t(1&lt;=t&lt;=1000), the number of the testcases. And there are no more then 10 testcases with n&gt;100</p>
-</blockquote>
-<blockquote>
-<p>For each testcase, the first line contains an integers n(1&lt;=n&lt;=100000), the length of S. And the second line contains a string of length S which only contains ‘(’ and ‘)’.</p>
-</blockquote>
-<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><blockquote>
-<p>For each testcase, print “Yes” or “No” in a line.</p>
-</blockquote>
-<h3 id="样例输入"><a href="#样例输入" class="headerlink" title="样例输入"></a>样例输入</h3><pre><code>3
-4
-())(
-4
-()()
-6
-)))(((</code></pre><h3 id="样例输出"><a href="#样例输出" class="headerlink" title="样例输出"></a>样例输出</h3><pre><code>Yes
-Yes
-No</code></pre><h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><blockquote>
-<p>For the second sample input, Rikka can choose (1,3) or (2,4) to swap. But do nothing is not allowed.</p>
-</blockquote>
-<h3 id="题解分析"><a href="#题解分析" class="headerlink" title="题解分析"></a>题解分析</h3><p>这题就是判断给定的括号串是否合法的变形题，题目要求必须交换两个位置的字符，因此大的思路还是一样，采用栈保存左括号，然后遍历给定的字符串，分情况处理：</p>
-<ol>
-<li><p>栈为空：</p>
-<p> （1） s[i]为’(‘，一定是进栈。</p>
-<p> （2） s[i]为’)’，一定要交换，显然肯定是跟’(‘交换，因此这里改为’)’，然后进栈，标记为changed置为true，表示已经进行交换了，至于跟谁交换，不用关心。如果changed已经为true，说明之前交换过一次了，按照题意只能交换一次，因此无解直接break跳出循环。</p>
-</li>
-<li><p>栈不为空：</p>
-<p> （1） s[i]为’(‘，一定是进栈。</p>
-<p> （2） s[i]为’)’，跟栈顶的’(‘匹配，栈顶元素出栈。</p>
-</li>
-</ol>
-<p>遍历结束后，对结果进行讨论分析：</p>
-<ol>
-<li><p>遍历完整个字符串，changed为false，栈为空，也就是说输入给的字符串本来就说合法的括号匹配序列，不需要交换，但因为题目要求一定要进行一次交换，因此这里需要特殊处理一下：</p>
-<p> （1）字符串长度&gt;2，显然我可以随便交换两个’)’或者’(‘从而达到题目的要求，因此输出”Yes”。</p>
-<p> （2）字符串长度&lt;=2，那没办法，输出”No”。</p>
-</li>
-<li><p>遍历完整个字符串，changed为true，栈不为空而且元素个数为2，这时如果栈的元素都是’(‘，也就是2个’(‘，因为刚才我们把’)’换成了’(‘，因此这里的第二个’(‘必须换成’)’，也就是说栈的元素最终由两个’(‘变成一个’(‘和一个’)’，刚好匹配，因此输出”Yes”。</p>
-</li>
-<li><p>其它情况都输出”No”。</p>
-</li>
-</ol>
-<h3 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h3><pre><code>#include &lt;iostream&gt;
-#include &lt;string&gt;
-#include &lt;cstring&gt;
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-#include &lt;algorithm&gt;
-#include &lt;map&gt;
-#include &lt;stack&gt;
-
-using namespace std;
-
-int main() {
-
-    int t;
-    int n;
-    string s;
-    cin &gt;&gt; t;
-    while (t--) {
-        cin &gt;&gt; n;
-        cin &gt;&gt; s;
-        stack&lt;char&gt; st;
-        bool changed = false;
-        int i = 0;
-        for (; i &lt; n; i++) {
-            if (st.empty()) {
-                // 栈为空
-                if (s[i] == &apos;(&apos;) {
-                    st.push(&apos;(&apos;);
-                } else {
-                    if (changed) {
-                        break;
-                    }
-                    changed = true;
-                    st.push(&apos;(&apos;);
-                }
-            } else {
-                // 栈不为空
-                if (s[i] == &apos;(&apos;) {
-                    st.push(&apos;(&apos;);
-                } else {
-                    st.pop();
-                }
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。</p><h3 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h3><ol>
+<li><p>定义接口</p>
+<pre><code>interface Animal {
+    @GET(&quot;/&quot;)
+    Call&lt;ResponseBody&gt; get();
+}</code></pre></li>
+<li><p>创建Retrofit对象：</p>
+<pre><code>Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(&quot;https://mtancode.com&quot;)
+        .build();</code></pre></li>
+<li><p>调用接口方法：</p>
+<pre><code>Animal animal = retrofit.create(Animal.class);
+    animal.get().enqueue(new Callback&lt;ResponseBody&gt;() {
+        @Override
+        public void onResponse(Call&lt;ResponseBody&gt; call,
+                               Response&lt;ResponseBody&gt; response) {
+            try {
+                Log.i(&quot;test&quot;, response.body().string());
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
         }
-        if (i == n &amp;&amp; !changed &amp;&amp; st.empty()) {
-            if (n &gt; 2) {
-                cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;
-            } else {
-                cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
-            }
-        } else if (i == n &amp;&amp; changed &amp;&amp; st.size() == 2) {
-            char c1 = st.top();
-            st.pop();
-            char c2 = st.top();
-            if (c1 == &apos;(&apos; &amp;&amp; c2 == &apos;(&apos;) {
-                cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;
-            } else {
-                cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
-            }
-        } else {
-            cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;
+
+        @Override
+        public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
+            Log.i(&quot;test&quot;, &quot;onFailure&quot;);
         }
+    });</code></pre><p> 请求结果在onResponse回调中获取到，该回调运行在UI线程中。</p>
+</li>
+</ol><a id="more"></a>
+
+<h3 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h3><ol>
+<li><p>常用的注解还有：</p>
+<p> @Query：GET方式单个请求参数。</p>
+<p> @QueryMap：GET方式多个请求参数。</p>
+<p> @Path：url部分动态传入。</p>
+<p> @Url：url整体动态传入。</p>
+<p> @Field：POST方式单个请求参数。</p>
+<p> @FieldMap：POST方式多个请求参数。</p>
+<p> @Body：POST方式多个不同类型的请求参数。</p>
+</li>
+<li><p>addCallAdapterFactory</p>
+<p> 改变接口返回类型，默认是retrofit2.Call，而其enqueue方法内部就是用okhttp实现网络请求的，如果要改成用其它请求方式（比如项目已有的网络请求框架，RxJava等），就可以自定义CallAdapter，然后接口返回自己的类型，再调用方法使用自己的请求方式，自定义CallAdapter需要三个类CustomCall，CustomCallAdapter和CustomCallAdapterFactory，如下：</p>
+<pre><code>private static class CustomCall&lt;T&gt; {
+    private Call call;
+    CustomCall(Call call) {
+        this.call = call;
+    }
+    public void request() {
+        // TODO 自定义网络请求逻辑
+    }
+}
+
+private static class CustomCallAdapter implements CallAdapter&lt;CustomCall, Object&gt; {
+
+    @Override
+    public Type responseType() {
+        return ResponseBody.class;
     }
 
-    return 0;
-}</code></pre>
+    @Override
+    public Object adapt(Call call) {
+        Log.i(&quot;test&quot;, call.toString());
+        return new CustomCall(call);
+    }
+}
+
+private static class CustomCallAdapterFactory extends CallAdapter.Factory {
+
+    @Override
+    public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+        return new CustomCallAdapter();
+    }
+}</code></pre></li>
+<li><p>addConverterFactory</p>
+<p> 处理转换请求数据和响应数据，改变接口返回值中的泛型类型，默认是ResponseBody。</p>
+</li>
+</ol>
+<h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><ol>
+<li><p>在调用接口后返回的是Call对象，之后的enqueue方法是OkHttp的，而之前就是Retrofit的。</p>
+</li>
+<li><p>Retrofit对象通过Builder进行配置，然后创建，可以配置url，转换器等等。</p>
+</li>
+<li><p>调用Retrofit的create方法，里面使用的是Java动态代理，最终会返回一个接口代理对象。</p>
+</li>
+<li><p>调用接口代理对象的方法，根据Java动态代理原理，会调用到InvocationHandler的invoke方法，在该方法中，会去解析所调用的接口方法的注解，最终生成OkHttp所需要的Call对象。</p>
+</li>
+<li><p>调用Call对象的enqueue方法执行网络请求。</p>
+</li>
+</ol>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><ol>
+<li><p>创建Retrofit对象：首次20ms左右，因为内部会创建OkHttpClient对象，底层会涉及到ssl相关初始化，首次创建会比较耗时。</p>
+</li>
+<li><p>create动态代理对象：0~1ms，基本不耗时。</p>
+</li>
+<li><p>调用接口方法：首次5ms左右，因为首次会去解析注解，会比较慢，后面有缓存，就基本不耗时了。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Retrofit库代码量很少，功能也比较简单，主要就是用来简化网络请求的封装，它的整体设计思想和架构设计都值得借鉴。</p>
+
     </div>
 
     
@@ -359,17 +344,14 @@ int main() {
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2020/06/06/ARouter%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8BActivity%E8%B7%B3%E8%BD%AC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" rel="next" title="ARouter框架原理剖析之Activity跳转实现原理">
-                  <i class="fa fa-chevron-left"></i> ARouter框架原理剖析之Activity跳转实现原理
+                <a href="/2021/02/27/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%BC%95%E5%85%A5DataBinding%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="next" title="项目中引入DataBinding遇到的问题和解决方案">
+                  <i class="fa fa-chevron-left"></i> 项目中引入DataBinding遇到的问题和解决方案
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2020/06/13/EventBus%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/" rel="prev" title="EventBus原理剖析">
-                  EventBus原理剖析 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -408,7 +390,7 @@ int main() {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#题意"><span class="nav-number">1.</span> <span class="nav-text">题意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入"><span class="nav-number">2.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出"><span class="nav-number">3.</span> <span class="nav-text">输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例输入"><span class="nav-number">4.</span> <span class="nav-text">样例输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样例输出"><span class="nav-number">5.</span> <span class="nav-text">样例输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提示"><span class="nav-number">6.</span> <span class="nav-text">提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题解分析"><span class="nav-number">7.</span> <span class="nav-text">题解分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AC代码"><span class="nav-number">8.</span> <span class="nav-text">AC代码</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础用法"><span class="nav-number">2.</span> <span class="nav-text">基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级用法"><span class="nav-number">3.</span> <span class="nav-text">高级用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理分析"><span class="nav-number">4.</span> <span class="nav-text">原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能分析"><span class="nav-number">5.</span> <span class="nav-text">性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
