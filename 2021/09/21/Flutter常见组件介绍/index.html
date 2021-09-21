@@ -50,17 +50,19 @@
   };
 </script>
 
-  <meta name="description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
+  <meta name="description" content="前言Flutter的组件很多，接下来介绍开发过程中常见的一些组件，先上类图：常见组件基本组件 Text   文本组件。  Image   图片组件。  RaisedButton、FlatButton、OutlineButton、IconButton   按钮组件，也可以实现样式自定义。  Icon   图标组件。  TextField   输入框组件。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Retrofit原理分析">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;27&#x2F;Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90&#x2F;index.html">
+<meta property="og:title" content="Flutter常见组件介绍">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;09&#x2F;21&#x2F;Flutter%E5%B8%B8%E8%A7%81%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
+<meta property="og:description" content="前言Flutter的组件很多，接下来介绍开发过程中常见的一些组件，先上类图：常见组件基本组件 Text   文本组件。  Image   图片组件。  RaisedButton、FlatButton、OutlineButton、IconButton   按钮组件，也可以实现样式自定义。  Icon   图标组件。  TextField   输入框组件。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-09-21T12:46:35.166Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;flutter_1.jpg">
+<meta property="og:updated_time" content="2021-09-21T13:21:31.427Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;flutter_1.jpg">
 
-<link rel="canonical" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="http://yoursite.com/2021/09/21/Flutter%E5%B8%B8%E8%A7%81%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
 
 
 <script id="page-configurations">
@@ -74,7 +76,7 @@
   };
 </script>
 
-  <title>Retrofit原理分析 | 麦田Coder</title>
+  <title>Flutter常见组件介绍 | 麦田Coder</title>
   
 
 
@@ -173,7 +175,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/09/21/Flutter%E5%B8%B8%E8%A7%81%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -186,7 +188,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Retrofit原理分析
+          Flutter常见组件介绍
         </h1>
 
         <div class="post-meta">
@@ -195,16 +197,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-03-27 22:09:29" itemprop="dateCreated datePublished" datetime="2021-03-27T22:09:29+08:00">2021-03-27</time>
+              <time title="Created: 2021-09-21 21:19:18 / Modified: 21:21:31" itemprop="dateCreated datePublished" datetime="2021-09-21T21:19:18+08:00">2021-09-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-21 20:46:35" itemprop="dateModified" datetime="2021-09-21T20:46:35+08:00">2021-09-21</time>
-              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -219,14 +215,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.2k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -238,105 +234,96 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。</p><h3 id="二、基础用法"><a href="#二、基础用法" class="headerlink" title="二、基础用法"></a>二、基础用法</h3><ol>
-<li><p>定义接口：</p>
-<pre><code>interface Animal {
-    @GET(&quot;/&quot;)
-    Call&lt;ResponseBody&gt; get();
-}</code></pre></li>
-<li><p>创建Retrofit对象：</p>
-<pre><code>Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(&quot;https://mtancode.com&quot;)
-        .build();</code></pre></li>
-<li><p>调用接口方法：</p>
-<pre><code>Animal animal = retrofit.create(Animal.class);
-animal.get().enqueue(new Callback&lt;ResponseBody&gt;() {
-    @Override
-    public void onResponse(Call&lt;ResponseBody&gt; call,
-                           Response&lt;ResponseBody&gt; response) {
-        try {
-            Log.i(&quot;test&quot;, response.body().string());
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Flutter的组件很多，接下来介绍开发过程中常见的一些组件，先上类图：</p><p><img src="/images/flutter_1.jpg" alt></p><h2 id="常见组件"><a href="#常见组件" class="headerlink" title="常见组件"></a>常见组件</h2><h3 id="基本组件"><a href="#基本组件" class="headerlink" title="基本组件"></a>基本组件</h3><ul>
+<li><p><strong>Text</strong></p>
+<p>  文本组件。</p>
+</li>
+<li><p><strong>Image</strong></p>
+<p>  图片组件。</p>
+</li>
+<li><p><strong>RaisedButton、FlatButton、OutlineButton、IconButton</strong></p>
+<p>  按钮组件，也可以实现样式自定义。</p>
+</li>
+<li><p><strong>Icon</strong></p>
+<p>  图标组件。</p>
+</li>
+<li><p><strong>TextField</strong></p>
+<p>  输入框组件。</p>
+</li>
+</ul><a id="more"></a>
 
-    @Override
-    public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
-        Log.i(&quot;test&quot;, &quot;onFailure&quot;);
-    }
-});</code></pre><p> 请求结果在onResponse回调中获取到，该回调运行在UI线程中。</p>
-</li>
-</ol><a id="more"></a>
 
-<h3 id="三、高级用法"><a href="#三、高级用法" class="headerlink" title="三、高级用法"></a>三、高级用法</h3><ol>
-<li><p>常用的注解还有：</p>
-<p> @Query：GET方式单个请求参数。</p>
-<p> @QueryMap：GET方式多个请求参数。</p>
-<p> @Path：url部分动态传入。</p>
-<p> @Url：url整体动态传入。</p>
-<p> @Field：POST方式单个请求参数。</p>
-<p> @FieldMap：POST方式多个请求参数。</p>
-<p> @Body：POST方式多个不同类型的请求参数。</p>
+<h3 id="容器组件"><a href="#容器组件" class="headerlink" title="容器组件"></a>容器组件</h3><ul>
+<li><p><strong>Container</strong></p>
+<p>  可以指定宽高，背景颜色，边框样式，padding和margin等。</p>
 </li>
-<li><p>addCallAdapterFactory</p>
-<p> 改变接口返回类型，默认是retrofit2.Call，而其enqueue方法内部就是用okhttp实现网络请求的，如果要改成用其它请求方式（比如项目已有的网络请求框架，RxJava等），就可以自定义CallAdapter，然后接口返回自己的类型，再调用方法使用自己的请求方式，自定义CallAdapter需要三个类CustomCall，CustomCallAdapter和CustomCallAdapterFactory，如下：</p>
-<pre><code>private static class CustomCall&lt;T&gt; {
-    private Call call;
-    CustomCall(Call call) {
-        this.call = call;
-    }
-    public void request() {
-        // TODO 自定义网络请求逻辑
-    }
-}
-
-private static class CustomCallAdapter implements CallAdapter&lt;CustomCall, Object&gt; {
-
-    @Override
-    public Type responseType() {
-        return ResponseBody.class;
-    }
-
-    @Override
-    public Object adapt(Call call) {
-        Log.i(&quot;test&quot;, call.toString());
-        return new CustomCall(call);
-    }
-}
-
-private static class CustomCallAdapterFactory extends CallAdapter.Factory {
-
-    @Override
-    public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-        return new CustomCallAdapter();
-    }
-}</code></pre></li>
-<li><p>addConverterFactory</p>
-<p> 处理转换请求数据和响应数据，改变接口返回值中的泛型类型，默认是ResponseBody。</p>
+<li><p><strong>Flex</strong>    </p>
+<p>  弹性布局，是Row和Column的父类，有个direction属性。</p>
 </li>
-</ol>
-<h3 id="四、原理分析"><a href="#四、原理分析" class="headerlink" title="四、原理分析"></a>四、原理分析</h3><ol>
-<li><p>在调用接口后返回的是Call对象，之后的enqueue方法是OkHttp的，而之前就是Retrofit的。</p>
+<li><p><strong>Row</strong></p>
+<p>  横向排列，继承自Flex，仅仅只是指定方向为horizontal，mainAxisSize默认为max，也就是填满主轴方向。</p>
 </li>
-<li><p>Retrofit对象通过Builder进行配置，然后创建，可以配置url，转换器等等。</p>
+<li><p><strong>Column</strong></p>
+<p>  竖向排列，继承自Flex，仅仅只是指定方向为vertical，mainAxisSize默认为max，也就是填满主轴方向。</p>
 </li>
-<li><p>调用Retrofit的create方法，里面使用的是Java动态代理，最终会返回一个接口代理对象。</p>
+<li><p><strong>Flexible</strong></p>
+<p>  fit属性固定为FlexFit.loose，也就是尽可能填满剩余空间但可不填满。</p>
 </li>
-<li><p>调用接口代理对象的方法，根据Java动态代理原理，会调用到InvocationHandler的invoke方法，在该方法中，会去解析所调用的接口方法的注解，最终生成OkHttp所需要的Call对象。</p>
+<li><p><strong>Expanded</strong></p>
+<p>  该组件必须用在Row，Column或者Flex内，有个弹性系数属性flex，继承自Flexible，fit属性固定为FlexFit.tight，也就是强制填满剩余空间。</p>
 </li>
-<li><p>调用Call对象的enqueue方法执行网络请求。</p>
+<li><p><strong>Stack</strong></p>
+<p>  类似Android中的FrameLayout，配合Positioned使用，对于未定位子组件，大小由fit参数决定，StackFit.loose表示子组件自己决定，StackFit.expand表示尽可能大；对于定位子组件，大小由定位参数决定。</p>
 </li>
-</ol>
-<h3 id="五、性能分析"><a href="#五、性能分析" class="headerlink" title="五、性能分析"></a>五、性能分析</h3><ol>
-<li><p>创建Retrofit对象：首次20ms左右，因为内部会创建OkHttpClient对象，底层会涉及到ssl相关初始化，首次创建会比较耗时。</p>
+</ul>
+<h3 id="可滚动组件"><a href="#可滚动组件" class="headerlink" title="可滚动组件"></a>可滚动组件</h3><ul>
+<li><p><strong>SingleChildScrollView</strong></p>
+<p>  滚动布局，滚动方向为水平或者垂直。</p>
 </li>
-<li><p>create动态代理对象：0~1ms，基本不耗时。</p>
+<li><p><strong>ListView</strong></p>
+<p>  有四种方法创建ListView对象，直接初始化children最简单，无复用机制，通过builder进行构建，separated构建带分割线，custom进一步实现自定义，都会有复用机制。</p>
 </li>
-<li><p>调用接口方法：首次5ms左右，因为首次会去解析注解，会比较慢，后面有缓存，就基本不耗时了。</p>
+<li><p><strong>GridView</strong></p>
+<p>  GridView和ListView类似，实现方格布局。</p>
 </li>
-</ol>
-<h3 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h3><p>Retrofit库代码量很少，功能也比较简单，主要就是用来简化网络请求的封装，它的整体设计思想和架构设计都值得借鉴。</p>
+<li><p><strong>CustomScrollView</strong></p>
+<p>  粘合ListView和GridView，实现更复杂的UI组合列表。</p>
+</li>
+</ul>
+<h3 id="约束和定位组件"><a href="#约束和定位组件" class="headerlink" title="约束和定位组件"></a>约束和定位组件</h3><ul>
+<li><p><strong>Align</strong></p>
+<p>  用来调整子组件在父组件中的位置，属性为alignment，根据子组件的宽高确定自身的宽高，属性为widthFactor和heightFactor，假设子组件宽高为w和h，则Align组件的宽高分别是widthFactor * w和heightFactor * h。</p>
+</li>
+<li><p><strong>Center</strong></p>
+<p>  继承自Align，alignment固定为center。</p>
+</li>
+<li><p><strong>Padding</strong></p>
+<p>  设置padding。</p>
+</li>
+<li><p><strong>ConstrainedBox</strong></p>
+<p>  约束子组件的最小宽高，最大宽高。</p>
+</li>
+<li><p><strong>SizedBox</strong></p>
+<p>  继承自ConstrainedBox，约束子组件的宽高。</p>
+</li>
+</ul>
+<h3 id="自定义约束和定位组件"><a href="#自定义约束和定位组件" class="headerlink" title="自定义约束和定位组件"></a>自定义约束和定位组件</h3><ul>
+<li><p><strong>CustomSingleChildLayout</strong></p>
+<p>  定义代理对单子组件实现自定义大小约束，位置偏移等。</p>
+</li>
+<li><p><strong>CustomMultiChildLayout</strong></p>
+<p>  定义代理多子组件实现自定义大小约束，位置偏移等，子组件通过id进行标识。</p>
+</li>
+</ul>
+<h3 id="其它组件"><a href="#其它组件" class="headerlink" title="其它组件"></a>其它组件</h3><ul>
+<li><p><strong>Opacity</strong></p>
+<p>  指定透明度。</p>
+</li>
+<li><p><strong>GestureDetector</strong></p>
+<p>  手势监控，包括点击，双击，长按等。</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以发现一些组件间是有关联的，比如Center是Align的特殊实现，总结规律能更高效地学习，而对于完全陌生的新组件，也可以通过阅读源码快速了解组件的使用方法和实现原理。</p>
 
     </div>
 
@@ -350,16 +337,16 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2021/02/27/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%BC%95%E5%85%A5DataBinding%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="next" title="项目中引入DataBinding遇到的问题和解决方案">
-                  <i class="fa fa-chevron-left"></i> 项目中引入DataBinding遇到的问题和解决方案
+                <a href="/2021/05/05/Jetpack%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="Jetpack深入浅出（一）">
+                  <i class="fa fa-chevron-left"></i> Jetpack深入浅出（一）
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2021/05/05/Jetpack%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="Jetpack深入浅出（一）">
-                  Jetpack深入浅出（一） <i class="fa fa-chevron-right"></i>
+                <a href="/2021/09/21/Android%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9F%90%E7%B1%BB%E9%97%AE%E9%A2%98%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/" rel="prev" title="Android开发过程中某类问题快速定位方法">
+                  Android开发过程中某类问题快速定位方法 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -399,7 +386,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、基础用法"><span class="nav-number">2.</span> <span class="nav-text">二、基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、高级用法"><span class="nav-number">3.</span> <span class="nav-text">三、高级用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、原理分析"><span class="nav-number">4.</span> <span class="nav-text">四、原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、性能分析"><span class="nav-number">5.</span> <span class="nav-text">五、性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、总结"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见组件"><span class="nav-number">2.</span> <span class="nav-text">常见组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本组件"><span class="nav-number">2.1.</span> <span class="nav-text">基本组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器组件"><span class="nav-number">2.2.</span> <span class="nav-text">容器组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可滚动组件"><span class="nav-number">2.3.</span> <span class="nav-text">可滚动组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#约束和定位组件"><span class="nav-number">2.4.</span> <span class="nav-text">约束和定位组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义约束和定位组件"><span class="nav-number">2.5.</span> <span class="nav-text">自定义约束和定位组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它组件"><span class="nav-number">2.6.</span> <span class="nav-text">其它组件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

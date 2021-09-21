@@ -50,17 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
+  <meta name="description" content="一、问题测试那边反馈有问题，自测没问题，由于各种原因无法拿测试手机亲自调试，因此只能是测试复现问题，然后给日志，开发根据日志定位问题原因。前提：代码逻辑复杂，流程复杂，或者是刚接手过来的项目，如何快速地定位到整个流程中哪一步出了问题？二、分析方案一：叫测试给指定tag的日志，因为代码逻辑复杂类多，很难一次性给出所有的tag，后面发现日志缺失后再去叫测试补日志很浪费时间。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Retrofit原理分析">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;27&#x2F;Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90&#x2F;index.html">
+<meta property="og:title" content="Android开发过程中某类问题快速定位方法">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;09&#x2F;21&#x2F;Android%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9F%90%E7%B1%BB%E9%97%AE%E9%A2%98%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
+<meta property="og:description" content="一、问题测试那边反馈有问题，自测没问题，由于各种原因无法拿测试手机亲自调试，因此只能是测试复现问题，然后给日志，开发根据日志定位问题原因。前提：代码逻辑复杂，流程复杂，或者是刚接手过来的项目，如何快速地定位到整个流程中哪一步出了问题？二、分析方案一：叫测试给指定tag的日志，因为代码逻辑复杂类多，很难一次性给出所有的tag，后面发现日志缺失后再去叫测试补日志很浪费时间。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-09-21T12:46:35.166Z">
+<meta property="og:updated_time" content="2021-09-21T13:22:54.648Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="http://yoursite.com/2021/09/21/Android%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9F%90%E7%B1%BB%E9%97%AE%E9%A2%98%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>Retrofit原理分析 | 麦田Coder</title>
+  <title>Android开发过程中某类问题快速定位方法 | 麦田Coder</title>
   
 
 
@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/09/21/Android%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9F%90%E7%B1%BB%E9%97%AE%E9%A2%98%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -186,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Retrofit原理分析
+          Android开发过程中某类问题快速定位方法
         </h1>
 
         <div class="post-meta">
@@ -195,16 +195,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-03-27 22:09:29" itemprop="dateCreated datePublished" datetime="2021-03-27T22:09:29+08:00">2021-03-27</time>
+              <time title="Created: 2021-09-21 21:22:33 / Modified: 21:22:54" itemprop="dateCreated datePublished" datetime="2021-09-21T21:22:33+08:00">2021-09-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-21 20:46:35" itemprop="dateModified" datetime="2021-09-21T20:46:35+08:00">2021-09-21</time>
-              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -219,14 +213,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.2k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -238,106 +232,63 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。</p><h3 id="二、基础用法"><a href="#二、基础用法" class="headerlink" title="二、基础用法"></a>二、基础用法</h3><ol>
-<li><p>定义接口：</p>
-<pre><code>interface Animal {
-    @GET(&quot;/&quot;)
-    Call&lt;ResponseBody&gt; get();
-}</code></pre></li>
-<li><p>创建Retrofit对象：</p>
-<pre><code>Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(&quot;https://mtancode.com&quot;)
-        .build();</code></pre></li>
-<li><p>调用接口方法：</p>
-<pre><code>Animal animal = retrofit.create(Animal.class);
-animal.get().enqueue(new Callback&lt;ResponseBody&gt;() {
-    @Override
-    public void onResponse(Call&lt;ResponseBody&gt; call,
-                           Response&lt;ResponseBody&gt; response) {
-        try {
-            Log.i(&quot;test&quot;, response.body().string());
-        } catch (Throwable t) {
-            t.printStackTrace();
+        <h3 id="一、问题"><a href="#一、问题" class="headerlink" title="一、问题"></a>一、问题</h3><p>测试那边反馈有问题，自测没问题，由于各种原因无法拿测试手机亲自调试，因此只能是测试复现问题，然后给日志，开发根据日志定位问题原因。</p><p>前提：代码逻辑复杂，流程复杂，或者是刚接手过来的项目，如何快速地定位到整个流程中哪一步出了问题？</p><h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>方案一：叫测试给指定tag的日志，因为代码逻辑复杂类多，很难一次性给出所有的tag，后面发现日志缺失后再去叫测试补日志很浪费时间。</p><a id="more"></a>
+
+
+<p>方案二：叫测试给全量日志，日志会很多，然后在全量日志里去搜索某条日志，可能会找出很多条，位置也不同，跳来跳去很容易看晕。</p>
+<h3 id="三、解决"><a href="#三、解决" class="headerlink" title="三、解决"></a>三、解决</h3><p>测试给全量日志，然后编写工具脚本，对全量日志进行逐行对比，如果包括指定的关键字，就输出，实现日志自动过滤功能。</p>
+<p>然后根据逻辑，要看某个日志有没有打印，就指定日志关键字，然后执行工具脚本代码，就可以马上看到该行日志，而不需要去全量日志里面查找。这样就能一条一条日志地查找，确定代码执行逻辑，再通过日志内容，就可以确定整个流程中的哪个步骤出了问题。</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>遇到类似的问题，就可以分几个步骤快速进行：</p>
+<ol>
+<li>测试给全量日志。</li>
+<li>添加要查看的日志关键字，执行工具脚本代码。</li>
+<li>查看是否有日志以及日志内容。</li>
+<li>重复2和3，直到找出数据异常的代码逻辑位置。</li>
+</ol>
+<h3 id="五、附录（工具脚本代码）"><a href="#五、附录（工具脚本代码）" class="headerlink" title="五、附录（工具脚本代码）"></a>五、附录（工具脚本代码）</h3><pre><code>public class LogKeyCutter {
+
+    private static final String srcPath = &quot;/Users/cat/Library/Containers/rt3.txt&quot;;
+
+    private static final Set&lt;String&gt; sLogKeywords;
+
+    static {
+        sLogKeywords = new HashSet&lt;String&gt;();
+        sLogKeywords.add(&quot;getGameGiftCacheUpdateTime&quot;);
+    }
+
+    public static void main(String[] args) {
+        List&lt;String&gt; lines = readTxt(srcPath);
+        for (String str : lines) {
+            for (String keyword : sLogKeywords) {
+                if (str.contains(keyword)) {
+                    System.out.println(str);
+                    break;
+                }
+            }
         }
     }
-
-    @Override
-    public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
-        Log.i(&quot;test&quot;, &quot;onFailure&quot;);
-    }
-});</code></pre><p> 请求结果在onResponse回调中获取到，该回调运行在UI线程中。</p>
-</li>
-</ol><a id="more"></a>
-
-<h3 id="三、高级用法"><a href="#三、高级用法" class="headerlink" title="三、高级用法"></a>三、高级用法</h3><ol>
-<li><p>常用的注解还有：</p>
-<p> @Query：GET方式单个请求参数。</p>
-<p> @QueryMap：GET方式多个请求参数。</p>
-<p> @Path：url部分动态传入。</p>
-<p> @Url：url整体动态传入。</p>
-<p> @Field：POST方式单个请求参数。</p>
-<p> @FieldMap：POST方式多个请求参数。</p>
-<p> @Body：POST方式多个不同类型的请求参数。</p>
-</li>
-<li><p>addCallAdapterFactory</p>
-<p> 改变接口返回类型，默认是retrofit2.Call，而其enqueue方法内部就是用okhttp实现网络请求的，如果要改成用其它请求方式（比如项目已有的网络请求框架，RxJava等），就可以自定义CallAdapter，然后接口返回自己的类型，再调用方法使用自己的请求方式，自定义CallAdapter需要三个类CustomCall，CustomCallAdapter和CustomCallAdapterFactory，如下：</p>
-<pre><code>private static class CustomCall&lt;T&gt; {
-    private Call call;
-    CustomCall(Call call) {
-        this.call = call;
-    }
-    public void request() {
-        // TODO 自定义网络请求逻辑
-    }
 }
 
-private static class CustomCallAdapter implements CallAdapter&lt;CustomCall, Object&gt; {
-
-    @Override
-    public Type responseType() {
-        return ResponseBody.class;
+public static List&lt;String&gt; readTxt(String path) {
+    List&lt;String&gt; result = new ArrayList&lt;String&gt;();
+    BufferedReader br = null;
+    try {
+        br = new BufferedReader(new InputStreamReader(new FileInputStream(path), Charset.forName(&quot;UTF-8&quot;)));
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            try {
+                result.add(line);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeIo(br);
     }
-
-    @Override
-    public Object adapt(Call call) {
-        Log.i(&quot;test&quot;, call.toString());
-        return new CustomCall(call);
-    }
-}
-
-private static class CustomCallAdapterFactory extends CallAdapter.Factory {
-
-    @Override
-    public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-        return new CustomCallAdapter();
-    }
-}</code></pre></li>
-<li><p>addConverterFactory</p>
-<p> 处理转换请求数据和响应数据，改变接口返回值中的泛型类型，默认是ResponseBody。</p>
-</li>
-</ol>
-<h3 id="四、原理分析"><a href="#四、原理分析" class="headerlink" title="四、原理分析"></a>四、原理分析</h3><ol>
-<li><p>在调用接口后返回的是Call对象，之后的enqueue方法是OkHttp的，而之前就是Retrofit的。</p>
-</li>
-<li><p>Retrofit对象通过Builder进行配置，然后创建，可以配置url，转换器等等。</p>
-</li>
-<li><p>调用Retrofit的create方法，里面使用的是Java动态代理，最终会返回一个接口代理对象。</p>
-</li>
-<li><p>调用接口代理对象的方法，根据Java动态代理原理，会调用到InvocationHandler的invoke方法，在该方法中，会去解析所调用的接口方法的注解，最终生成OkHttp所需要的Call对象。</p>
-</li>
-<li><p>调用Call对象的enqueue方法执行网络请求。</p>
-</li>
-</ol>
-<h3 id="五、性能分析"><a href="#五、性能分析" class="headerlink" title="五、性能分析"></a>五、性能分析</h3><ol>
-<li><p>创建Retrofit对象：首次20ms左右，因为内部会创建OkHttpClient对象，底层会涉及到ssl相关初始化，首次创建会比较耗时。</p>
-</li>
-<li><p>create动态代理对象：0~1ms，基本不耗时。</p>
-</li>
-<li><p>调用接口方法：首次5ms左右，因为首次会去解析注解，会比较慢，后面有缓存，就基本不耗时了。</p>
-</li>
-</ol>
-<h3 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h3><p>Retrofit库代码量很少，功能也比较简单，主要就是用来简化网络请求的封装，它的整体设计思想和架构设计都值得借鉴。</p>
-
+    return result;
+}</code></pre>
     </div>
 
     
@@ -350,17 +301,14 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2021/02/27/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%BC%95%E5%85%A5DataBinding%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="next" title="项目中引入DataBinding遇到的问题和解决方案">
-                  <i class="fa fa-chevron-left"></i> 项目中引入DataBinding遇到的问题和解决方案
+                <a href="/2021/09/21/Flutter%E5%B8%B8%E8%A7%81%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/" rel="next" title="Flutter常见组件介绍">
+                  <i class="fa fa-chevron-left"></i> Flutter常见组件介绍
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2021/05/05/Jetpack%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="Jetpack深入浅出（一）">
-                  Jetpack深入浅出（一） <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -399,7 +347,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、基础用法"><span class="nav-number">2.</span> <span class="nav-text">二、基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、高级用法"><span class="nav-number">3.</span> <span class="nav-text">三、高级用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、原理分析"><span class="nav-number">4.</span> <span class="nav-text">四、原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、性能分析"><span class="nav-number">5.</span> <span class="nav-text">五、性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、总结"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、问题"><span class="nav-number">1.</span> <span class="nav-text">一、问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、分析"><span class="nav-number">2.</span> <span class="nav-text">二、分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、解决"><span class="nav-number">3.</span> <span class="nav-text">三、解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-number">4.</span> <span class="nav-text">四、总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、附录（工具脚本代码）"><span class="nav-number">5.</span> <span class="nav-text">五、附录（工具脚本代码）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
