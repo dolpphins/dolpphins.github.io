@@ -1,0 +1,61 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 138531332 Realtime: 241333585
+
+** MEMINFO in pid 19179 [com.tencent.mm] **
+                   Pss  Private  Private  SwapPss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap    40613    40564        0    72101   164480   132995    31484
+  Dalvik Heap    19065    19016        0     8873    52069    27493    24576
+ Dalvik Other    11200    11196        0      893                           
+        Stack      100      100        0       16                           
+       Ashmem        4        4        0        0                           
+      Gfx dev     6432     6432        0        0                           
+    Other dev       28        0       28        0                           
+     .so mmap     6138      440     4328     3370                           
+    .jar mmap       28       28        0      336                           
+    .apk mmap     1157       88      672      160                           
+    .ttf mmap       60        0        0        0                           
+    .dex mmap    22720        0    19372       28                           
+    .oat mmap     2520        0        4        0                           
+    .art mmap    10700     9644      260     3067                           
+   Other mmap      336        0      324        4                           
+   EGL mtrack     9248     9248        0        0                           
+    GL mtrack     5436     5436        0        0                           
+      Unknown     2666     2664        0     4830                           
+        TOTAL   232129   104860    24988    93678   216549   160488    56060
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:    28920
+         Native Heap:    40564
+                Code:    24932
+               Stack:      100
+            Graphics:    21116
+       Private Other:    14216
+              System:   102281
+ 
+               TOTAL:   232129       TOTAL SWAP PSS:    93678
+ 
+ Objects
+               Views:     1388         ViewRootImpl:        1
+         AppContexts:        7           Activities:        1
+              Assets:        7        AssetManagers:        0
+       Local Binders:      157        Proxy Binders:       98
+       Parcel memory:       82         Parcel count:      327
+    Death Recipients:        8      OpenSSL Sockets:        0
+            WebViews:        0
+ 
+ SQL
+         MEMORY_USED:      528
+  PAGECACHE_OVERFLOW:       64          MALLOC_SIZE:      117
+ 
+ DATABASES
+      pgsz     dbsz   Lookaside(b)          cache  Dbname
+         4      436             97       25/40/10  /data/user/0/com.tencent.mm/databases/beacon_tbs_db
+         4      108            109       27/42/16  /data/user/0/com.tencent.mm/databases/google_app_measurement.db
+         4       36             99         4/34/6  /data/user/0/com.tencent.mm/databases/tes_db
+ 
+ Asset Allocations
+    : 132K
