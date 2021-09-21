@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、代码修复1. 原理原理是比较简单的，本质就是App在运行时，会有个dex数组，当要用到的class不存在时，就顺序从dex数组中寻找，只要找到就停止，因此可以把修复好的dex插入到这个dex数组最前面，那么找的时候就会找到修复好dex中的class，而不再是旧的有问题的class。2. 动手写代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动手实现Android热修复">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;11&#x2F;21&#x2F;%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="一、代码修复1. 原理原理是比较简单的，本质就是App在运行时，会有个dex数组，当要用到的class不存在时，就顺序从dex数组中寻找，只要找到就停止，因此可以把修复好的dex插入到这个dex数组最前面，那么找的时候就会找到修复好dex中的class，而不再是旧的有问题的class。2. 动手写代码">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-09-21T11:36:22.985Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/21/%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>动手实现Android热修复 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/21/%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          动手实现Android热修复
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-11-21 22:09:29" itemprop="dateCreated datePublished" datetime="2020-11-21T22:09:29+08:00">2020-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:36:22" itemprop="dateModified" datetime="2021-09-21T19:36:22+08:00">2021-09-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、代码修复"><a href="#一、代码修复" class="headerlink" title="一、代码修复"></a>一、代码修复</h3><h4 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h4><p>原理是比较简单的，本质就是App在运行时，会有个dex数组，当要用到的class不存在时，就顺序从dex数组中寻找，只要找到就停止，因此可以把修复好的dex插入到这个dex数组最前面，那么找的时候就会找到修复好dex中的class，而不再是旧的有问题的class。</p><h4 id="2-动手写代码"><a href="#2-动手写代码" class="headerlink" title="2. 动手写代码"></a>2. 动手写代码</h4><a id="more"></a>
+<pre><code>public class App extends Application {
+
+    private static final String TAG = &quot;App&quot;;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        try {
+            ClassLoader classLoader = getClassLoader();
+            Log.i(TAG, &quot;classLoader:&quot; + classLoader);
+            Field pathListField = classLoader.getClass().getSuperclass().getDeclaredField(&quot;pathList&quot;);
+            pathListField.setAccessible(true);
+            Object pathList = pathListField.get(classLoader);
+            Field dexElementsField = pathList.getClass().getDeclaredField(&quot;dexElements&quot;);
+            dexElementsField.setAccessible(true);
+            Object[] dexElements = (Object[]) dexElementsField.get(pathList);
+
+            Log.i(TAG, &quot;把补丁复制到私有目录（省略）&quot;);
+            File patchFile = getDir(&quot;patch&quot;, Context.MODE_PRIVATE);
+            if (!patchFile.isDirectory()) {
+                patchFile.mkdirs();
+            }
+            Log.i(TAG, patchFile.getAbsolutePath());
+            // 加载补丁
+            DexClassLoader dexClassLoader = new DexClassLoader(
+                    new File(patchFile, &quot;patch.dex&quot;).getAbsolutePath(),
+                    &quot;/sdcard/odex/&quot;, null, getClassLoader());
+            Object[] patchDexElements = hookDexElements(dexClassLoader);
+
+            // 合并
+            Object[] newDexElements = (Object[]) Array.newInstance(dexElements[0].getClass(), dexElements.length + patchDexElements.length);
+            int index = 0;
+            for (Object element : patchDexElements) {
+                newDexElements[index++] = element;
+            }
+            for (Object element : dexElements) {
+                newDexElements[index++] = element;
+            }
+
+            // 设置回去
+            dexElementsField.set(pathList, newDexElements);
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private static Object[] hookDexElements(ClassLoader classLoader) {
+        try {
+            Field pathListField = classLoader.getClass().getSuperclass().getDeclaredField(&quot;pathList&quot;);
+            pathListField.setAccessible(true);
+            Object pathList = pathListField.get(classLoader);
+            Field dexElementsField = pathList.getClass().getDeclaredField(&quot;dexElements&quot;);
+            dexElementsField.setAccessible(true);
+            Object[] dexElements = (Object[]) dexElementsField.get(pathList);
+            return dexElements;
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return null;
+    }
+}</code></pre><p>这里分为几个步骤：</p>
+<ol>
+<li><p>先通过反射拿到dexElements数组。</p>
+</li>
+<li><p>使用dx命令将class打包成补丁dex，如下：</p>
+<pre><code>dx --dex --output=patch.dex ./</code></pre><p> 注意要在包的最顶级目录中执行。</p>
+</li>
+<li><p>有了补丁dex后，通过网络下载到私有目录下。</p>
+</li>
+<li><p>使用DexClassLoader加载补丁dex，同样也拿到对应的dexElements数组。</p>
+</li>
+<li><p>两个dexElements数组合并，补丁的在前面，原有的在后面。</p>
+</li>
+<li><p>把合并好的新dexElements数组设置回ClassLoader中。</p>
+</li>
+</ol>
+<p>注意这里dex会有缓存，因此这个补丁操作必须尽早执行，如果已经用过某个class后再执行补丁操作，就不会生效了。</p>
+<h3 id="二、资源修复"><a href="#二、资源修复" class="headerlink" title="二、资源修复"></a>二、资源修复</h3><h4 id="1-原理-1"><a href="#1-原理-1" class="headerlink" title="1. 原理"></a>1. 原理</h4><p>ActivityThread中有个ArrayMap&lt;String, WeakReference&gt;变量mPackages，保存包名和LoadedApk的键值对，一般都是只有一个，我们只需要变量这些键值对，拿到对于的LoadedApk对象，然后修改其中的mResDir字符串的值为新的资源包的路径，后面在创建AssetManager时就会指定为新的资源路径，也就实现了资源的替换。</p>
+<h4 id="2-动手写代码-1"><a href="#2-动手写代码-1" class="headerlink" title="2. 动手写代码"></a>2. 动手写代码</h4><pre><code>private void doPatchResources() {
+    try {
+        File patchResDir = getDir(&quot;patch_res&quot;, Context.MODE_PRIVATE);
+        if (!patchResDir.isDirectory()) {
+            patchResDir.mkdirs();
+        }
+        File patchResFile = new File(patchResDir, &quot;fix.apk&quot;);
+        if (!patchResFile.isFile()) {
+            // 没有补丁资源
+            return;
+        }
+        // printFields();
+        // 获取ContextImpl对象
+        Field mBaseField = this.getClass().getSuperclass().getSuperclass().getDeclaredField(&quot;mBase&quot;);
+        mBaseField.setAccessible(true);
+        Object mBase = mBaseField.get(this);
+        Log.i(TAG, &quot;mBase:&quot; + mBase);
+        // 获取ActivityThread对象
+        Field mMainThreadField = mBase.getClass().getDeclaredField(&quot;mMainThread&quot;);
+        mMainThreadField.setAccessible(true);
+        Object mMainThread = mMainThreadField.get(mBase);
+        Log.i(TAG, &quot;mMainThread:&quot; + mMainThread);
+
+        // 获取mPackages
+        Field mPackagesField = mMainThread.getClass().getDeclaredField(&quot;mPackages&quot;);
+        mPackagesField.setAccessible(true);
+        ArrayMap&lt;String, WeakReference&lt;?&gt;&gt; mPackages = (ArrayMap&lt;String, WeakReference&lt;?&gt;&gt;) mPackagesField.get(mMainThread);
+        for (String key : mPackages.keySet()) {
+            Log.i(TAG, &quot;key:&quot; + key);
+            Object value = mPackages.get(key).get();
+            Log.i(TAG, &quot;value:&quot; + value);
+
+            Field mResDirField = value.getClass().getDeclaredField(&quot;mResDir&quot;);
+            mResDirField.setAccessible(true);
+            String mResDir = (String) mResDirField.get(value);
+            Log.i(TAG, &quot;mResDir:&quot; + mResDir);
+            // 修改mResDir的值
+            String newPath = patchResFile.getAbsolutePath();
+            mResDirField.set(value, newPath);
+        }
+    } catch (Throwable t) {
+        t.printStackTrace();
+    }
+}</code></pre><p>这里也是分为几个步骤：</p>
+<ol>
+<li><p>打包好新的资源包fix.apk，手动放到私有目录下。</p>
+</li>
+<li><p>拿到Application对象的ContextImpl对象，再拿到其中的ActivityThread对象，一个进程对应有一个。</p>
+</li>
+<li><p>拿到ActivityThread对象中的mPackages，也就是ArrayMap&lt;String, WeakReference&gt;表。</p>
+</li>
+<li><p>遍历该表，获取到LoadedApk对象，修改其中的mResDir为fix.apk路径。</p>
+</li>
+<li><p>这样后面在创建AssetManager对象时，资源路径就是这个fix.apk的路径，获取到的资源也就是新的。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/10/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%BA%93DataBinding/" rel="next" title="深入理解Android数据绑定库DataBinding">
+                  <i class="fa fa-chevron-left"></i> 深入理解Android数据绑定库DataBinding
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/12/20/Gradle%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/" rel="prev" title="Gradle高级用法">
+                  Gradle高级用法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、代码修复"><span class="nav-number">1.</span> <span class="nav-text">一、代码修复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-原理"><span class="nav-number">1.1.</span> <span class="nav-text">1. 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-动手写代码"><span class="nav-number">1.2.</span> <span class="nav-text">2. 动手写代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、资源修复"><span class="nav-number">2.</span> <span class="nav-text">二、资源修复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-原理-1"><span class="nav-number">2.1.</span> <span class="nav-text">1. 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-动手写代码-1"><span class="nav-number">2.2.</span> <span class="nav-text">2. 动手写代码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">162k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:27</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

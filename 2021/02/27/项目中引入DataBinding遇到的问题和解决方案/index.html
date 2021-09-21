@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="一、背景在之前开发微信小程序时，发现数据绑定用起来比较顺手，代码也变得更简洁，因此抽空研究了Android中DataBinding数据绑定技术的使用和内部原理，该库算比较轻量级，也不需要依赖到很多其它组件，就决定在项目业务中尝试引入使用。二、项目结构项目结构分为宿主和插件两部分，所有插件的代码和资源都是独立的，而宿主是共用的，插件可以调用宿主的代码，反过来不行。在最终编译出来的apk中，宿主会打包">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-02-27T02:04:54.356Z">
+<meta property="og:updated_time" content="2021-09-21T11:55:31.748Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2021/02/27/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%BC%95%E5%85%A5DataBinding%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
@@ -195,12 +195,25 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-27 10:03:16 / Modified: 10:04:54" itemprop="dateCreated datePublished" datetime="2021-02-27T10:03:16+08:00">2021-02-27</time>
+              <time title="Created: 2021-02-27 22:09:29" itemprop="dateCreated datePublished" datetime="2021-02-27T22:09:29+08:00">2021-02-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:55:31" itemprop="dateModified" datetime="2021-09-21T19:55:31+08:00">2021-09-21</time>
+              </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -454,9 +467,9 @@ project.afterEvaluate {
 <li><p>由于历史原因，proguard文件中keep住了所有android开头的类，所以DataBinding的所有类都被原封不动地打到插件包里，但实际上DataBinding的类是可以proguard的，内部并没有用到反射等特性，这里并不能直接把之前的keep去掉，因为这样可能会导致其它地方被proguard掉后出问题，由于项目巨大历史悠久也不太可能重新去梳理所有android开头的类，这里最好最快的方法就是，在keep住所有android开头的类前提下，又指定databinding的类需要proguard，实现方法如下：</p>
 <pre><code>-keep class !android.databinding.**, android.** {
    *;
-}</code></pre><p> <strong>最终引入的代码量从40KB减少到9KB，基于改造成本等综合考虑，最后的解决方法就是在每个使用到DataBinding的插件中都引入这一份代码。</strong></p>
-</li>
+}</code></pre></li>
 </ol>
+<p><strong>最终引入的代码量从40KB减少到9KB，基于改造成本等综合考虑，最后的解决方法就是在每个使用到DataBinding的插件中都引入这一份代码。</strong></p>
 <h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h3><ol>
 <li><p>对于这种通过开启脚本开关，然后会自动引入的依赖，要想做二次处理，都可以采用这种方法实现。</p>
 </li>
@@ -576,12 +589,12 @@ project.afterEvaluate {
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">162k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:29</span>
+    <span title="Reading time total">2:27</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
@@ -590,6 +603,26 @@ project.afterEvaluate {
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

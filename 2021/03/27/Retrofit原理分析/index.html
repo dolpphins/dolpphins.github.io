@@ -50,14 +50,14 @@
   };
 </script>
 
-  <meta name="description" content="前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。基础用法 定义接口 interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit = new">
+  <meta name="description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Retrofit原理分析">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;27&#x2F;Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。基础用法 定义接口 interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit = new">
+<meta property="og:description" content="一、前言Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。二、基础用法 定义接口： interface Animal {     @GET(&amp;quot;&#x2F;&amp;quot;)     Call&amp;lt;ResponseBody&amp;gt; get(); } 创建Retrofit对象： Retrofit retrofit =">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-03-27T02:10:03.827Z">
+<meta property="og:updated_time" content="2021-09-21T12:46:35.166Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2021/03/27/Retrofit%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
@@ -195,12 +195,25 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-03-27 10:03:59 / Modified: 10:10:03" itemprop="dateCreated datePublished" datetime="2021-03-27T10:03:59+08:00">2021-03-27</time>
+              <time title="Created: 2021-03-27 22:09:29" itemprop="dateCreated datePublished" datetime="2021-03-27T22:09:29+08:00">2021-03-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 20:46:35" itemprop="dateModified" datetime="2021-09-21T20:46:35+08:00">2021-09-21</time>
+              </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -225,8 +238,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。</p><h3 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h3><ol>
-<li><p>定义接口</p>
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>Retrofit是square开源的，用于封装网络请求方法和参数的第三方库，开发者使用注解进行网络请求配置，然后转由OkHttp请求网络。</p><h3 id="二、基础用法"><a href="#二、基础用法" class="headerlink" title="二、基础用法"></a>二、基础用法</h3><ol>
+<li><p>定义接口：</p>
 <pre><code>interface Animal {
     @GET(&quot;/&quot;)
     Call&lt;ResponseBody&gt; get();
@@ -237,26 +250,26 @@
         .build();</code></pre></li>
 <li><p>调用接口方法：</p>
 <pre><code>Animal animal = retrofit.create(Animal.class);
-    animal.get().enqueue(new Callback&lt;ResponseBody&gt;() {
-        @Override
-        public void onResponse(Call&lt;ResponseBody&gt; call,
-                               Response&lt;ResponseBody&gt; response) {
-            try {
-                Log.i(&quot;test&quot;, response.body().string());
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+animal.get().enqueue(new Callback&lt;ResponseBody&gt;() {
+    @Override
+    public void onResponse(Call&lt;ResponseBody&gt; call,
+                           Response&lt;ResponseBody&gt; response) {
+        try {
+            Log.i(&quot;test&quot;, response.body().string());
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
+    }
 
-        @Override
-        public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
-            Log.i(&quot;test&quot;, &quot;onFailure&quot;);
-        }
-    });</code></pre><p> 请求结果在onResponse回调中获取到，该回调运行在UI线程中。</p>
+    @Override
+    public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
+        Log.i(&quot;test&quot;, &quot;onFailure&quot;);
+    }
+});</code></pre><p> 请求结果在onResponse回调中获取到，该回调运行在UI线程中。</p>
 </li>
 </ol><a id="more"></a>
 
-<h3 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h3><ol>
+<h3 id="三、高级用法"><a href="#三、高级用法" class="headerlink" title="三、高级用法"></a>三、高级用法</h3><ol>
 <li><p>常用的注解还有：</p>
 <p> @Query：GET方式单个请求参数。</p>
 <p> @QueryMap：GET方式多个请求参数。</p>
@@ -303,7 +316,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 <p> 处理转换请求数据和响应数据，改变接口返回值中的泛型类型，默认是ResponseBody。</p>
 </li>
 </ol>
-<h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><ol>
+<h3 id="四、原理分析"><a href="#四、原理分析" class="headerlink" title="四、原理分析"></a>四、原理分析</h3><ol>
 <li><p>在调用接口后返回的是Call对象，之后的enqueue方法是OkHttp的，而之前就是Retrofit的。</p>
 </li>
 <li><p>Retrofit对象通过Builder进行配置，然后创建，可以配置url，转换器等等。</p>
@@ -315,7 +328,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 <li><p>调用Call对象的enqueue方法执行网络请求。</p>
 </li>
 </ol>
-<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><ol>
+<h3 id="五、性能分析"><a href="#五、性能分析" class="headerlink" title="五、性能分析"></a>五、性能分析</h3><ol>
 <li><p>创建Retrofit对象：首次20ms左右，因为内部会创建OkHttpClient对象，底层会涉及到ssl相关初始化，首次创建会比较耗时。</p>
 </li>
 <li><p>create动态代理对象：0~1ms，基本不耗时。</p>
@@ -323,7 +336,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 <li><p>调用接口方法：首次5ms左右，因为首次会去解析注解，会比较慢，后面有缓存，就基本不耗时了。</p>
 </li>
 </ol>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Retrofit库代码量很少，功能也比较简单，主要就是用来简化网络请求的封装，它的整体设计思想和架构设计都值得借鉴。</p>
+<h3 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h3><p>Retrofit库代码量很少，功能也比较简单，主要就是用来简化网络请求的封装，它的整体设计思想和架构设计都值得借鉴。</p>
 
     </div>
 
@@ -386,7 +399,7 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础用法"><span class="nav-number">2.</span> <span class="nav-text">基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级用法"><span class="nav-number">3.</span> <span class="nav-text">高级用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理分析"><span class="nav-number">4.</span> <span class="nav-text">原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能分析"><span class="nav-number">5.</span> <span class="nav-text">性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、基础用法"><span class="nav-number">2.</span> <span class="nav-text">二、基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、高级用法"><span class="nav-number">3.</span> <span class="nav-text">三、高级用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、原理分析"><span class="nav-number">4.</span> <span class="nav-text">四、原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、性能分析"><span class="nav-number">5.</span> <span class="nav-text">五、性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、总结"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -437,12 +450,12 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">162k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:29</span>
+    <span title="Reading time total">2:27</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
@@ -451,6 +464,26 @@ private static class CustomCallAdapterFactory extends CallAdapter.Factory {
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

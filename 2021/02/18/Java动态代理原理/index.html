@@ -50,14 +50,14 @@
   };
 </script>
 
-  <meta name="description" content="前言Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。使用方法 先定义一个接口： interface Animal {     void eat(); } 然后动态生成代理类对象： Animal proxy = (Animal) Proxy.newProxyInstan">
+  <meta name="description" content="一、前言Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。二、用法 先定义一个接口： interface Animal {     void eat(); } 然后动态生成代理类对象： Animal proxy = (Animal) Proxy.newProxyInst">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java动态代理原理">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;02&#x2F;18&#x2F;Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%8E%9F%E7%90%86&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="前言Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。使用方法 先定义一个接口： interface Animal {     void eat(); } 然后动态生成代理类对象： Animal proxy = (Animal) Proxy.newProxyInstan">
+<meta property="og:description" content="一、前言Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。二、用法 先定义一个接口： interface Animal {     void eat(); } 然后动态生成代理类对象： Animal proxy = (Animal) Proxy.newProxyInst">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-02-18T03:23:22.128Z">
+<meta property="og:updated_time" content="2021-09-21T11:47:46.397Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2021/02/18/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%8E%9F%E7%90%86/">
@@ -195,12 +195,25 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-18 11:22:57 / Modified: 11:23:22" itemprop="dateCreated datePublished" datetime="2021-02-18T11:22:57+08:00">2021-02-18</time>
+              <time title="Created: 2021-02-18 22:09:29" itemprop="dateCreated datePublished" datetime="2021-02-18T22:09:29+08:00">2021-02-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:47:46" itemprop="dateModified" datetime="2021-09-21T19:47:46+08:00">2021-09-21</time>
+              </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -225,24 +238,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。</p><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>Java动态代理可以实现动态生成代理类，而不需要手动写代理类，在使用上比较方便，而代理模式可以用于实现统计，拦截逻辑等统一管理控制的目的，比如在Retrofit中就用到了动态代理。</p><h3 id="二、用法"><a href="#二、用法" class="headerlink" title="二、用法"></a>二、用法</h3><ol>
 <li><p>先定义一个接口：</p>
 <pre><code>interface Animal {
     void eat();
 }</code></pre></li>
 <li><p>然后动态生成代理类对象：</p>
 <pre><code>Animal proxy = (Animal) Proxy.newProxyInstance(Animal.class.getClassLoader(), new Class[]{Animal.class},
-            (proxy1, method, args1) -&gt; {
-                System.out.println(&quot;invoke, &quot; + method.getName());
-                // 调用真实对象的方法
-                return null;
-            });</code></pre></li>
+    (proxy1, method, args1) -&gt; {
+        System.out.println(&quot;invoke, &quot; + method.getName());
+        // 调用真实对象的方法
+        return null;
+});</code></pre></li>
 <li><p>最后调用方法：</p>
 <pre><code>proxy.eat();</code></pre><p> 调用该方法时，就会跑到InvocationHandler的invoke方法中，然后在该方法中去调用真实对象的方法，或者做一些统计逻辑，拦截逻辑等等。</p>
 </li>
 </ol><a id="more"></a>
 
-<h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><p>调用newProxyInstance方法返回的proxy对象，打印出它的全限定名为com.$Proxy0，这个类就是动态生成的，目前只存在内存中，可以把Class对象保存为class文件：</p>
+<h3 id="三、原理分析"><a href="#三、原理分析" class="headerlink" title="三、原理分析"></a>三、原理分析</h3><p>调用newProxyInstance方法返回的proxy对象，打印出它的全限定名为com.$Proxy0，这个类就是动态生成的，目前只存在内存中，可以把Class对象保存为class文件：</p>
 <pre><code>byte[] data = ProxyGenerator.generateProxyClass(&quot;com.$Proxy0.class&quot;, proxy.getClass().getInterfaces());
 saveClass(data);</code></pre><p>然后反编译查看源码：</p>
 <pre><code>public final void eat() {
@@ -317,7 +330,7 @@ saveClass(data);</code></pre><p>然后反编译查看源码：</p>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方法"><span class="nav-number">2.</span> <span class="nav-text">使用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理分析"><span class="nav-number">3.</span> <span class="nav-text">原理分析</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、用法"><span class="nav-number">2.</span> <span class="nav-text">二、用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、原理分析"><span class="nav-number">3.</span> <span class="nav-text">三、原理分析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -368,12 +381,12 @@ saveClass(data);</code></pre><p>然后反编译查看源码：</p>
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">162k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:29</span>
+    <span title="Reading time total">2:27</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
@@ -382,6 +395,26 @@ saveClass(data);</code></pre><p>然后反编译查看源码：</p>
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

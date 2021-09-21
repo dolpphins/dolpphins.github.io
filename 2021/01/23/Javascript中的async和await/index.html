@@ -57,7 +57,7 @@
 <meta property="og:site_name" content="麦田Coder">
 <meta property="og:description" content="在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。asyncasync只需要记住两点就可以： async函数最终都将返回一个Promise对象，返回值通过resolve的参数传递。  比如这段代码： async function test() {     return &amp;quot;hello js&amp;quo">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-01-23T03:16:39.023Z">
+<meta property="og:updated_time" content="2021-09-21T11:44:22.042Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2021/01/23/Javascript%E4%B8%AD%E7%9A%84async%E5%92%8Cawait/">
@@ -195,12 +195,25 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-01-23 11:16:05 / Modified: 11:16:39" itemprop="dateCreated datePublished" datetime="2021-01-23T11:16:05+08:00">2021-01-23</time>
+              <time title="Created: 2021-01-23 22:09:29" itemprop="dateCreated datePublished" datetime="2021-01-23T22:09:29+08:00">2021-01-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:44:22" itemprop="dateModified" datetime="2021-09-21T19:44:22+08:00">2021-09-21</time>
+              </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -225,7 +238,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。</p><h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p>async只需要记住两点就可以：</p><ol>
+        <p>在ES7中async和await被正式发布，它们是基于Promise的语法糖，可以用于优化链式代码的写法，让代码更具有可读性，编写逻辑更加清晰。</p><h4 id="async"><a href="#async" class="headerlink" title="async"></a>async</h4><p>async只需要记住两点就可以：</p><ol>
 <li><p>async函数最终都将返回一个Promise对象，返回值通过resolve的参数传递。</p>
 <p> 比如这段代码：</p>
 <pre><code>async function test() {
@@ -244,7 +257,7 @@
 </ol><a id="more"></a>
 
 
-<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>await可以是等表达式，普通函数，或者Promise对象，当表达式计算完成了，普通函数执行结束了，Promise对象resolve了，那么await就等到结果了，继续往下执行async函数内接下来的代码，而async函数外的代码，在await时就会被执行。</p>
+<h4 id="await"><a href="#await" class="headerlink" title="await"></a>await</h4><p>await可以是表达式，普通函数，或者Promise对象，当表达式计算完成了，普通函数执行结束了，Promise对象resolve了，那么await就等到结果了，继续往下执行async函数内接下来的代码，而async函数外的代码，在await时就会被执行。</p>
 <p>举个例子：</p>
 <pre><code>function a() {
   return new Promise((resolve, reject) =&gt; {
@@ -330,7 +343,7 @@ console.log(&apos;22222&apos;);</code></pre><p>在函数b里，await了函数a�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">2.</span> <span class="nav-text">await</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#async"><span class="nav-number">1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#await"><span class="nav-number">2.</span> <span class="nav-text">await</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -381,12 +394,12 @@ console.log(&apos;22222&apos;);</code></pre><p>在函数b里，await了函数a�
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">162k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:29</span>
+    <span title="Reading time total">2:27</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
@@ -395,6 +408,26 @@ console.log(&apos;22222&apos;);</code></pre><p>在函数b里，await了函数a�
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
