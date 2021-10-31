@@ -50,17 +50,17 @@
   };
 </script>
 
-  <meta name="description" content="为什么需要优化Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。常见检测工具有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈">
+  <meta name="description" content="package_info_plus源码分析package_info_plus用于获取对应平台的包信息（注意只是获取自己的），目前最新版本是1.3.0。使用时，调用fromPlatform方法，就可以拿到对应平台的自身包信息，fromPlatform方法源码如下：static Future&amp;lt;PackageInfo&amp;gt; fromPlatform() async {     if (_from">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android性能优化-布局优化">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;30&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96&#x2F;index.html">
+<meta property="og:title" content="Flutter开源库源码解析（一）">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;10&#x2F;31&#x2F;Flutter%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89&#x2F;index.html">
 <meta property="og:site_name" content="麦田Coder">
-<meta property="og:description" content="为什么需要优化Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。常见检测工具有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈">
+<meta property="og:description" content="package_info_plus源码分析package_info_plus用于获取对应平台的包信息（注意只是获取自己的），目前最新版本是1.3.0。使用时，调用fromPlatform方法，就可以拿到对应平台的自身包信息，fromPlatform方法源码如下：static Future&amp;lt;PackageInfo&amp;gt; fromPlatform() async {     if (_from">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-11-30T15:04:26.002Z">
+<meta property="og:updated_time" content="2021-10-31T04:43:44.227Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2019/11/30/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96/">
+<link rel="canonical" href="http://yoursite.com/2021/10/31/Flutter%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>Android性能优化-布局优化 | 麦田Coder</title>
+  <title>Flutter开源库源码解析（一） | 麦田Coder</title>
   
 
 
@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/30/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/31/Flutter%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/custom_avatar.jpg">
@@ -186,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Android性能优化-布局优化
+          Flutter开源库源码解析（一）
         </h1>
 
         <div class="post-meta">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-11-30 22:49:38 / Modified: 23:04:26" itemprop="dateCreated datePublished" datetime="2019-11-30T22:49:38+08:00">2019-11-30</time>
+              <time title="Created: 2021-10-31 12:34:31 / Modified: 12:43:44" itemprop="dateCreated datePublished" datetime="2021-10-31T12:34:31+08:00">2021-10-31</time>
             </span>
 
           
@@ -213,14 +213,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.3k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>4 mins.</span>
             </span>
 
         </div>
@@ -232,62 +232,117 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="为什么需要优化"><a href="#为什么需要优化" class="headerlink" title="为什么需要优化"></a>为什么需要优化</h2><p>Android布局可能存在的主要问题有两个：过度绘制和卡顿，过度绘制会浪费资源，卡顿会影响用户体验，甚至导致ANR，因此需要进行优化，优化都是围绕着这两个问题展开的，最终目的就是减少过度绘制，减少卡顿。</p><h2 id="常见检测工具"><a href="#常见检测工具" class="headerlink" title="常见检测工具"></a>常见检测工具</h2><p>有时通过直觉无法明显发现过度绘制和卡顿，或者无法准确量化其严重程度，因此需要借助检测工具来帮助我们排查问题，常用的工具主要有两个：开发者选项中的调试GPU过度绘制和GPU呈现模式分析。</p><a id="more"></a>
+        <h3 id="package-info-plus源码分析"><a href="#package-info-plus源码分析" class="headerlink" title="package_info_plus源码分析"></a>package_info_plus源码分析</h3><p>package_info_plus用于获取对应平台的包信息（注意只是获取自己的），目前最新版本是1.3.0。</p><p>使用时，调用fromPlatform方法，就可以拿到对应平台的自身包信息，fromPlatform方法源码如下：</p><pre><code>static Future&lt;PackageInfo&gt; fromPlatform() async {
+    if (_fromPlatform != null) {
+      return _fromPlatform!;
+    }
 
-<ul>
-<li><p><strong>开发者选项-调试GPU过度绘制</strong></p>
-<p>  这里有五种颜色，代表过度绘制的严重程度</p>
-<p>  真彩色：没有过度绘制</p>
-<p>  蓝色：过度绘制1次</p>
-<p>  绿色：过度绘制2次</p>
-<p>  粉色：过度绘制3次</p>
-<p>  红色：过度绘制4次或更多</p>
-<p>  优化的目标，应该是让尽量多的区域为真彩色和蓝色。</p>
-<p>  官方文档：<a href="https://developer.android.google.cn/topic/performance/rendering/overdraw" target="_blank" rel="noopener" title="https://developer.android.google.cn/topic/performance/rendering/overdraw">https://developer.android.google.cn/topic/performance/rendering/overdraw</a></p>
-</li>
-<li><p><strong>开发者选项-GPU呈现模式分析</strong></p>
-<p>  开启后屏幕底下会有不断移动的柱状图，一条代表一帧，高度代表该帧处理和渲染绘制整个过程花费的总时间，低于水平绿线（16ms）才不会出现卡顿。<br>  对于每一帧，不同颜色代表不同阶段所花费的时间，这里有八种颜色，包括：</p>
-<p>  绘制时间：onDraw执行时间</p>
-<p>  测量和布局时间：onMeasure和onLayout执行时间</p>
-<p>  动画时间：ObjectAnimator等动画执行时间，常见场景比如ListView等列表的fling动画。</p>
-<p>  CPU等GPU缓冲区时间：时间长，说明GPU工作太多</p>
-<p>  输入处理时间：处理用户输入的时间，如果时间太长需要开子线程处理。</p>
-<p>  构建DisplayList时间：构建绘制命令时间</p>
-<p>  位图信息上传给GPU时间：将位图信息上传到GPU所花的时间</p>
-<p>  VSync延迟时间：VSync处理延迟时间，时间太长说明UI线程执行了耗时操作</p>
-<p>  官方文档：<a href="https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html" target="_blank" rel="noopener" title="https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html">https://developer.android.google.cn/topic/performance/rendering/profile-gpu.html</a></p>
-</li>
-</ul>
-<h2 id="常见原因和优化方法"><a href="#常见原因和优化方法" class="headerlink" title="常见原因和优化方法"></a>常见原因和优化方法</h2><ul>
-<li><p><strong>在UI线程执行耗时操作</strong></p>
-<p>  <strong>原因：</strong> 比如读写SharePreferences，读写数据库等。</p>
-<p>  <strong>解决方法：</strong> 耗时操作都应该放到子线程中执行。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>布局过于复杂</strong></p>
-<p>  <strong>原因：</strong> 布局嵌套层数过深，以及布局过于复杂，measure，layout，draw需要花费大量时间。</p>
-<p>  <strong>解决方法：</strong> 使用merge标签合并布局，减少一层嵌套；使用ViewStub实现懒加载布局，必要时才inflate布局；使用RelativeLayout减少嵌套层数，相同层数优先用LinearLayout而不是RelativeLayout。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>过度绘制</strong></p>
-<p>  <strong>原因：</strong> 同个位置设置了重复背景，同个像素被绘制多次。</p>
-<p>  <strong>解决方法：</strong> 去除重复背景，去除Window默认背景，自定义View通过Canvas的clipRect指定绘制区域。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>频繁GC导致UI线程被挂起</strong></p>
-<p>  <strong>原因：</strong> 内存抖动。</p>
-<p>  <strong>解决方法：</strong> 排查大量创建短命对象的地方。</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>频繁刷新整个UI布局</strong></p>
-<p>  <strong>原因：</strong> 整个UI布局的measure，layout，draw耗时较多。</p>
-<p>  <strong>解决方法：</strong> 只刷新需要刷新的区域即可，比如调用notifyItemChanged刷新RecyclerView某个Item，ListView也类似，最好能拿到某个Item的View进行刷新。</p>
-</li>
-</ul>
+    final platformData = await _platform.getAll();
+    _fromPlatform = PackageInfo(
+      appName: platformData.appName,
+      packageName: platformData.packageName,
+      version: platformData.version,
+      buildNumber: platformData.buildNumber,
+      buildSignature: platformData.buildSignature,
+    );
+    return _fromPlatform!;
+  }</code></pre><a id="more"></a>
+
+<p>_fromPlatform是缓存对象，而首次真正获取数据的，是调用_platform的getAll方法，_platform对象在不同平台上是不一样的，看下_platform的get实现：</p>
+<pre><code>static PackageInfoPlatform get _platform {
+    if (__platform == null) {
+      if (!_disablePlatformOverride &amp;&amp; !kIsWeb) {
+        if (Platform.isLinux) {
+          __platform = PackageInfoLinux();
+        } else if (Platform.isWindows) {
+          __platform = PackageInfoWindows();
+        }
+      }
+      __platform ??= PackageInfoPlatform.instance;
+    }
+    return __platform!;
+  }</code></pre><p>可以看到，不同平台，会对应不同的__platform对象，比如在windows上，对应的就是PackageInfoWindows对象，它会继承自PackageInfoPlatform抽象类，实现了getAll方法：</p>
+<pre><code>@override
+Future&lt;PackageInfoData&gt; getAll() {
+    final info = _FileVersionInfo(Platform.resolvedExecutable);
+    final versions = info.productVersion!.split(&apos;+&apos;);
+    final data = PackageInfoData(
+      appName: info.productName ?? &apos;&apos;,
+      packageName: info.internalName ?? &apos;&apos;,
+      version: versions.getOrNull(0) ?? &apos;&apos;,
+      buildNumber: versions.getOrNull(1) ?? &apos;&apos;,
+      buildSignature: &apos;&apos;,
+    );
+    info.dispose();
+    return Future.value(data);
+}</code></pre><p>在windows上，最终是通过_FileVersionInfo去拿到信息的，这个是win32库的类，Platform.resolvedExecutable就是exe的文件路径，也就是说它只能获取到自己的，而不是获取windows上已安装的所有软件信息。而对于Android和ios，就是采用MethodChannel实现，最终会调用native api读取软件信息。</p>
+<p>总结：package_info_plus新增了适配层，抽取出公共接口，对不同平台（使用Platform进行ifelse判断）赋予不同的__platform对象，然后各自实现了获取信息逻辑。</p>
+<h3 id="device-info-plus源码分析"><a href="#device-info-plus源码分析" class="headerlink" title="device_info_plus源码分析"></a>device_info_plus源码分析</h3><p>package_info_plus用于获取对应平台的基础信息，目前最新版本是3.1.0。</p>
+<p>它原理和package_info_plus类似，也是有一个_platform对象，然后不同平台对应不同的对象：</p>
+<pre><code>static DeviceInfoPlatform get _platform {
+    if (__platform == null) {
+      if (!_disablePlatformOverride &amp;&amp; !kIsWeb) {
+        if (Platform.isLinux) {
+          __platform = DeviceInfoLinux();
+        } else if (Platform.isWindows) {
+          __platform = DeviceInfoWindows();
+        }
+      }
+      __platform ??= DeviceInfoPlatform.instance;
+    }
+
+    return __platform!;
+  }</code></pre><p>对于windows平台，还是通过win32库实现信息获取，对于android和ios，采用MethodChannel获取。</p>
+<h3 id="win32源码分析"><a href="#win32源码分析" class="headerlink" title="win32源码分析"></a>win32源码分析</h3><p>win32封装了windows相关api，从而实现在Flutter中直接调用对应的api，提高Flutter开发windows程序的效率。</p>
+<p>该库的原理就是去加载常见的windows系统dll，然后找到常见的API函数，然后通过Dart封装起来，形成尽量简单的Dart接口，供第三方调用。以user32.dll为例，加载dll的代码如下：</p>
+<pre><code>final _user32 = DynamicLibrary.open(&apos;user32.dll&apos;);</code></pre><p>然后它又封装了_CreateWindowEx和ShowWindow对应的Dart接口，因此在Dart中直接调用这两个接口，就可以弹出一个windows窗口：</p>
+<pre><code>// Create the window.
+  final windowCaption = TEXT(&apos;Dart Native Win32 window&apos;);
+  final hWnd = CreateWindowEx(
+      0, // Optional window styles.
+      className, // Window class
+      windowCaption, // Window caption
+      WS_OVERLAPPEDWINDOW, // Window style
+
+      // Size and position
+      CW_USEDEFAULT,
+      CW_USEDEFAULT,
+      CW_USEDEFAULT,
+      CW_USEDEFAULT,
+      NULL, // Parent window
+      NULL, // Menu
+      hInstance, // Instance handle
+      nullptr // Additional application data
+      );
+  free(windowCaption);
+  free(className);
+
+  if (hWnd == 0) {
+    final error = GetLastError();
+    throw WindowsException(HRESULT_FROM_WIN32(error));
+  }
+
+  ShowWindow(hWnd, nShowCmd);</code></pre><p>对于其它接口也是类似，这样就不需要自己去写C++然后生成dll，然后再给Dart调用了，当然如果没有对应的系统dll和API，那还是需要自己用C++实现的。</p>
+<h3 id="call源码分析"><a href="#call源码分析" class="headerlink" title="call源码分析"></a>call源码分析</h3><p>call用于在Flutter中加载dll或者so等，如果通过ffi的DynamicLibrary.open方法进行加载，那么需要传入要加载的文件的路径，这个在不同平台（Windows，Linux或者macOS）上是不一样的，因此call这个库就做了适配层，通过使用这个库，直接把文件放assets目录下，然后加载时传文件名就可以了，加载时用的是getDyLibModule方法，代码如下：</p>
+<pre><code>ffi.DynamicLibrary getDyLibModule(String module) {
+  String path = &apos;&apos;;
+  if (Platform.isWindows) {
+    path = Windows().getCurrentPath();
+  } else if (Platform.isLinux) {
+    path = Linux().getCurrentPath();
+  } else if (Platform.isMacOS) {
+    path = Macos().getCurrentPath();
+  } else {
+    throw &apos;The version lib doesn\&apos;t support the platform&apos;;
+  }
+
+  return ffi.DynamicLibrary.open(join(path, module));
+}</code></pre><p>这里会对不同平台做适配，从而获取到对应的路径，以windows为例，对应Windows类：</p>
+<pre><code>class Windows extends TargetPath {
+  @override
+  String getDebugPath() =&gt; join(Directory.current.path,
+      &apos;build\\windows\\runner\\Debug&apos;, &apos;data&apos;, &apos;flutter_assets&apos;);
+}</code></pre><p>Linux和macOS也是类似的原理。</p>
 
     </div>
 
@@ -301,17 +356,14 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/" rel="next" title="深入理解Protobuf3协议原理">
-                  <i class="fa fa-chevron-left"></i> 深入理解Protobuf3协议原理
+                <a href="/2021/09/21/Android%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9F%90%E7%B1%BB%E9%97%AE%E9%A2%98%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/" rel="next" title="Android开发过程中某类问题快速定位方法">
+                  <i class="fa fa-chevron-left"></i> Android开发过程中某类问题快速定位方法
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/12/01/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" rel="prev" title="Android性能优化-内存优化">
-                  Android性能优化-内存优化 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -350,7 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要优化"><span class="nav-number">1.</span> <span class="nav-text">为什么需要优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见检测工具"><span class="nav-number">2.</span> <span class="nav-text">常见检测工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见原因和优化方法"><span class="nav-number">3.</span> <span class="nav-text">常见原因和优化方法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#package-info-plus源码分析"><span class="nav-number">1.</span> <span class="nav-text">package_info_plus源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#device-info-plus源码分析"><span class="nav-number">2.</span> <span class="nav-text">device_info_plus源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#win32源码分析"><span class="nav-number">3.</span> <span class="nav-text">win32源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call源码分析"><span class="nav-number">4.</span> <span class="nav-text">call源码分析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
