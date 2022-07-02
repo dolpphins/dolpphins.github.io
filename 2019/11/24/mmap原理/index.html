@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="普通文件读写过程读文件：会先把文件数据拷贝到内核空间中的页缓存中，然后再把页缓存的数据拷贝到用户空间中，这里需要两次数据拷贝。写文件：先把用户空间的数据拷贝到内核空间，内核空间再写回磁盘，也是两次数据拷贝。mmap实现过程 在当前进程的虚拟地址空间中寻找一段满足要求的虚拟地址，然后创建vm_area_struct结构，对其进行初始化，最后将其插入到进程的虚拟地址区域链表（或者树）中。  内核根据f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mmap原理">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;24&#x2F;mmap%E5%8E%9F%E7%90%86&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="普通文件读写过程读文件：会先把文件数据拷贝到内核空间中的页缓存中，然后再把页缓存的数据拷贝到用户空间中，这里需要两次数据拷贝。写文件：先把用户空间的数据拷贝到内核空间，内核空间再写回磁盘，也是两次数据拷贝。mmap实现过程 在当前进程的虚拟地址空间中寻找一段满足要求的虚拟地址，然后创建vm_area_struct结构，对其进行初始化，最后将其插入到进程的虚拟地址区域链表（或者树）中。  内核根据f">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-11-24T14:12:32.169Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/24/mmap%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>mmap原理 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/24/mmap%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mmap原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-11-24 22:09:29 / Modified: 22:12:32" itemprop="dateCreated datePublished" datetime="2019-11-24T22:09:29+08:00">2019-11-24</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>542</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="普通文件读写过程"><a href="#普通文件读写过程" class="headerlink" title="普通文件读写过程"></a>普通文件读写过程</h2><p>读文件：会先把文件数据拷贝到内核空间中的页缓存中，然后再把页缓存的数据拷贝到用户空间中，这里需要两次数据拷贝。</p><p>写文件：先把用户空间的数据拷贝到内核空间，内核空间再写回磁盘，也是两次数据拷贝。</p><h2 id="mmap实现过程"><a href="#mmap实现过程" class="headerlink" title="mmap实现过程"></a>mmap实现过程</h2><ol>
+<li><p>在当前进程的虚拟地址空间中寻找一段满足要求的虚拟地址，然后创建vm_area_struct结构，对其进行初始化，最后将其插入到进程的虚拟地址区域链表（或者树）中。</p>
+</li>
+<li><p>内核根据fd找到文件磁盘物理地址，建立页表实现文件地址和虚拟地址区域的一一对应。</p>
+</li>
+<li><p>进程对映射的虚拟地址空间发起访问，引发缺页中断，系统会把所缺的页装入主存中。</p>
+</li>
+</ol><a id="more"></a>
+
+
+<h2 id="mmap回写磁盘时机"><a href="#mmap回写磁盘时机" class="headerlink" title="mmap回写磁盘时机"></a>mmap回写磁盘时机</h2><ul>
+<li><p>内存不足</p>
+</li>
+<li><p>进程退出</p>
+</li>
+<li><p>调用msync和munmap</p>
+</li>
+<li><p>一定延迟时间后</p>
+</li>
+</ul>
+<h2 id="mmap应用"><a href="#mmap应用" class="headerlink" title="mmap应用"></a>mmap应用</h2><h4 id="微信日志模块xlog"><a href="#微信日志模块xlog" class="headerlink" title="微信日志模块xlog"></a>微信日志模块xlog</h4><ul>
+<li><p>解决频繁GC，跨平台：采用C++实现</p>
+</li>
+<li><p>解决丢日志，写入速度快：mmap内存映射</p>
+</li>
+<li><p>非集中式压缩：在写入mmap前进行压缩，采用分单元压缩，某条日志损坏只会导致所在的单元无法解压，不影响其它单元，官方说的压缩率为83.7%</p>
+</li>
+<li><p>加密：压缩才加密，能提高效率</p>
+</li>
+</ul>
+<p><strong>整个流程为：采集 –&gt; 压缩 –&gt; 加密 –&gt; 写入mmap –&gt; 操作系统自动回写到日志文件中</strong></p>
+<h4 id="美团日志模块Logan"><a href="#美团日志模块Logan" class="headerlink" title="美团日志模块Logan"></a>美团日志模块Logan</h4><p>其实跟微信的xlog类似，采用C++，mmap，压缩这些技术实现。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/23/Android%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%A4%9A%E6%B8%A0%E9%81%93%E6%89%93%E5%8C%85/" rel="next" title="Android签名机制原理与多渠道打包">
+                  <i class="fa fa-chevron-left"></i> Android签名机制原理与多渠道打包
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/24/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="prev" title="Android屏幕适配方案设计">
+                  Android屏幕适配方案设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#普通文件读写过程"><span class="nav-number">1.</span> <span class="nav-text">普通文件读写过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mmap实现过程"><span class="nav-number">2.</span> <span class="nav-text">mmap实现过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mmap回写磁盘时机"><span class="nav-number">3.</span> <span class="nav-text">mmap回写磁盘时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mmap应用"><span class="nav-number">4.</span> <span class="nav-text">mmap应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#微信日志模块xlog"><span class="nav-number">4.0.1.</span> <span class="nav-text">微信日志模块xlog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#美团日志模块Logan"><span class="nav-number">4.0.2.</span> <span class="nav-text">美团日志模块Logan</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

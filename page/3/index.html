@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="专注于写有深度的技术文章">
+<meta property="og:type" content="website">
+<meta property="og:title" content="麦田Coder">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;page&#x2F;3&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="专注于写有深度的技术文章">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/page/3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/11/SharedPreferences%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/11/SharedPreferences%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">SharedPreferences必须弄清楚的几个问题</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-11 13:16:39 / Modified: 13:17:03" itemprop="dateCreated datePublished" datetime="2020-04-11T13:16:39+08:00">2020-04-11</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>先推荐一下官方的Android源码查看网站：<a href="https://cs.android.com/" target="_blank" rel="noopener">Android Code Search</a>，功能很强大，用起来很方便。</p>
+</blockquote><h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><p>之前写过一篇文章：<a href="https://blog.csdn.net/u012619640/article/details/50940074" target="_blank" rel="noopener">深入理解Android中的SharedPreferences</a>，现在抛开源码，总结成几个关键点：</p><ol>
+<li><p>只要file name相同，拿到的就是同一个SharedPreferencesImpl对象，内部有缓存机制，首次获取才会创建对象。</p>
+</li>
+<li><p>在SharedPreferencesImpl构造方法中，会开启子线程把对应的文件key-value全部加载进内存，加载结束后，mLoaded被设置为true。</p>
+</li>
+<li><p>调用getXXX方法时，会阻塞等待直到mLoaded为true，也就是getXXX方法是有可能阻塞UI线程的，另外，调用contains和<br>edit等方法也是。</p>
+</li>
+<li><p>写数据时，会先拿到一个EditorImpl对象，然后putXXX，这时只是把数据写入到内存中，最后调用commit或者apply方法，才会真正写入文件。</p>
+</li>
+<li><p>不管是commit还是apply方法，第一步都是调用commitToMemory方法生成一个MemoryCommitResult对象，注意这里会先处理clear旧的key-value，再处理新添加的key-value，另外value为this或者null都表示需要被remove掉。</p>
+</li>
+<li><p>调用commit方法，就会同步执行写入文件的操作，该方法是耗时操作，不能在主线程中调用，该方法最后会返回成功或失败结果。</p>
+</li>
+<li><p>调用apply方法，就会把任务放到QueuedWork的队列中，然后在HandlerThread中执行，然后apply方法会立即返回。但如果是Android8.0之前，这里就是放到QueuedWork的一个单线程中执行了。</p>
+</li>
+<li><p>最后是写入文件，会先把原有的文件命名为bak备份文件，然后创建新的文件全量写入，写入成功后，把bak备份文件删除掉。</p>
+</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/11/SharedPreferences%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/22/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/22/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6/" class="post-title-link" itemprop="url">通俗易懂弄清Android P非SDK接口限制</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-22 12:20:21 / Modified: 12:20:51" itemprop="dateCreated datePublished" datetime="2020-03-22T12:20:21+08:00">2020-03-22</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Android-P非SDK接口限制"><a href="#Android-P非SDK接口限制" class="headerlink" title="Android P非SDK接口限制"></a>Android P非SDK接口限制</h2><h3 id="1-三种名单"><a href="#1-三种名单" class="headerlink" title="1. 三种名单"></a>1. 三种名单</h3><ul>
+<li><p>黑名单：不可使用，否则会抛出异常。</p>
+</li>
+<li><p>灰名单：如果当前apk的API级别&lt;接口的限制API级别，那么可以用，否则抛出异常。</p>
+</li>
+<li><p>白名单：受支持的接口，可以使用。</p>
+</li>
+</ul><h3 id="2-抛出异常"><a href="#2-抛出异常" class="headerlink" title="2. 抛出异常"></a>2. 抛出异常</h3><p>如果使用了黑名单的接口，就会抛出异常，调用getDeclaredField()方法会抛出NoSuchFieldException，调用getDeclaredMethod()方法会抛出NoSuchMethodException。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/22/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%BC%84%E6%B8%85Android-P%E9%9D%9ESDK%E6%8E%A5%E5%8F%A3%E9%99%90%E5%88%B6/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">通俗易懂地学习ThreadLocal内部原理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-01-24 11:27:51 / Modified: 11:35:36" itemprop="dateCreated datePublished" datetime="2020-01-24T11:27:51+08:00">2020-01-24</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ThreadLocal是JDK中的一个类，很多基础框架和平时开发中都会使用到，因此有必要弄清其内部原理，才能更好地使用它。</p><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>要弄清原理，还是要先知道如何使用，ThreadLocal用起来是很简单的，一般都是把ThreadLocal定义为static变量，也就是只有一个实例对象，如下：</p><pre><code>private static ThreadLocal&lt;Integer&gt; sThreadLocal = new ThreadLocal&lt;Integer&gt;();</code></pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/11/OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">OkHttp必须弄清楚的几个原理性问题</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-01-11 09:39:51 / Modified: 09:40:10" itemprop="dateCreated datePublished" datetime="2020-01-11T09:39:51+08:00">2020-01-11</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>9 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>okhttp是目前很火的网络请求框架，Android4.4开始HttpURLConnection的底层就是采用okhttp实现的，其Github地址：<a href="https://github.com/square/okhttp" target="_blank" rel="noopener">https://github.com/square/okhttp</a></p><p>来自官方说明：</p><blockquote>
+<p>  OkHttp is an HTTP client that’s efficient by default:</p>
+<ul>
+<li>HTTP/2 support allows all requests to the same host to share a socket.</li>
+<li>Connection pooling reduces request latency (if HTTP/2 isn’t available).</li>
+<li>Transparent GZIP shrinks download sizes.</li>
+<li>Response caching avoids the network completely for repeat requests.</li>
+</ul>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/11/OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/21/Android-Gradle%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%A7%A3%E6%9E%90Gradle-Wrapper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/21/Android-Gradle%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%A7%A3%E6%9E%90Gradle-Wrapper/" class="post-title-link" itemprop="url">Android Gradle原理分析系列（一）：解析Gradle Wrapper</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-21 21:26:49 / Modified: 21:34:04" itemprop="dateCreated datePublished" datetime="2019-12-21T21:26:49+08:00">2019-12-21</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新建一个AS工程，编译器会自动帮我们创建了Gradle Wrapper相关的文件，目录结构如下：</p><pre><code>├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+└── gradlew.bat</code></pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/21/Android-Gradle%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%A7%A3%E6%9E%90Gradle-Wrapper/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%8F%8D%E5%B0%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%8F%8D%E5%B0%84/" class="post-title-link" itemprop="url">深入理解Java反射</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-07 22:31:56 / Modified: 22:54:18" itemprop="dateCreated datePublished" datetime="2019-12-07T22:31:56+08:00">2019-12-07</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍Java反射的内部原理，反射慢的原因，如何优化反射。</p><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>平时开发中反射用得最多的应该是方法调用，下面分析反射调用方法的内部原理，先看getDeclaredMethod方法：</p><pre><code>@CallerSensitive
+public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
+    throws NoSuchMethodException, SecurityException {
+    checkMemberAccess(Member.DECLARED, Reflection.getCallerClass(), true);
+    Method method = searchMethods(privateGetDeclaredMethods(false), name, parameterTypes);
+    if (method == null) {
+        throw new NoSuchMethodException(getName() + &quot;.&quot; + name + argumentTypesToString(parameterTypes));
+    }
+    return method;
+}</code></pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%8F%8D%E5%B0%84/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/07/Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">Android线程死锁检测方案设计</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-07 10:18:56 / Modified: 11:02:27" itemprop="dateCreated datePublished" datetime="2019-12-07T10:18:56+08:00">2019-12-07</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在项目中，使用多线程是很常见的事情，但是如果处理不当，代码写的不好，就可能会导致线程死锁，对于死锁问题，从发现到定位问题都是比较困难的，如果是线上用户发生了线程死锁，那就是难上加难了，因此最好是项目本身有自己一套线程死锁检测机制，能够自动检测，自动上报，然后我们分析上报日志就可以了。</p><h2 id="WatchDog原理"><a href="#WatchDog原理" class="headerlink" title="WatchDog原理"></a>WatchDog原理</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/07/Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入理解Git内部原理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-07 08:53:33 / Modified: 10:01:18" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。</p><h2 id="git目录"><a href="#git目录" class="headerlink" title=".git目录"></a>.git目录</h2><ul>
+<li><p>hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-commit在整个提交过程完成后执行，可以用于发送提交通知等，另外也有服务端钩子，在推送前或者后执行，比如post-receive在推送结束后会被执行，可以用于通知打包平台启动打包任务。关于git钩子更详细的信息可以参考：<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90" target="_blank" rel="noopener" title="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">自定义 Git - Git 钩子</a>。</p>
+</li>
+<li><p>info：保存git的相关信息</p>
+</li>
+<li><p>logs</p>
+<ul>
+<li><p>refs：暂存记录，本地分支记录，远程分支记录</p>
+</li>
+<li><p>HEAD：记录每次的变更操作</p>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">Android性能优化-电量优化</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-06 08:44:15 / Modified: 09:04:33" itemprop="dateCreated datePublished" datetime="2019-12-06T08:44:15+08:00">2019-12-06</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如果应用耗电量过大，就会消耗用户手机过多的电量，甚至发热，现在一般手机都会有耗电量过大的提醒，当用户看到后，也可能会把你的应用卸载掉，因此需要对其进行优化，让应用的耗电量尽可能小。</p><h2 id="检测工具"><a href="#检测工具" class="headerlink" title="检测工具"></a>检测工具</h2><p>Battery Historian：<a href="https://github.com/google/battery-historian" target="_blank" rel="noopener" title="https://github.com/google/battery-historian">https://github.com/google/battery-historian</a></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">Android性能优化-数据库优化</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-06 08:18:37 / Modified: 08:39:17" itemprop="dateCreated datePublished" datetime="2019-12-06T08:18:37+08:00">2019-12-06</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>860</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Android中使用SQLite做为数据库，当数据量很大的情况下，就可能会出现性能问题，比如查询速度过慢，更新速度过慢等，因此需要对其进行优化。</p><h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><ul>
+<li><p><strong>使用事务</strong></p>
+<p>  每次事务都会修改rollback journal文件，因此比较耗时，对于批量操作，应该合并到同一个事务中。</p>
+</li>
+<li><p><strong>建立索引</strong></p>
+<p>  对查询多，更新少的字段建立索引，但索引会占用空间，而且会降低更新速度。</p>
+</li>
+<li><p><strong>使用SQLiteStatement</strong></p>
+<p>  对于循环执行数据库操作，应该在循环外预编译好sql语句得到SQLiteStatement对象，然后循环内bindXXX，而不是直接在循环内调用execSQL方法，这样会导致创建大量的SQLiteStatement临时对象，而且每次都会重新编译sql语句。</p>
+</li>
+<li><p><strong>缓存getColumnIndex返回结果</strong></p>
+<p>  对于循环执行数据库操作，getColumnIndex方法应该放到循环前调用，而不是每次循环都调用一次，虽然该方法的本质是从Map中查找index，但对性能还是有一定的影响的，放在循环前调用会稍微快一些。</p>
+</li>
+<li><p><strong>Cursor优化</strong></p>
+<p>  正如微信的WCDB所说，在合适的场景下，直接把Cursor的共享内存缓存去掉，会提高数据查询的速度。</p>
+</li>
+<li><p><strong>分表、分库</strong></p>
+<p>  SQLite的同步锁是表级别的，因此为了避免等待，可以按照具体场景拆分为多个表，或者分库。</p>
+</li>
+<li><p><strong>SQL语句拼接</strong></p>
+<p>  不要用+进行连接，用StringBuilder，有循环的最后放到循环外部，不要每次循环都去生成sql语句字符串。</p>
+</li>
+<li><p><strong>SQL语句优化</strong></p>
+<p>  适用所有数据库优化，不仅仅只是SQLite，见下部分。</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

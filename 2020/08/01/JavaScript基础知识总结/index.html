@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、常见数据类型JavaScript中可以用typeof获取某个变量的数据类型，常见的数据类型有：number，string，boolean，object，function，undefined，直接看代码：let a = 1; let b = 1.222; alert(typeof(a)); &#x2F;&#x2F; number alert(typeof(b)); &#x2F;&#x2F; number  let c = &amp;apos;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript基础知识总结">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;01&#x2F;JavaScript%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="一、常见数据类型JavaScript中可以用typeof获取某个变量的数据类型，常见的数据类型有：number，string，boolean，object，function，undefined，直接看代码：let a = 1; let b = 1.222; alert(typeof(a)); &#x2F;&#x2F; number alert(typeof(b)); &#x2F;&#x2F; number  let c = &amp;apos;">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-09-21T11:05:46.883Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/08/01/JavaScript%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>JavaScript基础知识总结 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/JavaScript%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript基础知识总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-01 22:09:29" itemprop="dateCreated datePublished" datetime="2020-08-01T22:09:29+08:00">2020-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:05:46" itemprop="dateModified" datetime="2021-09-21T19:05:46+08:00">2021-09-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、常见数据类型"><a href="#一、常见数据类型" class="headerlink" title="一、常见数据类型"></a>一、常见数据类型</h3><p>JavaScript中可以用typeof获取某个变量的数据类型，常见的数据类型有：number，string，boolean，object，function，undefined，直接看代码：</p><pre><code>let a = 1;
+let b = 1.222;
+alert(typeof(a)); // number
+alert(typeof(b)); // number
+
+let c = &apos;1&apos;;
+let d = &apos;hello&apos;;
+let k = &apos;&apos;;
+alert(typeof(c)); // string
+alert(typeof(d)); // string
+alert(typeof(k)); // string
+
+let e = true;
+alert(typeof(e)); // boolean
+
+let m = window;
+let n = {};
+let p = null;
+let q = [1, 2, 3];
+alert(typeof(m)); // object
+alert(typeof(n)); // object
+alert(typeof(p)); // object
+alert(typeof(q)); // object
+
+let fun = function() {}
+alert(typeof(fun)); // function
+
+let json = {}
+alert(json.a); // undefined
+let y;
+alert(y); // undefined
+let fun1 = function(){
+    return;
+}
+alert(fun1()); // undefined
+let fun2 = function(){}
+alert(fun2()); // undefined</code></pre><a id="more"></a>
+<h3 id="二、类型转换"><a href="#二、类型转换" class="headerlink" title="二、类型转换"></a>二、类型转换</h3><h4 id="1-显式类型转换"><a href="#1-显式类型转换" class="headerlink" title="1. 显式类型转换"></a>1. 显式类型转换</h4><p>通过全局函数parseInt，parseFloat进行转换，如下：</p>
+<pre><code>let a = &apos;123&apos;
+alert(parseInt(a) + 1); // 124</code></pre><p>parseInt会从左到右扫描，直到遇到无法解析字符为止，如果第一个字符就无法解析，那么就返回NaN，如下：</p>
+<pre><code>let b = &apos;123hello&apos;
+alert(parseInt(b)); // 123
+let c = &apos;1hello23&apos;
+alert(parseInt(c)); // 1
+let d = &apos;2.333&apos;
+alert(parseInt(d)); // 2
+let e = &apos;hello&apos;
+alert(parseInt(e)); // NaN</code></pre><p>注意NaN不能用==进行判断相等，需要用isNaN函数进行判断。</p>
+<h4 id="2-隐式类型转换"><a href="#2-隐式类型转换" class="headerlink" title="2. 隐式类型转换"></a>2. 隐式类型转换</h4><pre><code>let a = 123;
+let b = 123;
+let c = &apos;123hello&apos;;
+alert(a == b); // true
+alert(a == c); // false</code></pre><p>这里b会被先转换成number类型123，然后再与a进行比较，结果返回true，而c就不会，所以返回false，如果需要判断类型可以改为用===，这时123就不会和’123’相等了。</p>
+<p>在使用+，-等数学运算符时也可能存在隐式类型转换：</p>
+<pre><code>let a = &apos;10&apos;;
+let b = 2;
+alert(a - b); // 8
+let c = &apos;10hello&apos;;
+alert(c - b); // NaN
+let d = &apos;3&apos;;
+alert(a + b); // &apos;102&apos;</code></pre><p>对于能直接字符串连接的就直接连接，否则就尝试转换成number再运算，对于无法转换的返回NaN。</p>
+<h3 id="三、变量作用域"><a href="#三、变量作用域" class="headerlink" title="三、变量作用域"></a>三、变量作用域</h3><p>子函数可以使用父函数定义的局部变量。</p>
+<h3 id="四、数组"><a href="#四、数组" class="headerlink" title="四、数组"></a>四、数组</h3><p>JavaScript中定义数组有两种方式：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+let arr2 = new Array(5, 6, 7);
+alert(arr1);
+alert(arr2);</code></pre><p>而且同个数组可以存放不同类型数据：</p>
+<pre><code>let arr3 = [1, &apos;hello&apos;, 2];
+alert(arr3);</code></pre><p>数组有个length属性，表示数组的长度，而且该属性值还可以修改：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+alert(arr1.length); // 4
+arr1.length = 2;
+alert(arr1); // [1, 2]</code></pre><p>数组本身就是对象，有一系列的函数可以调用，比如在数组尾部添加和删除元素用push和pop：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+arr1.push(5);
+alert(arr1); // [1, 2, 3, 4, 5]
+arr1.pop();
+arr1.pop();
+alert(arr1); // [1, 2, 3]</code></pre><p>相对应的，在数组头添加和删除元素用unshift和shift：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+arr1.unshift(0);
+alert(arr1); // [0, 1, 2, 3, 4]
+arr1.shift();
+arr1.shift();
+alert(arr1); // [2, 3, 4]</code></pre><p>另外还有个splice函数，用于在指定位置删除和添加元素：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+// (起始位置，要删除元素个数，要添加的元素列表)
+arr1.splice(1, 2, &apos;a&apos;, &apos;b&apos;);
+alert(arr1); // [1, a, b, 4]</code></pre><p>concat函数用于连接多个数组，join函数用于数组转字符串：</p>
+<pre><code>let arr1 = [1, 2, 3, 4];
+let arr2 = arr1.concat([1, 2, 3]);
+let arr3 = arr1.concat(1);
+alert(arr1); // 原数组不会改变，[1, 2, 3, 4]
+alert(arr2); // 连接后得到的副本，[1, 2, 3, 4, 1, 2, 3]
+alert(arr3); // [1, 2, 3, 4, 1]
+
+let arr1 = [1, 2, 3, 4];
+alert(arr1.join(&apos;-&apos;)); // 1-2-3-4</code></pre><p>最后一个是数组排序函数sort，注意它默认都是按照字符串进行排序的，即使数组中的元素都是number类型：</p>
+<pre><code>let arr = [8, 9, 10, 11, 3, 2];
+arr.sort();
+alert(arr); // [10, 11, 2, 3, 8, 9]</code></pre><p>如果要按照数值大小进行排序，需要传入比较函数：</p>
+<pre><code>let arr = [8, 9, 10, 11, 3, 2];
+arr.sort(function(n1, n2){
+    return n1 - n2;
+});
+alert(arr); // [2, 3, 8, 9, 10, 11]</code></pre><h3 id="五、条件和循环"><a href="#五、条件和循环" class="headerlink" title="五、条件和循环"></a>五、条件和循环</h3><p>这两个和C++中的类似，都是if，else，switch，for，while，break，continue这些，另外JavaScript也有三目表达式。需要注意的就是JavaScript中可以用for…in进行循环遍历：</p>
+<pre><code>let arr = [1, 2, 3];
+for (let index in arr) {
+    alert(arr[index]);
+}</code></pre><p>这里需要注意条件语句中的判断条件为false的情况：</p>
+<pre><code>let a; 
+alert(a ? &apos;true&apos; : &apos;false&apos;); // undefined false
+let b = null;
+alert(b ? &apos;true&apos; : &apos;false&apos;); // 空对象 false
+let c = &apos;&apos;;
+alert(c ? &apos;true&apos; : &apos;false&apos;); // 空字符串 false
+let d = 0;
+alert(d ? &apos;true&apos; : &apos;false&apos;); // 0 false</code></pre><p>也就是说，这四种情况下都是判断为false，其它情况判断为true。</p>
+<h3 id="六、Json"><a href="#六、Json" class="headerlink" title="六、Json"></a>六、Json</h3><p>JavaScript中经常会使用到json对象，比如请求接口时后端的返回结果等，访问json中的值可以用.或者[]：</p>
+<pre><code>let json = {a: 1, b: 2, c: 3};
+alert(json.a); // 1
+alert(json[&apos;b&apos;]); // 2
+alert(json.d); // undefined</code></pre><p>遍历json：</p>
+<pre><code>let json = {a: 1, b: 2, c: 3};
+for (let key in json) {
+    alert(json[key]);
+}</code></pre><h3 id="七、函数"><a href="#七、函数" class="headerlink" title="七、函数"></a>七、函数</h3><p>JavaScript中没有真正意义上的函数重载，但对于某个函数，参数个数是不固定的，可以通过arguments获取到：</p>
+<pre><code>let fun = function() {
+    alert(arguments.length); // 2
+}
+fun(1, 2);</code></pre><p>也就是说，调用函数时不能看函数参数签名，参数签名列表可以是空，但外部还是可以传参数进去的，内部也可以通过arguments获取到对于的参数，不过为了可读性，一般都会写上参数列表：</p>
+<pre><code>let fun = function(a, b, c) {
+    alert(a + b + c);
+}
+fun(1, 2, 3);</code></pre><h3 id="八、事件队列"><a href="#八、事件队列" class="headerlink" title="八、事件队列"></a>八、事件队列</h3><p>avaScript只有一个线程在干活，不支持多线程，但它又是非阻塞的，其内部使用了事件队列。</p>
+<p>JavaScript中有两个事件队列：宏任务队列和微任务队列，setTimeout和setInterval等任务会被加到宏任务队列中，Promise等任务会被加到微任务队列中，在优先级上：主线程&gt;微任务队列&gt;宏任务队列。可以通过下面的示例代码理解这个机制：</p>
+<pre><code>console.log(&apos;start&apos;);
+setTimeout(function() {
+    console.log(&apos;222&apos;);
+}，0)
+new Promise((resolve, reject) =&gt; {
+    console.log(&apos;333&apos;);
+    resolve();
+    console.log(&apos;444&apos;);
+}).then(value =&gt; {
+    console.log(&apos;success&apos;);
+}, reason =&gt; {
+    console.log(&apos;fail&apos;);
+});
+console.log(&apos;111&apos;);</code></pre><p>上面代码被执行，首先肯定是先输出start，然后执行了setTimeout函数，这时会把任务加到宏任务队列中，接着又创建了一个Promise对象然后执行其任务，输出333，回调resolve，这时会把任务加到微任务队列中，然后输出444，继续往下执行，输出111，这时主线程的代码都执行完了，就开始轮询事件队列，先取出微任务队列中的所有任务，这里面有刚才的resolve回调，开始执行，输出success，微任务队列的任务都执行完了，继续取宏任务队列中的队头任务，是刚才setTimeout的任务，因此输出222。</p>
+<p>所以输出的日志为：start–&gt;333–&gt;444-&gt;111-&gt;success–&gt;222</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/07/11/Android%E4%B8%AD%E7%9A%84Kotlin%E5%9F%BA%E7%A1%80/" rel="next" title="Android中的Kotlin基础">
+                  <i class="fa fa-chevron-left"></i> Android中的Kotlin基础
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/09/19/%E4%BD%BF%E7%94%A8Promise%E8%A7%A3%E5%86%B3%E4%BB%A3%E7%A0%81%E5%B5%8C%E5%A5%97%E9%97%AE%E9%A2%98/" rel="prev" title="使用Promise解决代码嵌套问题">
+                  使用Promise解决代码嵌套问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、常见数据类型"><span class="nav-number">1.</span> <span class="nav-text">一、常见数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、类型转换"><span class="nav-number">2.</span> <span class="nav-text">二、类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-显式类型转换"><span class="nav-number">2.1.</span> <span class="nav-text">1. 显式类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-隐式类型转换"><span class="nav-number">2.2.</span> <span class="nav-text">2. 隐式类型转换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、变量作用域"><span class="nav-number">3.</span> <span class="nav-text">三、变量作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、数组"><span class="nav-number">4.</span> <span class="nav-text">四、数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、条件和循环"><span class="nav-number">5.</span> <span class="nav-text">五、条件和循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、Json"><span class="nav-number">6.</span> <span class="nav-text">六、Json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、函数"><span class="nav-number">7.</span> <span class="nav-text">七、函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、事件队列"><span class="nav-number">8.</span> <span class="nav-text">八、事件队列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、前言DataBinding库其实出来挺久了，最近工作涉及到跨平台开发，接触到前端的响应式编程，比如微信小程序开发，Vue框架，使用起来还是比较方便的，开发效率也比较高，因此深入分析了Android中的DataBinding库的使用和原理。二、使用1. 简单入门先从最简单的入手，为了让项目支持使用DataBinding，需要在build.gradle中打开开关：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Android数据绑定库DataBinding">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;10&#x2F;07&#x2F;%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%BA%93DataBinding&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="一、前言DataBinding库其实出来挺久了，最近工作涉及到跨平台开发，接触到前端的响应式编程，比如微信小程序开发，Vue框架，使用起来还是比较方便的，开发效率也比较高，因此深入分析了Android中的DataBinding库的使用和原理。二、使用1. 简单入门先从最简单的入手，为了让项目支持使用DataBinding，需要在build.gradle中打开开关：">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2021-09-21T11:32:42.429Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/10/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%BA%93DataBinding/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>深入理解Android数据绑定库DataBinding | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%BA%93DataBinding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入理解Android数据绑定库DataBinding
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-07 22:09:29" itemprop="dateCreated datePublished" datetime="2020-10-07T22:09:29+08:00">2020-10-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 19:32:42" itemprop="dateModified" datetime="2021-09-21T19:32:42+08:00">2021-09-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>8.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>DataBinding库其实出来挺久了，最近工作涉及到跨平台开发，接触到前端的响应式编程，比如微信小程序开发，Vue框架，使用起来还是比较方便的，开发效率也比较高，因此深入分析了Android中的DataBinding库的使用和原理。</p><h3 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h3><h4 id="1-简单入门"><a href="#1-简单入门" class="headerlink" title="1. 简单入门"></a>1. 简单入门</h4><p>先从最简单的入手，为了让项目支持使用DataBinding，需要在build.gradle中打开开关：</p><a id="more"></a>
+
+<pre><code>android {
+    ......
+    dataBinding {
+        enabled true
+    }
+}</code></pre><p>然后写个简单的布局文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;layout
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;data&gt;
+        &lt;variable
+            name=&quot;text&quot;
+            type=&quot;String&quot; /&gt;
+    &lt;/data&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:orientation=&quot;vertical&quot;&gt;
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_margin=&quot;10dp&quot;
+            android:text=&quot;@{text}&quot;/&gt;
+    &lt;/LinearLayout&gt;
+&lt;/layout&gt;</code></pre><p>最后在Activity的onCreate中设置text的值：</p>
+<pre><code>public class BasicActivity extends Activity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        final ActivityBasicBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_basic);
+        binding.setText(&quot;hello world&quot;);
+    }
+}</code></pre><p>这样最简单的数据绑定demo就写好了，代码通过setText设置text的值，UI就会自动进行刷新。</p>
+<h4 id="2-表达式"><a href="#2-表达式" class="headerlink" title="2. 表达式"></a>2. 表达式</h4><p>可以看到，在布局文件中，使用数据绑定用的是@{}符号，而中间就是具体的变量，其实这里也可以支持各种表达式的，比如+-/*%，&amp;&amp; || 数组访问等等，官方给出支持表达式如下：</p>
+<pre><code>算术运算符 + - / * %
+字符串连接运算符 +
+逻辑运算符 &amp;&amp; ||
+二元运算符 &amp; | ^
+一元运算符 + - ! ~
+移位运算符 &gt;&gt; &gt;&gt;&gt; &lt;&lt;
+比较运算符 == &gt; &lt; &gt;= &lt;=（请注意，&lt; 需要转义为 &amp;lt;）
+instanceof
+分组运算符 ()
+字面量运算符 - 字符、字符串、数字、null
+类型转换
+方法调用
+字段访问
+数组访问 []
+三元运算符 ?:</code></pre><p>注意表达式如果涉及到字符串的，外层需要使用’’，而内层的字符串使用””，另外所有的&lt;都必须写成&lt;。</p>
+<h4 id="3-Observable"><a href="#3-Observable" class="headerlink" title="3. Observable"></a>3. Observable</h4><p>在上面的代码中，绑定的变量是一个String对象text，比较简单，但其实还可以绑定到更复杂的实体类中，比如user.name，如果User只是一个普通的实体类，我们修改里面的name，实际上并不会自动更新UI，而需要调用setUser才能更新，下面以RGB实体类为例进行说明：</p>
+<pre><code>Random random = new Random();
+data.setR(random.nextInt(256));
+data.setG(random.nextInt(256));
+data.setB(random.nextInt(256));
+// 这里必须重新设置才能触发更新
+mBinding.setData(data);</code></pre><p>这时我们可以改造RGB类，让它继承自BaseObservable，然后在get方法上加注解@Bindable，在set方法中调用notifyPropertyChanged通知字段发生改变，如下：</p>
+<pre><code>public class ObservableRGB extends BaseObservable {
+
+    private int r;
+    private int g;
+    private int b;
+
+    @Bindable
+    public int getR() {
+        return r;
+    }
+
+    public void setR(int r) {
+        this.r = r;
+        notifyPropertyChanged(BR.r);
+    }
+
+    @Bindable
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+        notifyPropertyChanged(BR.g);
+    }
+
+    @Bindable
+    public int getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b = b;
+        notifyPropertyChanged(BR.b);
+    }
+}</code></pre><p>这时就不再需要调用setData重新设置整个实体类对象了，只要r或者g或者b的值改变了，都会字段更新到UI上。</p>
+<p>这种做法还是比较麻烦的，因为rgb都是int值，其实有更简单的方法，也就是用ObservableInt，直接把rgb都定义为ObservableInt引用就可以实现了，如下：</p>
+<pre><code>public class IntRGB {
+
+    private ObservableInt r = new ObservableInt();
+    private ObservableInt g = new ObservableInt();
+    private ObservableInt b = new ObservableInt();
+    private ObservableField&lt;String&gt; s = new ObservableField&lt;&gt;();
+
+    /**
+     * 注意这里必须返回ObservableInt对象，而不是int值
+     * @return
+     */
+    public ObservableInt getR() {
+        return r;
+    }
+
+    public void setR(int r) {
+        this.r.set(r);
+    }
+
+    public ObservableInt getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g.set(g);
+    }
+
+    public ObservableInt getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b.set(b);
+    }
+
+    public ObservableField&lt;String&gt; getS() {
+        return s;
+    }
+
+    public void setS(String s) {
+        this.s.set(s);
+    }
+}</code></pre><p>注意这里有个坑，getXXX必须返回ObservableInt对象，而不能返回具体的值，不然会出现UI不刷新的问题。</p>
+<h4 id="4-绑定事件"><a href="#4-绑定事件" class="headerlink" title="4. 绑定事件"></a>4. 绑定事件</h4><p>DataBinding也支持绑定事件，比如绑定onClick的回调方法，onWindowFocusChanged的回调方法等等，而且绑定时支持lambda表达式，回调方法支持自定义参数：</p>
+<pre><code>&lt;Button
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;方法引用方式&quot;
+        android:onClick=&quot;@{eventHandler::onClick}&quot;/&gt;
+
+&lt;Button
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;lambda表达式方式&quot;
+    android:onClick=&quot;@{() -&gt; eventHandler.onLambdaClick(context)}&quot;
+    android:layout_marginTop=&quot;10dp&quot;/&gt;</code></pre><p>这里的context是DataBinding内部实现好的，可以直接用，实际上就是对应的Activity对象。</p>
+<h4 id="5-BindingAdapter"><a href="#5-BindingAdapter" class="headerlink" title="5. BindingAdapter"></a>5. BindingAdapter</h4><p>在最开始的例子中，我们可能会想，DataBinding是如何知道android:text的值，要用setText方法去动态设置，这里其实就涉及到绑定查找顺序，DataBinding会先查找对应的set方法，比如text，就找setText，color就找setColor，如果找到就可以直接用了，如果找不到，就遍历BindingMethod注解，这个注解会声明xml属性对应哪个方法，如果还是没有，就会找被BindingAdapter注解的方法，该注解会指定该方法对应的属性，如果还是没有，就编译失败报错。</p>
+<p>BindingMethod用法：</p>
+<pre><code>@BindingMethods({
+    @BindingMethod(type = TextView.class, attribute = &quot;app:bindText&quot;, method = &quot;setText&quot;)
+})
+public class BindingAdapterHelper {
+    ......
+}</code></pre><p>这里bindText是自定义属性，通过BindingMethod注解，把它映射到setText方法上，最终会通过setText方法设置该值，注意BindingMethods和BindingMethod是一起使用的，BindingMethod是BindingMethods的值。</p>
+<p>BindingAdapter用法：</p>
+<pre><code>@androidx.databinding.BindingAdapter({&quot;url&quot;})
+    public static void loadImage(ImageView view, String url) {
+        Log.i(TAG, &quot;url:&quot; + url);
+        Glide.with(view.getContext()).load(url).into(view);
+}</code></pre><p>这里又有一个自定义属性url，通过BindingAdapter注解，DataBinding最终会调用loadImage方法，然后我们在该方法里实现自己的逻辑，比如加载网络图片。</p>
+<h4 id="6-BindingConversion"><a href="#6-BindingConversion" class="headerlink" title="6. BindingConversion"></a>6. BindingConversion</h4><p>这个就比较简单了，可以实现特定类型的自定义转换，二次处理，只要xml中的属性的参数和返回值与其返回值被BindingConversion注解的方法的参数和返回值一值，就会调用该方法，拿到返回值后再进行设置。</p>
+<pre><code>&lt;TextView
+    android:layout_width=&quot;100dp&quot;
+    android:layout_height=&quot;100dp&quot;
+    android:background=&quot;@{color}&quot;/&gt;
+
+@androidx.databinding.BindingConversion
+public static Drawable convertStringToDrawable(int color) {
+    return new ColorDrawable(color);
+}</code></pre><h4 id="7-双向数据绑定"><a href="#7-双向数据绑定" class="headerlink" title="7. 双向数据绑定"></a>7. 双向数据绑定</h4><p>上面所说的都是单向绑定，也就是从data到UI，但DataBinding也是支持从UI到data的，比如输入框内容发生改变了，data的值也会跟着改变，SeekBar的进度发生改变了，data的值也跟着改变，为了实现从UI到data的绑定，需要使用@={}符号：</p>
+<pre><code>&lt;EditText
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;@={data.text}&quot;
+    android:layout_marginTop=&quot;20dp&quot;/&gt;
+&lt;TextView
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:layout_marginTop=&quot;10dp&quot;
+    android:text=&quot;@{data.text}&quot;/&gt;</code></pre><p>可以看到，EditText和data.text实现了双向绑定，data.text的值发生了改变，会显示到EditText上，在EditText上直接修改文本，也会导致data.text变成修改后的文本，下面的进度条也是类似：</p>
+<pre><code>&lt;SeekBar
+    android:id=&quot;@+id/search_bar&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:progress=&quot;@={data.progress}&quot;
+    android:layout_marginTop=&quot;50dp&quot;/&gt;
+
+&lt;TextView
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:text=&quot;@{String.valueOf(data.progress)}&quot;
+    android:layout_marginTop=&quot;20dp&quot;
+    android:textSize=&quot;20sp&quot;/&gt;</code></pre><h4 id="7-include和ViewStub"><a href="#7-include和ViewStub" class="headerlink" title="7. include和ViewStub"></a>7. include和ViewStub</h4><p>DataBinding支持对include进行数据绑定，值会被传到include实际的布局中，通过也支持ViewStub。</p>
+<h3 id="三、原理"><a href="#三、原理" class="headerlink" title="三、原理"></a>三、原理</h3><p>DataBinding的实现原理不算复杂，通过反编译生成的apk，或者调试内部代码，大概就会明白其中的实现方法，可以分为两个阶段，编译阶段和运行阶段。</p>
+<h4 id="编译阶段"><a href="#编译阶段" class="headerlink" title="编译阶段"></a>编译阶段</h4><p>在编译时，DataBinding编译器会处理layout为根节点的xml文件，然后生成正常的xml布局文件，还是最开始的demo，生成的xml布局文件如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout
+              xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+              android:orientation=&quot;vertical&quot; 
+              android:tag=&quot;layout/activity_basic_0&quot; 
+              android:layout_width=&quot;match_parent&quot;
+              android:layout_height=&quot;match_parent&quot;&gt;
+    &lt;TextView 
+              android:tag=&quot;binding_1&quot; 
+              android:layout_width=&quot;wrap_content&quot;
+              android:layout_height=&quot;wrap_content&quot; 
+              android:layout_margin=&quot;10dp&quot;/&gt;
+&lt;/LinearLayout&gt;</code></pre><p>可以看到，这个多了tag信息，这个是DataBinding自动加上的，待会在运行阶段会用到，会通过该tag找到该View对应的绑定的值。</p>
+<p>编译时DataBinding还会生成几个类，最关键的就是XXXBindingImpl类，这个类的类名默认是根据xml命名按照一定规律生成的，当然也可以在data标签下指定为其它名字，这个XXXBindingImpl类就是实现data和UI绑定的关键，在运行阶段会用到。</p>
+<h4 id="运行阶段"><a href="#运行阶段" class="headerlink" title="运行阶段"></a>运行阶段</h4><p>在运行时，我们会调用如下代码：</p>
+<pre><code>final ActivityBasicBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_basic);
+binding.setText(&quot;hello world&quot;);</code></pre><p>这里的ActivityBasicBinding对象，其实就是ActivityBasicBindingImpl类对象，它会做几件事：</p>
+<ol>
+<li><p>在对象初始化时，寻找所有的View引用，然后保存起来。</p>
+</li>
+<li><p>在data发送改变时，会用Choreographer发送一个回调任务，该任务会在UI线程中执行。</p>
+</li>
+<li><p>上面所说的回调任务，就是执行UI刷新操作，最终会调用到ActivityBasicBindingImpl类的executeBindings方法，该方法会调用属性的对应的方法进行UI刷新。<br>看下ActivityBasicBindingImpl类的executeBindings方法：</p>
+<pre><code>@Override
+protected void executeBindings() {
+    long dirtyFlags = 0;
+    synchronized(this) {
+        dirtyFlags = mDirtyFlags;
+        mDirtyFlags = 0;
+    }
+    java.lang.String text = mText;
+
+    if ((dirtyFlags &amp; 0x3L) != 0) {
+    }
+    // batch finished
+    if ((dirtyFlags &amp; 0x3L) != 0) {
+        // api target 1
+
+        androidx.databinding.adapters.TextViewBindingAdapter.setText(this.mboundView1, text);
+    }
+}</code></pre></li>
+</ol>
+<p>这里直接调用mboundView1的setText也是可以的，但可能会导致死循环，所以实际上还是调用了TextViewBindingAdapter的setText方法，这个TextViewBindingAdapter是官方提供的，也就是TextView的BindingAdapter，在setText里做了新旧值相等判断，不相等才需要更新UI。</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>经过上面的使用和分析，已经较全面地学习DataBinding的使用和内部原理，能够在项目中很轻松地写出DataBinding代码，接下来分析下DataBinding的优点和存在的问题。</p>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li><p>可以避免无用的刷新，实现高效局部刷新，比如ListView或者RecyclerView某个Item的某个控件的刷新。</p>
+</li>
+<li><p>避免重复调用findViewById，DataBinding内部帮我们调用了，而且只调用一次。</p>
+</li>
+<li><p>能够实现MVVM模式，数据改变直接触发UI更新，VM不会持有View的引用，也不会做更新UI的逻辑，该开发模式同时也能节省不少代码，提高开发效率。</p>
+</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li><p>因为都是全自动绑定，出问题不好定位，调试不容易。</p>
+</li>
+<li><p>可能会导致占用内存大。</p>
+</li>
+<li><p>编译速度变慢。</p>
+</li>
+</ol>
+<h4 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h4><ol>
+<li><p>常规数据绑定，逻辑解耦。</p>
+</li>
+<li><p>实现局部刷新，提高性能。</p>
+</li>
+<li><p>加上特殊逻辑，比如ImageView加载图片时特殊逻辑。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/09/26/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Promise/" rel="next" title="深入分析Promise">
+                  <i class="fa fa-chevron-left"></i> 深入分析Promise
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/11/21/%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/" rel="prev" title="动手实现Android热修复">
+                  动手实现Android热修复 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、使用"><span class="nav-number">2.</span> <span class="nav-text">二、使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-简单入门"><span class="nav-number">2.1.</span> <span class="nav-text">1. 简单入门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-表达式"><span class="nav-number">2.2.</span> <span class="nav-text">2. 表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Observable"><span class="nav-number">2.3.</span> <span class="nav-text">3. Observable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-绑定事件"><span class="nav-number">2.4.</span> <span class="nav-text">4. 绑定事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-BindingAdapter"><span class="nav-number">2.5.</span> <span class="nav-text">5. BindingAdapter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-BindingConversion"><span class="nav-number">2.6.</span> <span class="nav-text">6. BindingConversion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-双向数据绑定"><span class="nav-number">2.7.</span> <span class="nav-text">7. 双向数据绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-include和ViewStub"><span class="nav-number">2.8.</span> <span class="nav-text">7. include和ViewStub</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、原理"><span class="nav-number">3.</span> <span class="nav-text">三、原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编译阶段"><span class="nav-number">3.1.</span> <span class="nav-text">编译阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行阶段"><span class="nav-number">3.2.</span> <span class="nav-text">运行阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-number">4.</span> <span class="nav-text">四、总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">4.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点"><span class="nav-number">4.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#适用场景"><span class="nav-number">4.3.</span> <span class="nav-text">适用场景</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

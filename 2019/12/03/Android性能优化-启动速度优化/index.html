@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="如果APP启动速度很慢，会导致用户体验很差，甚至用户流失。所以我们需要持续地对启动速度进行优化，不断减少启动等待时间，把优化做到极致。启动类型启动类型可以分为三种： 冷启动   进程不存在，启动时需要先创建进程，然后再创建并打开页面。  温启动   进程存在，但页面不存在，只需要创建并打开页面。  热启动   进程存在，页面也存在，直接把页面拉到前台即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android性能优化-启动速度优化">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;03&#x2F;Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="如果APP启动速度很慢，会导致用户体验很差，甚至用户流失。所以我们需要持续地对启动速度进行优化，不断减少启动等待时间，把优化做到极致。启动类型启动类型可以分为三种： 冷启动   进程不存在，启动时需要先创建进程，然后再创建并打开页面。  温启动   进程存在，但页面不存在，只需要创建并打开页面。  热启动   进程存在，页面也存在，直接把页面拉到前台即可。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-03T01:10:07.684Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/03/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Android性能优化-启动速度优化 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/03/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android性能优化-启动速度优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-03 08:44:10 / Modified: 09:10:07" itemprop="dateCreated datePublished" datetime="2019-12-03T08:44:10+08:00">2019-12-03</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>如果APP启动速度很慢，会导致用户体验很差，甚至用户流失。所以我们需要持续地对启动速度进行优化，不断减少启动等待时间，把优化做到极致。</p><h2 id="启动类型"><a href="#启动类型" class="headerlink" title="启动类型"></a>启动类型</h2><p>启动类型可以分为三种：</p><ul>
+<li><p>冷启动</p>
+<p>  进程不存在，启动时需要先创建进程，然后再创建并打开页面。</p>
+</li>
+<li><p>温启动</p>
+<p>  进程存在，但页面不存在，只需要创建并打开页面。</p>
+</li>
+<li><p>热启动</p>
+<p>  进程存在，页面也存在，直接把页面拉到前台即可。</p>
+</li>
+</ul><a id="more"></a>
+
+
+<h2 id="检测工具"><a href="#检测工具" class="headerlink" title="检测工具"></a>检测工具</h2><ul>
+<li><p>代码日志</p>
+<p>  通过代码计算时间差，得到代码执行时间，存在的问题是需要手动添加计算代码，如果要检测的地方很多，就需要加很多计算代码，很不方便。</p>
+</li>
+<li><p>系统日志</p>
+<pre><code>ActivityManager: Displayed com.tencent.mm/.app.WeChatSplashActivity: +424ms (total +1s37ms)</code></pre><p>  上面是微信冷启动的系统日志，这里涉及到启动页和首页两个Activity的启动，总时长为1s27ms，而启动首页占用的时长为424ms，时长是在从框架层开始启动Activity（包括创建进程）到Activity被绘制完成这一过程所需要的时间。</p>
+</li>
+</ul>
+<pre><code>    ActivityManager: Displayed com.tencent.mm/.ui.LauncherUI: +288ms
+
+
+这个是微信温启动（进程还在，Activity不在）的系统日志，可以看到明显比冷启动快了。
+
+注意，这个系统日志，在Android4.4开始才有。</code></pre><ul>
+<li><p>adb shell am start -W 包名/Activity全限定名    </p>
+<pre><code>Starting: Intent{act=android.intent.action.MAIN category[android.intent.category.LAUNCHER] cmp=com.tencent.mm/.ui.LauncherUI}
+Status: ok
+Activity: com.tencent.mm/.ui.LauncherUI
+ThisTime: 1138
+TotalTime: 1138
+WaitTime: 1168
+Complete</code></pre><p>  这里有三个数值，ThisTime表示启动目标Activity的时长，TotalTime表示最终启动目标Activity的时长，WaitTime则在TotalTime上加上了等待时长，也就是startActivityAndWait方法的执行时间。</p>
+</li>
+<li><p>TraceView</p>
+<p>  这个工具用起来比较简单，代码如下：</p>
+<pre><code>Debug.startMethodTracing(&quot;weixin&quot;);
+......
+Debug.stopMethodTracing();</code></pre><p>  然后就可以去SD卡根目录（记得开SD卡权限）找到weixin.trace文件，导入AS分析。</p>
+<p>  用这个工具，主要是用于分析APP启动时哪些方法执行时间比较长，定位启动慢的代码位置。</p>
+<p>  TraceView有一个问题，就是会导致App很卡，开销太大，因为它会收集所有方法的执行时间。</p>
+<p>  另外，AS的Profiler工具，也可以直接生成trace文件。当然，只能用于可debug的App进程。</p>
+</li>
+<li><p>systrace</p>
+<p>  参考文章：<a href="https://zhuanlan.zhihu.com/p/27331842" target="_blank" rel="noopener" title="https://zhuanlan.zhihu.com/p/27331842">https://zhuanlan.zhihu.com/p/27331842</a></p>
+<p>  google在Framework层的关键过程加了监控，比如启动Activity流程中Framework层的调用过程，可以直接获取到其运行时长数据，这个TraceView做不了。</p>
+<p>  另外，Android P在开发者选项中新增了系统追踪，根据官方介绍，功能跟systrace差不多，不用连接USB即可获取到trace文件，具体使用方法和原理等有空研究。</p>
+</li>
+</ul>
+<h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><p>先看一下冷启动Activity的流程：</p>
+<ol>
+<li>startActivity(Launcher)</li>
+<li>startActivity(AMS)</li>
+<li>fork进程</li>
+<li>attach(ActivityThread)</li>
+<li>handleBindApplication(ActivityThread)</li>
+<li><strong>attachBaseContext(Application)</strong></li>
+<li><strong>installContentProviders(ActivityThread)</strong></li>
+<li><strong>onCreate(Application)</strong></li>
+<li>UI线程开始loop循环</li>
+<li><strong>onCreate(Activity)</strong></li>
+</ol>
+<p>这里有些过程我们无法干预，事实上这个无法干预的过程也不是启动慢的主要原因，能干预的，就是attachBaseContext，installContentProviders，Application的onCreate，Activity的onCreate。</p>
+<ul>
+<li><p><strong>attachBaseContext</strong></p>
+<p>  针对5.0以下的手机，一般我们很喜欢在这个方法里面做Multidex的初始化，理由是dex越早加载越好，而这个attachBaseContext方法，就是在pplication对象刚被创建后回调的。但Multidex的初始化，有可能是比较耗时的，关于如何解决MultiDex初始化耗时的问题，后面有专门的文章分析。</p>
+</li>
+<li><p><strong>installContentProviders</strong></p>
+<p>  应用进程启动后就会安装所有的ContentProvider，回调其onCreate方法，这样就会拖慢App启动速度，其官方文档说明如下：</p>
+</li>
+</ul>
+<blockquote>
+<pre><code>/** 
+ * Implement this to initialize your content provider on startup.
+ * This method is called for all registered content providers on the
+ * application main thread at application launch time.  It must not perform
+ * lengthy operations, or application startup will be delayed.
+ *
+ * &lt;p&gt;You should defer nontrivial initialization (such as opening,
+ * upgrading, and scanning databases) until the content provider is used
+ * (via {@link #query}, {@link #insert}, etc).  Deferred initialization
+ * keeps application startup fast, avoids unnecessary work if the provider
+ * turns out not to be needed, and stops database errors (such as a full
+ * disk) from halting application launch.
+ *
+ * &lt;p&gt;If you use SQLite, {@link android.database.sqlite.SQLiteOpenHelper}
+ * is a helpful utility class that makes it easy to manage databases,
+ * and will automatically defer opening until first use.  If you do use
+ * SQLiteOpenHelper, make sure to avoid calling
+ * {@link android.database.sqlite.SQLiteOpenHelper#getReadableDatabase} or
+ * {@link android.database.sqlite.SQLiteOpenHelper#getWritableDatabase}
+ * from this method.  (Instead, override
+ * {@link android.database.sqlite.SQLiteOpenHelper#onOpen} to initialize the
+ * database when it is first opened.)
+ *
+ * @return true if the provider was successfully loaded, false otherwise
+ */
+public abstract boolean onCreate();</code></pre></blockquote>
+<ul>
+<li><p><strong>Application的onCreate</strong></p>
+<p>   一般应用都会在这里做各种初始化，建议是对于非必要的初始化，可以改为用延迟初始化和子线程初始化。</p>
+</li>
+<li><p><strong>Activity的onCreate</strong></p>
+<p>  这里主要是布局过于复杂，导致inflate时间过长，可以根据UI优化建议进行优化。</p>
+</li>
+</ul>
+<h2 id="保底方案"><a href="#保底方案" class="headerlink" title="保底方案"></a>保底方案</h2><ul>
+<li><p>障眼法</p>
+<p>  当做了上面的优化后，因为部分逻辑是非执行不可，App启动速度还是会比较慢，这时就需要采用一些类似障眼法的方案来优化用户体验。这里主要的方法是先跳转到启动页，启动页设置其主题背景为某张启动图片，广告信息，等初始化完成了，再跳转到主页面。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/01/Android%E4%B8%ADCursor%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" rel="next" title="Android中Cursor内存泄露原理分析">
+                  <i class="fa fa-chevron-left"></i> Android中Cursor内存泄露原理分析
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/04/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-MultiDex%E4%BC%98%E5%8C%96/" rel="prev" title="Android性能优化-MultiDex优化">
+                  Android性能优化-MultiDex优化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动类型"><span class="nav-number">1.</span> <span class="nav-text">启动类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测工具"><span class="nav-number">2.</span> <span class="nav-text">检测工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化方法"><span class="nav-number">3.</span> <span class="nav-text">优化方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保底方案"><span class="nav-number">4.</span> <span class="nav-text">保底方案</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="我们知道，Cursor使用结束后，如果没有调用Cursor的close方法，就可能会导致内存泄露，但其原因是什么呢？究竟是什么对象泄露了？下面通过源码分析其原因。SQLiteDatabase的query过程 SQLiteDatabase执行查询操作很简单，直接调用query方法： CustomSQLiteDatabase helper = new CustomSQLiteDatabase(this">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android中Cursor内存泄露原理分析">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;01&#x2F;Android%E4%B8%ADCursor%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="我们知道，Cursor使用结束后，如果没有调用Cursor的close方法，就可能会导致内存泄露，但其原因是什么呢？究竟是什么对象泄露了？下面通过源码分析其原因。SQLiteDatabase的query过程 SQLiteDatabase执行查询操作很简单，直接调用query方法： CustomSQLiteDatabase helper = new CustomSQLiteDatabase(this">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-02T01:07:25.964Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/01/Android%E4%B8%ADCursor%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Android中Cursor内存泄露原理分析 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/01/Android%E4%B8%ADCursor%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android中Cursor内存泄露原理分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-01 12:53:22" itemprop="dateCreated datePublished" datetime="2019-12-01T12:53:22+08:00">2019-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-02 09:07:25" itemprop="dateModified" datetime="2019-12-02T09:07:25+08:00">2019-12-02</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们知道，Cursor使用结束后，如果没有调用Cursor的close方法，就可能会导致内存泄露，但其原因是什么呢？究竟是什么对象泄露了？下面通过源码分析其原因。</p><h2 id="SQLiteDatabase的query过程"><a href="#SQLiteDatabase的query过程" class="headerlink" title="SQLiteDatabase的query过程"></a>SQLiteDatabase的query过程</h2><ol>
+<li><p>SQLiteDatabase执行查询操作很简单，直接调用query方法：</p>
+<pre><code>CustomSQLiteDatabase helper = new CustomSQLiteDatabase(this);
+SQLiteDatabase db = helper.getWritableDatabase();
+Cursor cursor = db.query(&quot;COMPANY&quot;, null, null, null, null, null, null);</code></pre></li>
+<li><p>内部会创建一个SQLiteDirectCursorDriver对象，然后调用其query方法：</p>
+<pre><code>public Cursor query(CursorFactory factory, String[] selectionArgs) {
+    final SQLiteQuery query = new SQLiteQuery(mDatabase, mSql, mCancellationSignal);
+    final Cursor cursor;
+    try {
+        // 建立index-&gt;列名映射，最终放在Object数组中
+        query.bindAllArgsAsStrings(selectionArgs);
+
+        if (factory == null) {
+            cursor = new SQLiteCursor(this, mEditTable, query);
+        } else {
+            cursor = factory.newCursor(mDatabase, this, mEditTable, query);
+        }
+    } catch (RuntimeException ex) {
+        query.close();
+        throw ex;
+    }
+
+    mQuery = query;
+    return cursor;
+}</code></pre><p> 一般我们不会指定CursorFactory，所以factory为null，这种情况下创建的是一个SQLiteCursor对象，也就是外部的query方法返回的其实就是这个SQLiteCursor对象。</p>
+<p> 另外注意到这里调用query方法时，只是做了一些初始化操作，简单返回一个SQLiteCursor对象而且，并不会真的去执行数据库查询，因此这个query执行起来不耗时。</p>
+<p> 接着我们拿到这个SQLiteCursor对象后，调用moveToPosition(0)方法把游标移动到第一条记录，这个操作就比较耗时了，SQLiteCursor继承自AbstractWindowedCursor，看一下AbstractWindowedCursor的moveToPosition方法：</p>
+<pre><code>@Override
+public final boolean moveToPosition(int position) {
+    // Make sure position isn&apos;t past the end of the cursor
+    final int count = getCount();
+    if (position &gt;= count) {
+        mPos = count;
+        return false;
+    }
+
+    // Make sure position isn&apos;t before the beginning of the cursor
+    if (position &lt; 0) {
+        mPos = -1;
+        return false;
+    }
+
+    // Check for no-op moves, and skip the rest of the work for them
+    if (position == mPos) {
+        return true;
+    }
+
+    boolean result = onMove(mPos, position);
+    if (result == false) {
+        mPos = -1;
+    } else {
+        mPos = position;
+    }
+
+    return result;
+}</code></pre><p> 这里的getCount方法和onMove方法，都可能会触发执行fillWindow方法，而fillWindow方法就是真正去查询数据库，然后把数据填充到共享内存中。对于这块共享内存，默认大小为2MB，只有当真正查询数据库时才会被创建，然后填充查询结果数据，假如结果数据过大填充不下，就只填充一部分，如果下次读取到填充之外的数据，就需要重新执行数据库查询，清空原有共享内存缓存数据，然后把新数据填充到共享内存中。</p>
+</li>
+<li><p>继续看fillWindow方法：</p>
+<pre><code>private void fillWindow(int requiredPos) {
+    clearOrCreateWindow(getDatabase().getPath());
+    try {
+        Preconditions.checkArgumentNonnegative(requiredPos,
+                &quot;requiredPos cannot be negative, but was &quot; + requiredPos);
+
+        if (mCount == NO_COUNT) {
+            mCount = mQuery.fillWindow(mWindow, requiredPos, requiredPos, true);
+            mCursorWindowCapacity = mWindow.getNumRows();
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, &quot;received count(*) from native_fill_window: &quot; + mCount);
+            }
+        } else {
+            int startPos = mFillWindowForwardOnly ? requiredPos : DatabaseUtils
+                    .cursorPickFillWindowStartPosition(requiredPos, mCursorWindowCapacity);
+            mQuery.fillWindow(mWindow, startPos, requiredPos, false);
+        }
+    } catch (RuntimeException ex) {
+        // Close the cursor window if the query failed and therefore will
+        // not produce any results.  This helps to avoid accidentally leaking
+        // the cursor window if the client does not correctly handle exceptions
+        // and fails to close the cursor.
+        closeWindow();
+        throw ex;
+    }
+}</code></pre><p> 一开始就调用clearOrCreateWindow方法，如果共享内存已经存在就清空，没有就创建，这里其实就是创建一个CursorWindow对象，当然它只是一个壳而已，最终对共享内存的操作都是通过native层实现的。</p>
+<p> 共享内存准备好之后，就可以调用mQuery的fillWindow方法查询数据库填充数据了，mQuery的类型为SQLiteQuery，fillWindow方法会连接到数据库查询数据，然后填充到共享内存中。</p>
+</li>
+</ol><a id="more"></a>
+
+<p><strong>通过上面的分析，Android采用CursorWindow共享内存缓存数据库查询结果数据，优点有：</strong></p>
+<ol>
+<li><p>能够实现跨进程传输数据，其它进程可以读取CursorWindow共享内存的数据。</p>
+</li>
+<li><p>缓存数据，不用每次都查询数据库</p>
+</li>
+<li><p>能够根据position快速定位到某一条记录</p>
+</li>
+</ol>
+<p><strong>当然这种做法也存在缺点：</strong></p>
+<ol>
+<li><p>中间读写CursorWindow有一定的性能开销</p>
+</li>
+<li><p>遍历过程如果发生Cursor重新查询填充，也会消耗不少时间。</p>
+</li>
+</ol>
+<p>因此微信的<a href="https://github.com/Tencent/wcdb" target="_blank" rel="noopener" title="https://github.com/Tencent/wcdb">wcdb</a>就对Cursor做了优化，直接把CursorWindow共享内存去掉了，自己实现了一个SQLiteDirectCursor，把缓存做到Java层上，当然这个SQLiteDirectCursor就不能实现跨进程共享数据。这种基于特定场景进行改造优化，是常用的提升性能方法。</p>
+<p>来到这里，我们可以猜测，没有调用close方法时这块共享内存就没有被释放，也就出现了内存泄露，下面分析close方法看看它是如何释放这块共享内存的。</p>
+<h2 id="Cursor的close方法原理"><a href="#Cursor的close方法原理" class="headerlink" title="Cursor的close方法原理"></a>Cursor的close方法原理</h2><p>分析之前，先理清SQLiteCursor的继承层次：SQLiteCursor –&gt; AbstractWindowedCursor –&gt; AbstractCursor — CrossProcessCursor，</p>
+<p>也就是，SQLiteCursor继承自AbstractWindowedCursor，AbstractWindowedCursor继承自AbstractCursor，而AbstractCursor又实现了CrossProcessCursor接口。</p>
+<p>下面分析close方法调用流程：</p>
+<ol>
+<li><p>上面我们说到，query返回的其实是一个SQLiteCursor对象，看下它的close方法：</p>
+<pre><code>@Override
+public void close() {
+    super.close();
+    synchronized (this) {
+        mQuery.close();
+        mDriver.cursorClosed();
+    }
+}</code></pre></li>
+<li><p>AbstractCursor的close方法：</p>
+<pre><code>@Override
+public void close() {
+    mClosed = true;
+    mContentObservable.unregisterAll();
+    onDeactivateOrClose();
+}</code></pre></li>
+<li><p>AbstractWindowedCursor的onDeactivateOrClose方法：</p>
+<pre><code>@Override
+protected void onDeactivateOrClose() {
+    super.onDeactivateOrClose();
+    closeWindow();
+}</code></pre></li>
+<li><p>AbstractWindowedCursor的closeWindow方法：</p>
+<pre><code>protected void closeWindow() {
+    if (mWindow != null) {
+        mWindow.close();
+        mWindow = null;
+    }
+}</code></pre><p> 来到这里，就可以很清楚地看到，没有调用Cursor的close方法，CursorWindow的close方法也就不会被调用，那么这个CursorWindow共享内存也就发生泄漏了。</p>
+<p> CursorWindow的close方法，内部会维护一个引用计数，每次close一次，就减1，如果减到为0，就调用dispose方法，这个方法就是真正去释放资源，可以看看其实现代码：</p>
+<pre><code>private void dispose() {
+    if (mCloseGuard != null) {
+        mCloseGuard.close();
+    }
+    if (mWindowPtr != 0) {
+        recordClosingOfWindow(mWindowPtr);
+        nativeDispose(mWindowPtr);
+        mWindowPtr = 0;
+    }
+}</code></pre><p> 最终通过native层关闭共享内存，释放相关资源。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果没有调用Cursor的close方法，就可能会导致本次query对应的共享内存发生内存泄露，因此每次使用完Cursor都必须调用其close方法，建议放到finally语句块里。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/01/Android%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7LeakCanary%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" rel="next" title="Android内存泄漏检测工具LeakCanary原理分析">
+                  <i class="fa fa-chevron-left"></i> Android内存泄漏检测工具LeakCanary原理分析
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/03/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/" rel="prev" title="Android性能优化-启动速度优化">
+                  Android性能优化-启动速度优化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SQLiteDatabase的query过程"><span class="nav-number">1.</span> <span class="nav-text">SQLiteDatabase的query过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cursor的close方法原理"><span class="nav-number">2.</span> <span class="nav-text">Cursor的close方法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言okhttp是目前很火的网络请求框架，Android4.4开始HttpURLConnection的底层就是采用okhttp实现的，其Github地址：https:&#x2F;&#x2F;github.com&#x2F;square&#x2F;okhttp来自官方说明：   OkHttp is an HTTP client that’s efficient by default:  HTTP&#x2F;2 support allows all">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OkHttp必须弄清楚的几个原理性问题">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;11&#x2F;OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="前言okhttp是目前很火的网络请求框架，Android4.4开始HttpURLConnection的底层就是采用okhttp实现的，其Github地址：https:&#x2F;&#x2F;github.com&#x2F;square&#x2F;okhttp来自官方说明：   OkHttp is an HTTP client that’s efficient by default:  HTTP&#x2F;2 support allows all">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-01-11T01:40:10.528Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/11/OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>OkHttp必须弄清楚的几个原理性问题 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/OkHttp%E5%BF%85%E9%A1%BB%E5%BC%84%E6%B8%85%E6%A5%9A%E7%9A%84%E5%87%A0%E4%B8%AA%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OkHttp必须弄清楚的几个原理性问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-01-11 09:39:51 / Modified: 09:40:10" itemprop="dateCreated datePublished" datetime="2020-01-11T09:39:51+08:00">2020-01-11</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>9 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>okhttp是目前很火的网络请求框架，Android4.4开始HttpURLConnection的底层就是采用okhttp实现的，其Github地址：<a href="https://github.com/square/okhttp" target="_blank" rel="noopener">https://github.com/square/okhttp</a></p><p>来自官方说明：</p><blockquote>
+<p>  OkHttp is an HTTP client that’s efficient by default:</p>
+<ul>
+<li>HTTP/2 support allows all requests to the same host to share a socket.</li>
+<li>Connection pooling reduces request latency (if HTTP/2 isn’t available).</li>
+<li>Transparent GZIP shrinks download sizes.</li>
+<li>Response caching avoids the network completely for repeat requests.</li>
+</ul>
+</blockquote><a id="more"></a>
+
+
+<p>总结一下，OkHttp支持http2，当然需要你请求的服务端支持才行，针对http1.x，OkHttp采用了连接池降低网络延迟，内部实现gzip透明传输，使用者无需关注，支持http协议上的缓存用于避免重复网络请求。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li><p>引入依赖</p>
+<pre><code>implementation &apos;com.squareup.okhttp3:okhttp:3.14.4&apos;</code></pre></li>
+<li><p>请求网络</p>
+<pre><code>OkHttpClient okHttpClient = new OkHttpClient();
+Request request = new Request.Builder().url(&quot;http://mtancode.com/&quot;).build();
+// 同步方式
+Response response = okHttpClient.newCall(request).execute();
+// 异步方式
+okHttpClient.newCall(request).enqueue(new Callback() {
+    @Override
+    public void onFailure(Call call, IOException e) {
+        Log.i(TAG, &quot;onFailure&quot;);
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) {
+        try {
+            Log.i(TAG, response.body().string());
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+});</code></pre></li>
+</ol>
+<p>可以看到，使用起来非常简单，而且支持同步和异步两种方式请求网络。这里需要注意一下，回调的线程并不是UI线程。</p>
+<h3 id="主流程分析"><a href="#主流程分析" class="headerlink" title="主流程分析"></a>主流程分析</h3><p>同步和异步只是使用方式不同，但其原理都是一样的，最终会走到相同的逻辑，因此这里就直接从异步方式开始分析了，newCall方法会返回一个RealCall对象，看其enqueue方法：</p>
+<pre><code>@Override public void enqueue(Callback responseCallback) {
+    synchronized (this) {
+      if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
+      executed = true;
+    }
+    transmitter.callStart();
+    client.dispatcher().enqueue(new AsyncCall(responseCallback));
+}</code></pre><p>这里有个Dispatcher，顾名思义它就是专门分发和执行请求的，看它的enqueue方法：</p>
+<pre><code>void enqueue(AsyncCall call) {
+    synchronized (this) {
+      readyAsyncCalls.add(call);
+
+      // Mutate the AsyncCall so that it shares the AtomicInteger of an existing running call to
+      // the same host.
+      if (!call.get().forWebSocket) {
+        AsyncCall existingCall = findExistingCallWithHost(call.host());
+        if (existingCall != null) call.reuseCallsPerHostFrom(existingCall);
+      }
+    }
+    promoteAndExecute();
+  }</code></pre><p>把call添加到readyAsyncCalls列表中，看promoteAndExecute方法：</p>
+<pre><code>private boolean promoteAndExecute() {
+  assert (!Thread.holdsLock(this));
+
+  List&lt;AsyncCall&gt; executableCalls = new ArrayList&lt;&gt;();
+  boolean isRunning;
+  synchronized (this) {
+    for (Iterator&lt;AsyncCall&gt; i = readyAsyncCalls.iterator(); i.hasNext(); ) {
+      AsyncCall asyncCall = i.next();
+
+      if (runningAsyncCalls.size() &gt;= maxRequests) break; // Max capacity.
+      if (asyncCall.callsPerHost().get() &gt;= maxRequestsPerHost) continue; // Host max capacity.
+
+      i.remove();
+      asyncCall.callsPerHost().incrementAndGet();
+      executableCalls.add(asyncCall);
+      runningAsyncCalls.add(asyncCall);
+    }
+    isRunning = runningCallsCount() &gt; 0;
+  }
+
+  for (int i = 0, size = executableCalls.size(); i &lt; size; i++) {
+    AsyncCall asyncCall = executableCalls.get(i);
+    asyncCall.executeOn(executorService());
+  }
+
+  return isRunning;
+}</code></pre><p>把call搬到runningAsyncCalls中，遍历列表，对每个call调用executeOn方法：</p>
+<pre><code>void executeOn(ExecutorService executorService) {
+  assert (!Thread.holdsLock(client.dispatcher()));
+  boolean success = false;
+  try {
+    executorService.execute(this);
+    success = true;
+  } catch (RejectedExecutionException e) {
+    InterruptedIOException ioException = new InterruptedIOException(&quot;executor rejected&quot;);
+    ioException.initCause(e);
+    transmitter.noMoreExchanges(ioException);
+    responseCallback.onFailure(RealCall.this, ioException);
+  } finally {
+    if (!success) {
+      client.dispatcher().finished(this); // This call is no longer running!
+    }
+  }
+}</code></pre><p>看RealCall的execute方法：</p>
+<pre><code>@Override protected void execute() {
+  boolean signalledCallback = false;
+  transmitter.timeoutEnter();
+  try {
+    Response response = getResponseWithInterceptorChain();
+    responseCallback.onResponse(RealCall.this, response);
+......
+}</code></pre><p>来到getResponseWithInterceptorChain方法，该方法内部会执行所有具体的处理逻辑，执行结束后，返回一个最终的response，然后回调给外部传入的callback，看看getResponseWithInterceptorChain方法：</p>
+<pre><code>Response getResponseWithInterceptorChain() throws IOException {
+    // Build a full stack of interceptors.
+    List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
+    interceptors.addAll(client.interceptors());
+    interceptors.add(new RetryAndFollowUpInterceptor(client));
+    interceptors.add(new BridgeInterceptor(client.cookieJar()));
+    interceptors.add(new CacheInterceptor(client.internalCache()));
+    interceptors.add(new ConnectInterceptor(client));
+    if (!forWebSocket) {
+      interceptors.addAll(client.networkInterceptors());
+    }
+    interceptors.add(new CallServerInterceptor(forWebSocket));
+
+    Interceptor.Chain chain = new RealInterceptorChain(interceptors, transmitter, null, 0,
+        originalRequest, this, client.connectTimeoutMillis(),
+        client.readTimeoutMillis(), client.writeTimeoutMillis());
+
+    boolean calledNoMoreExchanges = false;
+    try {
+      Response response = chain.proceed(originalRequest);
+      if (transmitter.isCanceled()) {
+        closeQuietly(response);
+        throw new IOException(&quot;Canceled&quot;);
+      }
+      return response;
+    } catch (IOException e) {
+      calledNoMoreExchanges = true;
+      throw transmitter.noMoreExchanges(e);
+    } finally {
+      if (!calledNoMoreExchanges) {
+        transmitter.noMoreExchanges(null);
+      }
+    }
+  }</code></pre><p>可以看到，这里添加了一系列的拦截器，构成拦截器链，请求会沿着这条链依次调用其intercept方法，每个拦截器都做自己该做的工作，最终完成请求，返回最终的response对象。</p>
+<p>简单说下链式调用的实现方法：创建一个RealInterceptorChain，传入所有的interceptors，和当前index（从0开始），然后调用RealInterceptorChain的process方法，该方法里，获取到对应的interceptor，然后调用intercept方法，而在intercept方法中，会执行具体的处理逻辑，然后创建一个RealInterceptorChain，传入所有的interceptors，和当前index+1，继续调用RealInterceptorChain的process方法，如此重复直到index超过interceptors个数为止。其实这种实现方式跟Task实现链式调用很类似，整个调用过程会创建一系列的中间对象。</p>
+<p>继续回到okhttp，这里其实是一种责任链设计模式，它的优点有：</p>
+<ul>
+<li><p>可以降低逻辑的耦合，相互独立的逻辑写到自己的拦截器中，也无需关注其它拦截器所做的事情。</p>
+</li>
+<li><p>扩展性强，可以添加新的拦截器。</p>
+</li>
+</ul>
+<p>当然它也有缺点：</p>
+<ul>
+<li>因为调用链路长，而且存在嵌套，遇到问题排查其它比较麻烦。</li>
+</ul>
+<p>对于OkHttp，我们可以添加自己的拦截器：</p>
+<pre><code>OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+builder.addInterceptor(new Interceptor() {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        // TODO 自定义逻辑
+
+        return chain.proceed(chain.request());
+    }
+});</code></pre><p>来到这里，OkHttp的主流程就分析完了，至于具体的缓存逻辑，连接池逻辑，网络请求这些，都是在对应的拦截器里面实现的，下面对这些拦截器逐个进行分析。</p>
+<h3 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h3><p>代码在CacheInterceptor类中，实现HTTP协议的缓存机制，OkHttp默认并不没有开启缓存，要自己传入一个Cache对象。</p>
+<p>先了解下HTTP协议的缓存机制：</p>
+<p>首先缓存分为三种：过期时间缓存、第一差异缓存和第二差异缓存，而且在优先级上，过期时间缓存 &gt; 第一差异缓存 &gt; 第二差异缓存。</p>
+<p>过期时间缓存，就是通过HTTP响应头部的字段控制：</p>
+<ul>
+<li><p>expires：响应字段，绝对过期时间，HTTP1.0。</p>
+</li>
+<li><p>Cache-Control：响应字段，相对过期时间，HTTP1.1。注意如果值为no-cache，表示跳过过期时间缓存逻辑，值为no-store表示跳过过期时间缓存逻辑和差异缓存逻辑，也就是不使用缓存数据。</p>
+</li>
+</ul>
+<p>当客户端请求时，发现缓存未过期，就直接返回缓存数据了，不请求网络，否则，执行第一差异缓存逻辑：</p>
+<ul>
+<li><p>If-None-Match：请求字段，值为ETag。</p>
+</li>
+<li><p>ETag：响应字段，服务端会根据内容生成唯一的字符串。</p>
+</li>
+</ul>
+<p>如果服务端发现If-None-Match的值和当前ETag一样，就说明数据内容没有变化，就返回304，否则，执行第二差异缓存逻辑：</p>
+<ul>
+<li><p>If-Modified-Since：请求字段，客户端告诉服务端本地缓存的资源的上次修改时间。</p>
+</li>
+<li><p>Last-Modified：响应字段，服务端告诉客户端资源的最后修改时间。</p>
+</li>
+</ul>
+<p>如果服务端发现If-Modified-Since的值就是资源的最后修改时间，就说明数据内容没有变化，就返回304，否则，返回所有资源数据给客户端，响应码为200。</p>
+<p>回到OkHttp，CacheInterceptor拦截器处理的逻辑，其实就是上面所说的HTTP缓存逻辑，注意到OkHttp提供了一个现成的缓存类Cache，它采用DiskLruCache实现缓存策略，至于缓存的位置和大小，需要你自己指定。</p>
+<p>这里其实会有个问题，上面的缓存都是依赖HTTP协议本身的缓存机制的，如果我们请求的服务器不支持这套缓存机制，或者需要实现更灵活的缓存管理，直接使用上面这套缓存机制就可能不太可行了，这时我们可以自己新增拦截器，自行实现缓存的管理。</p>
+<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h3><p>连接池的逻辑在ConnectInterceptor拦截器中处理，看intercept方法：</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+    RealInterceptorChain realChain = (RealInterceptorChain) chain;
+    Request request = realChain.request();
+    Transmitter transmitter = realChain.transmitter();
+
+    // We need the network to satisfy this request. Possibly for validating a conditional GET.
+    boolean doExtensiveHealthChecks = !request.method().equals(&quot;GET&quot;);
+    Exchange exchange = transmitter.newExchange(chain, doExtensiveHealthChecks);
+
+    return realChain.proceed(request, transmitter, exchange);
+}</code></pre><p>关键代码就是调用了Transmitter的newExchange方法，最终会得到一个Exchange对象，该对象表示一条连接，用于后面实现请求和读取响应数据，为了避免陷入代码中无法自拔，这里就不一步一步跟踪newExchange方法了，它最后会调用ExchangeFinder的findConnection的方法，这个方法就是在连接池中寻找可复用的连接，当然如果没找到，就创建一个新的连接，OkHttp对连接池的管理是在RealConnectionPool类中：</p>
+<pre><code>public final class RealConnectionPool {
+  /**
+   * Background threads are used to cleanup expired connections. There will be at most a single
+   * thread running per connection pool. The thread pool executor permits the pool itself to be
+   * garbage collected.
+   */
+  private static final Executor executor = new ThreadPoolExecutor(0 /* corePoolSize */,
+      Integer.MAX_VALUE /* maximumPoolSize */, 60L /* keepAliveTime */, TimeUnit.SECONDS,
+      new SynchronousQueue&lt;&gt;(), Util.threadFactory(&quot;OkHttp ConnectionPool&quot;, true));
+
+  /** The maximum number of idle connections for each address. */
+  private final int maxIdleConnections;
+  private final long keepAliveDurationNs;
+  private final Runnable cleanupRunnable = () -&gt; {
+    while (true) {
+      long waitNanos = cleanup(System.nanoTime());
+      if (waitNanos == -1) return;
+      if (waitNanos &gt; 0) {
+        long waitMillis = waitNanos / 1000000L;
+        waitNanos -= (waitMillis * 1000000L);
+        synchronized (RealConnectionPool.this) {
+          try {
+            RealConnectionPool.this.wait(waitMillis, (int) waitNanos);
+          } catch (InterruptedException ignored) {
+          }
+        }
+      }
+    }
+  };
+
+  private final Deque&lt;RealConnection&gt; connections = new ArrayDeque&lt;&gt;();
+  ......
+}</code></pre><p>主要关注几个重要的成员变量，maxIdleConnections表示连接池的最大缓存连接数，这里外部传入了5，也就是最多缓存5个连接，缓存的连接都被放到connections中，而keepAliveDurationNs表示连接的缓存时长，这里为5分钟，我们还看到这里还有个executor，它就是用来清理过期连接。</p>
+<h3 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h3><p>在CallServerInterceptor拦截器中处理，采用okio实现，http请求和读取响应最终是在Http1ExchangeCodec或Http2ExchangeCodec中实现的。</p>
+<h3 id="透明gzip压缩"><a href="#透明gzip压缩" class="headerlink" title="透明gzip压缩"></a>透明gzip压缩</h3><p>在BridgeInterceptor拦截器中处理，看一下intercept方法：</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+  Request userRequest = chain.request();
+  Request.Builder requestBuilder = userRequest.newBuilder();
+
+  RequestBody body = userRequest.body();
+  ......
+
+  // If we add an &quot;Accept-Encoding: gzip&quot; header field we&apos;re responsible for also decompressing
+  // the transfer stream.
+  boolean transparentGzip = false;
+  if (userRequest.header(&quot;Accept-Encoding&quot;) == null &amp;&amp; userRequest.header(&quot;Range&quot;) == null) {
+    transparentGzip = true;
+    requestBuilder.header(&quot;Accept-Encoding&quot;, &quot;gzip&quot;);
+  }
+
+  ......
+
+  if (transparentGzip
+      &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
+      &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+    GzipSource responseBody = new GzipSource(networkResponse.body().source());
+    Headers strippedHeaders = networkResponse.headers().newBuilder()
+        .removeAll(&quot;Content-Encoding&quot;)
+        .removeAll(&quot;Content-Length&quot;)
+        .build();
+    responseBuilder.headers(strippedHeaders);
+    String contentType = networkResponse.header(&quot;Content-Type&quot;);
+    responseBuilder.body(new RealResponseBody(contentType, -1L, Okio.buffer(responseBody)));
+  }
+
+  return responseBuilder.build();
+}</code></pre><p>可以看到，OkHttp默认会为我们加上gzip头部字段，如果服务端支持的话，就会返回gzip压缩后的数据，这样就可以缩短传输时间和减少传输数据大小，接收到gzip压缩后的数据后，Okhttp会自动帮我们解压缩，所以这一切对使用者来说都是透明的，无需关注，当然如果我们自己明确指定了用gzip压缩，解压缩的事情就需要我们自己来做了。</p>
+<h3 id="支持HTTP2"><a href="#支持HTTP2" class="headerlink" title="支持HTTP2"></a>支持HTTP2</h3><p>OkHttp2支持HTTP2协议，当然如果服务端不支持就没办法了，针对HTTP2的相关类都在okhttp3.internal.http2包下，有兴趣可以自行查看源码。</p>
+<p>关于HTTP2的优点，主要有：</p>
+<ul>
+<li><p>多路复用：就是针对同个域名的请求，都可以在同一条连接中并行进行，而且头部和数据都进行了二进制封装。</p>
+</li>
+<li><p>二进制分帧：传输都是基于字节流进行的，而不是文本，二进制分帧层处于应用层和传输层之间。</p>
+</li>
+<li><p>头部压缩：HTTP1.x每次请求都会携带完整的头部字段，所以可能会出现重复传输，因此HTTP2采用HPACK对其进行压缩优化，可以节省不少的传输流量。</p>
+</li>
+<li><p>服务端推送：服务端可以主动推送数据给客户端。</p>
+</li>
+</ul>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><p><a href="https://juejin.im/post/5d9abde7e51d4578110dc77f" target="_blank" rel="noopener">解密HTTP/2与HTTP/3 的新特性</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/21/Android-Gradle%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%A7%A3%E6%9E%90Gradle-Wrapper/" rel="next" title="Android Gradle原理分析系列（一）：解析Gradle Wrapper">
+                  <i class="fa fa-chevron-left"></i> Android Gradle原理分析系列（一）：解析Gradle Wrapper
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/24/%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E5%9C%B0%E5%AD%A6%E4%B9%A0ThreadLocal%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" rel="prev" title="通俗易懂地学习ThreadLocal内部原理">
+                  通俗易懂地学习ThreadLocal内部原理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方法"><span class="nav-number">2.</span> <span class="nav-text">使用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主流程分析"><span class="nav-number">3.</span> <span class="nav-text">主流程分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存机制"><span class="nav-number">4.</span> <span class="nav-text">缓存机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接池"><span class="nav-number">5.</span> <span class="nav-text">连接池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据传输"><span class="nav-number">6.</span> <span class="nav-text">数据传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#透明gzip压缩"><span class="nav-number">7.</span> <span class="nav-text">透明gzip压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持HTTP2"><span class="nav-number">8.</span> <span class="nav-text">支持HTTP2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">9.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

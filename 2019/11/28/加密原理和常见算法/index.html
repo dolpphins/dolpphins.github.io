@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="散列算法散列算法不属于加密算法，目前经常使用的有两种：1. MD5对任意长度的数据计算生成128位固定长度的MD5值，主要的特定： 生成的MD5值一定是128位，不管输入数据多大  原始数据只要有修改，MD5值就会发生很大的改变  容易计算，也就是算法不会很耗时  很少会发生碰撞  MD5的算法过程主要为：填充 –&amp;gt; 分组进行位运算 –&amp;gt; 得到MD5值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密原理和常见算法">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%92%8C%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="散列算法散列算法不属于加密算法，目前经常使用的有两种：1. MD5对任意长度的数据计算生成128位固定长度的MD5值，主要的特定： 生成的MD5值一定是128位，不管输入数据多大  原始数据只要有修改，MD5值就会发生很大的改变  容易计算，也就是算法不会很耗时  很少会发生碰撞  MD5的算法过程主要为：填充 –&amp;gt; 分组进行位运算 –&amp;gt; 得到MD5值">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-11-28T01:15:05.546Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/28/%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%92%8C%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>加密原理和常见算法 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/28/%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%92%8C%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          加密原理和常见算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-11-28 09:14:51 / Modified: 09:15:05" itemprop="dateCreated datePublished" datetime="2019-11-28T09:14:51+08:00">2019-11-28</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="散列算法"><a href="#散列算法" class="headerlink" title="散列算法"></a>散列算法</h2><p>散列算法不属于加密算法，目前经常使用的有两种：</p><h3 id="1-MD5"><a href="#1-MD5" class="headerlink" title="1. MD5"></a>1. MD5</h3><p>对任意长度的数据计算生成128位固定长度的MD5值，主要的特定：</p><ul>
+<li><p>生成的MD5值一定是128位，不管输入数据多大</p>
+</li>
+<li><p>原始数据只要有修改，MD5值就会发生很大的改变</p>
+</li>
+<li><p>容易计算，也就是算法不会很耗时</p>
+</li>
+<li><p>很少会发生碰撞</p>
+</li>
+</ul><p>MD5的算法过程主要为：填充 –&gt; 分组进行位运算 –&gt; 得到MD5值</p><a id="more"></a>
+
+
+
+<p>具体的计算过程可以参考：<a href="https://zhuanlan.zhihu.com/p/37257569" target="_blank" rel="noopener" title="https://zhuanlan.zhihu.com/p/37257569">https://zhuanlan.zhihu.com/p/37257569</a></p>
+<h3 id="2-SHA1"><a href="#2-SHA1" class="headerlink" title="2. SHA1"></a>2. SHA1</h3><p>对于长度小于2^64位的数据计算生成160位固定长度的SHA1值，可以看到它与MD5的区别有：</p>
+<ul>
+<li><p>输入数据长度必须小于2^64位</p>
+</li>
+<li><p>生成的信息摘要值为160位</p>
+</li>
+</ul>
+<p>因此相对于MD5，SHA的安全性更高，但运算速度大概会慢1/4。</p>
+<p>SHA1的算法过程主要位：填充 –&gt; 分组进行位运算 –&gt; 得到SHA1值</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>散列算法主要用于以下三中场景：</p>
+<ul>
+<li><p>防修改：比如服务端动态下发文件，需要对其进行完整性校验，保证文件没有被修改或者传输过程损坏。</p>
+</li>
+<li><p>数字签名：如Apk安装时的签名校验，保证Apk文件没有被修改过。</p>
+</li>
+<li><p>防明文存储：密码存储（还要加盐），不直接存储明文，这也就是为什么密码只能重置不能找回的原因。</p>
+</li>
+</ul>
+<p>散列算法的破解，有三种方法：</p>
+<ul>
+<li><p>暴力枚举：这种计算量巨大，不太靠谱。</p>
+</li>
+<li><p>字典法：字典里存储常见的明文密文键值对，比如常见密码等，空间占用会比较大。</p>
+</li>
+<li><p>彩虹表：对字典法进行改进，通过运算减少一部分的空间占用，也就是空间和时间相结合实现破解，具体破解过程可以参考：<a href="https://www.jianshu.com/p/732d9d960411" target="_blank" rel="noopener" title="https://www.jianshu.com/p/732d9d960411">https://www.jianshu.com/p/732d9d960411</a>。</p>
+</li>
+</ul>
+<h2 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h2><p>加密和解密都是用同一个密钥，常见的DES和AES都是对称加密算法，对称加密的优点就是加解密速度快，缺点就是安全性不高，密钥需要给到加密方，容易泄露。</p>
+<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>非对称加密采用公钥加密，私钥解密，加密方无需拿到私钥，安全性高，但加密速度慢，适用于关键环节的加密，比如https建立连接的握手过程等。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>核心就是：公钥大家都知道，但还是很难破解计算出私钥，因为大素数的分解很难。</p>
+<p>具体地，如下：</p>
+<p>选定两个质数P、Q，计算N = P * Q，欧拉函数w(N) = (P - 1) * (Q - 1)<br>然后就可以得到公钥和私钥了，假设初始公钥为G，则公钥的取值必须满足1 &lt; G &lt; w(N)，而且还必须跟w(N)互质，最终G和N组成真正的公钥，我们表示为（G, N），而私钥必须满足G * S % w(N) = 1，其中的S就是初始私钥，最终S和N组成真正的私钥，我们表示为（S, N）。</p>
+<p>加密过程：M * G mod N = C，其中M是明文，C是密文</p>
+<p>解密过程：C * S mod N = M，可以看到通过密钥就能够得到明文</p>
+<p>另外，公钥和私钥的地位是等价的，也就是可以交换，G保存起来当私钥，把S发布出去当公钥，原理上可行，但实际上G和S的选定会有一定标准，使得G更适合做公钥，S适合做私钥，因此实际上一般不能交换使用。</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>非对称加密可用于数据加密，也可用于签名校验：</p>
+<p>数据加密：公钥加密，私钥解密。</p>
+<p>签名校验：私钥加密，公钥解密，验证明文是否对应得上，是的话就校验通过。</p>
+<p>具体到实现场景，HTTPS建立连接握手过程，apk安装签名校验等。</p>
+<h3 id="常见算法"><a href="#常见算法" class="headerlink" title="常见算法"></a>常见算法</h3><p>RSA：原理就是上面所描述的过程，密钥越长越难破解，可以采用1024位或者2048位，注意RSA本身也是会有中间人攻击的问题，实际使用中采用数字签名+RSA实现密钥交换。</p>
+<p>ECC：跟椭圆曲线方程有关，具体原理和细节后面研究。</p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><h3 id="DH密钥交换协议"><a href="#DH密钥交换协议" class="headerlink" title="DH密钥交换协议"></a>DH密钥交换协议</h3><p>用于在不安全的信道上交换密钥，其原理就是离散对数很难被计算出来，具体的算法如下：</p>
+<ol>
+<li>取素数p和整数g，这里g一般为2或5，而素数要很大</li>
+<li>A端生成随机数Xa，计算Ya=g^Xa mod p，把Ya传给B端</li>
+<li>B端生成随机数Xb，计算Yb=g^Xb mod p，把Yb传给A端</li>
+<li>A端拿到Yb后，可以计算K=Yb^Xa mod p</li>
+<li>B端拿到Ya后，可以计算K=Ya^Xb mod p</li>
+</ol>
+<p>可以看到，最终A和B都能计算的到密钥K，而对于其它人，它们是很难计算出来的，因为它们不知道Xa或者Xb，而在知道p，g，Ya，Yb的情况下，计算离散对数Xa或者Xb是很困难的。</p>
+<p>由于DH算法并没有进行身份验证，因此很容易出现中间人攻击问题，解决该问题的方法就是引入签名验证。</p>
+<h3 id="SSH原理"><a href="#SSH原理" class="headerlink" title="SSH原理"></a>SSH原理</h3><p>解决中间人攻击的方法就是实现对公钥进行公证，HTTPS中使用签名证书进行公证，这是因为证书是权威机构CA颁发的，而SSH的公钥都是自己生成的，接收方无法确定公钥有无问题，SSH有两种认证方式：</p>
+<ul>
+<li><p>输入用户名和密码</p>
+<ol>
+<li><p>客户端请求服务端，服务端下发公钥给客户端。</p>
+</li>
+<li><p>客户端会显示这个公钥指纹给用户确认是否真的来着服务端，输入yes后，用这个公钥加密密码，发生给服务端。</p>
+</li>
+<li><p>服务端接收到后用私钥解密，正确就登录成功。</p>
+<p>可以看到，这种方式每次登录都要输入密码，使用起来不方便。另外，显示公钥指纹是为了避免中间人攻击。</p>
+</li>
+</ol>
+</li>
+<li><p>Public Key认证</p>
+<ol>
+<li><p>生成公钥-私钥对，然后客户端保存私钥，服务端保存公钥。</p>
+</li>
+<li><p>客户端请求服务端，服务端生成随机串x，使用公钥加密后得到R(x)下发给客户端。</p>
+</li>
+<li><p>客户端用私钥解密R(x)得到x，然后用MD5算法对x和session key生成摘要D，发送给服务端。</p>
+</li>
+<li><p>服务端接收到摘要D后，同样用MD5算法对x和session key生成摘要D’，如果D和D’相同，就说明登录成功。</p>
+<p>这里涉及到一个session key，这个是在认证之前客户端和服务端协商好的一个密钥，用于后面通信时做为对称加密的密码，SSH2协商采用DH算法，在认证阶段客户端和服务端都已经拥有了这个session key。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="Base64"><a href="#Base64" class="headerlink" title="Base64"></a>Base64</h3><p>这个不是真正的加密算法，只是按照一定的编码规则，对字节流进行编码，编码后的结果只包含英文数字和等号，编码原理为：</p>
+<p>依次取字节流的6个bit，得到对应的数值，然后查找Base64索引表找到对应的字符，这样直到字节流结束为止，另外如果原始数据字节数不是3的倍数，会在最后加上一个或两个等号。</p>
+<p>从上面的算法可以知道，Base64编码后的结果大小会是原始数据大小的4/3。</p>
+<p>举个例子，比如字符串“ABCD”，对应的二进制位：01000001010000100100001101000100，然后按三个字节一组划分，010000010100001001000011 01000100，对于第一组，6bit组成一个int数组，依次为16,20,9,3，查Base64表对应为Q,U,J,D,接着看第二组，第一个6bit为17，也就是R，第二个6bit其实只剩两位，因此补4个零，最终还是0，对应A，而这组总共才8位一个字节，因此后面再补两个字节，也就是两个=，最终整个字符串的编码为：QUJDRA==，通过网上现成的编码工具验证正确。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.zhihu.com/question/320376106/answer/659948766" target="_blank" rel="noopener" title="https://www.zhihu.com/question/320376106/answer/659948766">SSH是如何防御重放攻击的？</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/24/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="next" title="Android屏幕适配方案设计">
+                  <i class="fa fa-chevron-left"></i> Android屏幕适配方案设计
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Protobuf3%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86/" rel="prev" title="深入理解Protobuf3协议原理">
+                  深入理解Protobuf3协议原理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#散列算法"><span class="nav-number">1.</span> <span class="nav-text">散列算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-MD5"><span class="nav-number">1.1.</span> <span class="nav-text">1. MD5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-SHA1"><span class="nav-number">1.2.</span> <span class="nav-text">2. SHA1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">2.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">3.</span> <span class="nav-text">非对称加密</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">3.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用"><span class="nav-number">3.2.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见算法"><span class="nav-number">3.3.</span> <span class="nav-text">常见算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">4.</span> <span class="nav-text">其它</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DH密钥交换协议"><span class="nav-number">4.1.</span> <span class="nav-text">DH密钥交换协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH原理"><span class="nav-number">4.2.</span> <span class="nav-text">SSH原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Base64"><span class="nav-number">4.3.</span> <span class="nav-text">Base64</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

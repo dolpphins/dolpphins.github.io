@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。.git目录 hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Git内部原理">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;07&#x2F;%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86&#x2F;index.html">
+<meta property="og:site_name" content="麦田Coder">
+<meta property="og:description" content="前言当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。.git目录 hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-07T02:01:18.642Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>深入理解Git内部原理 | 麦田Coder</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">麦田Coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/custom_avatar.jpg">
+      <meta itemprop="name" content="麦田">
+      <meta itemprop="description" content="专注于写有深度的技术文章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="麦田Coder">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入理解Git内部原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2019-12-07 08:53:33 / Modified: 10:01:18" itemprop="dateCreated datePublished" datetime="2019-12-07T08:53:33+08:00">2019-12-07</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们执行git init命令，或者clone网上某个代码仓库后，会看到有一个.git目录，git所有版本控制信息就是放在目录里面，下面对这个.git目录进行分析。</p><h2 id="git目录"><a href="#git目录" class="headerlink" title=".git目录"></a>.git目录</h2><ul>
+<li><p>hooks：钩子目录，存放执行指定git命令前或者后触发的脚本，可以看到默认会有几个sample文件，如果要开启某个钩子脚本，就把脚本文件名的后缀simple去掉就可以，这些钩子会在特定的时机被触发执行，比如post-commit在整个提交过程完成后执行，可以用于发送提交通知等，另外也有服务端钩子，在推送前或者后执行，比如post-receive在推送结束后会被执行，可以用于通知打包平台启动打包任务。关于git钩子更详细的信息可以参考：<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90" target="_blank" rel="noopener" title="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">自定义 Git - Git 钩子</a>。</p>
+</li>
+<li><p>info：保存git的相关信息</p>
+</li>
+<li><p>logs</p>
+<ul>
+<li><p>refs：暂存记录，本地分支记录，远程分支记录</p>
+</li>
+<li><p>HEAD：记录每次的变更操作</p>
+</li>
+</ul>
+</li>
+</ul><a id="more"></a>
+
+<ul>
+<li><p>objects：存放真实数据，以Git对象形式存放</p>
+</li>
+<li><p>refs</p>
+<ul>
+<li><p>heads：存放所有本地分支最新的commit哈希值</p>
+</li>
+<li><p>stash：存放stash对应的哈希值</p>
+</li>
+<li><p>tags：存放tags相关的</p>
+</li>
+</ul>
+</li>
+<li><p>config：配置文件</p>
+</li>
+<li><p>HEAD：当前分支，并不存放SHA1值，类似/refs/heads/master，这个指向的文件里会有最新commit的SHA1值</p>
+</li>
+<li><p>index：二进制文件，暂存区</p>
+</li>
+</ul>
+<h2 id="Git中的几种对象"><a href="#Git中的几种对象" class="headerlink" title="Git中的几种对象"></a>Git中的几种对象</h2><ul>
+<li><p><strong>数据对象</strong></p>
+<p>  数据对象就是用于存储真实的文件数据，其创建过程如下：</p>
+<ol>
+<li><p>计算内容大小，构造header</p>
+</li>
+<li><p>将header添加到内容前面，构造数据对象</p>
+</li>
+<li><p>使用sha1算法计算Git对象的160位hash码，表示成16进制就是40位</p>
+</li>
+<li><p>使用zlib的deflate算法压缩数据对象</p>
+</li>
+<li><p>存储到.git/objectes/目录下，文件夹名为hash码的前两位，文件名为hash码的后38位</p>
+</li>
+</ol>
+</li>
+<li><p><strong>tree对象</strong></p>
+<p>  保存目录信息，也就是目录树的非叶子节点的版本控制信息，需要从暂存区中创建。</p>
+</li>
+<li><p><strong>commit对象</strong></p>
+<p>  保存某次提交的详细信息，包括时间、提交人等。</p>
+</li>
+<li><p><strong>tag对象</strong></p>
+<p>  跟commit对象类似，包含了一个指针，该指针指向一个commit对象，而且永远不会改变。</p>
+</li>
+</ul>
+<h2 id="Git提交过程原理"><a href="#Git提交过程原理" class="headerlink" title="Git提交过程原理"></a>Git提交过程原理</h2><ol>
+<li><p>添加到暂存区：git add xxx</p>
+<ul>
+<li><p>创建数据对象</p>
+</li>
+<li><p>更新index文件</p>
+</li>
+</ul>
+</li>
+<li><p>提交：git commit -m “xxxx”</p>
+<ul>
+<li><p>如果存在目录，就创建tree对象</p>
+</li>
+<li><p>创建commit对象</p>
+</li>
+</ul>
+</li>
+<li><p>将上面创建的对象保存为目录和文件</p>
+</li>
+</ol>
+<p>可以看到，git提交的整个过程，其实就是创建数据对象、tree对象和commit对象的过程，最终这些对象都会保存到objects目录下。</p>
+<h2 id="Git数据存储原理"><a href="#Git数据存储原理" class="headerlink" title="Git数据存储原理"></a>Git数据存储原理</h2><p>Git默认采用的是松散对象格式，也就是每次保存一份完整数据，比如有个大文件10MB，第一次提交被保存起来了，后面修改了一点东西又提交，这时Git会保存两个10Mb的对象数据，这样看起来就会比较浪费，最好是能够只保存文件的差异部分。</p>
+<p>实际上Git就是这样做的，如果存在太多的松散对象，或者执行了push命令，或者git gc命令，Git就会将松散对象进行打包到一个pack文件中，该文件保存文件不同版本之间的差异内容，减少了存储占用，而且是该pack文件是二进制文件，需要采用命令git verify-pack查看。</p>
+<p>注意这里pack会将最新版本保存为完整对象，而之前的版本保存差异信息，因为大部分情况下访问的都会是最新版本。</p>
+<h2 id="Git传输协议"><a href="#Git传输协议" class="headerlink" title="Git传输协议"></a>Git传输协议</h2><p>Git有四种传输协议，包括本地协议、HTTP协议，SSH协议，GIT协议。</p>
+<ul>
+<li><p>本地协议</p>
+<p>  远程仓库就存放在硬盘中，这里的硬盘，可以是远程挂载的网络硬盘，远程仓库的地址直接指定为目录路径，也可以加上file前缀。不过共享文件系统配置起来比较麻烦，速度也比较慢。</p>
+</li>
+<li><p>HTTP协议</p>
+<p>  采用http/https协议进行传输，这里细分有两种协议：哑协议和智能协议，哑协议是Git 1.6.6版本之前使用的协议，Git 1.6.6引入了智能协议。</p>
+<ul>
+<li><p>哑协议</p>
+<ol>
+<li><p>获取info/refs文件，确定所有分支的最新commit的SHA1值</p>
+</li>
+<li><p>获取HEAD文件，确定当前分支，检出到工作目录</p>
+</li>
+<li><p>获取第一个commit对象的数据</p>
+</li>
+<li><p>往上追溯，获取所有对象数据</p>
+</li>
+</ol>
+</li>
+<li><p><strong>智能协议（大部分使用）</strong></p>
+<p>  不管是上传（比如push等）还是下载（比如pull等），都是客户端开一个进程，服务端开一个进程，然后协商需要传输的数据，确认好哪些数据需要传输，进程端口是http或者https端口。</p>
+</li>
+<li><p><em>HTTP协议的优点：1.就是使用方便，只需要一个远程地址即可，2.认证方便，直接输用户名密码，不需要像SSH首次配置那么麻烦。*</em></p>
+</li>
+</ul>
+</li>
+<li><p>SSH协议</p>
+<p>  使用ssh协议做为传输协议，使用时需要配置ssh信息，配置后就不用每次都输入用户名和密码了。</p>
+</li>
+<li><p>Git协议</p>
+<p>  与http智能协议原理类似，但它监听的端口是9418，Git协议没有授权机制，也就是不能实现控制一部分人能push，另一部分不能push，因此大部分情况的做法是让Git协议只开放读取，禁止推送。</p>
+</li>
+</ul>
+<h2 id="git-flow协作流程"><a href="#git-flow协作流程" class="headerlink" title="git flow协作流程"></a>git flow协作流程</h2><h4 id="稳定分支"><a href="#稳定分支" class="headerlink" title="稳定分支"></a>稳定分支</h4><ul>
+<li><p>develop：开发分支</p>
+</li>
+<li><p>master：发布分支</p>
+</li>
+</ul>
+<h4 id="临时分支"><a href="#临时分支" class="headerlink" title="临时分支"></a>临时分支</h4><ul>
+<li><p>feature：特性分支，用于临时开发新功能，从develop拉，最终合入到develop。</p>
+</li>
+<li><p>release：预发布分支，当develop分支开发完本版本需求后，就拉release分支，用于修bug，配置发布信息等，这时develop分支继续开发下一版本的需求。当release分支修改结束后，就合入develop和master。注意合入到master时要打tag做标记，比如master_8.1之类的命名。</p>
+</li>
+<li><p>hotfix：修复分支，用于修复线上紧急bug，从master拉，最终合入到develop和master。注意合入到master时要打tag做标记，比如master-8.1.1之类的命名。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/06/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E7%94%B5%E9%87%8F%E4%BC%98%E5%8C%96/" rel="next" title="Android性能优化-电量优化">
+                  <i class="fa fa-chevron-left"></i> Android性能优化-电量优化
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/07/Android%E7%BA%BF%E7%A8%8B%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="prev" title="Android线程死锁检测方案设计">
+                  Android线程死锁检测方案设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git目录"><span class="nav-number">2.</span> <span class="nav-text">.git目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git中的几种对象"><span class="nav-number">3.</span> <span class="nav-text">Git中的几种对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git提交过程原理"><span class="nav-number">4.</span> <span class="nav-text">Git提交过程原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git数据存储原理"><span class="nav-number">5.</span> <span class="nav-text">Git数据存储原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git传输协议"><span class="nav-number">6.</span> <span class="nav-text">Git传输协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-flow协作流程"><span class="nav-number">7.</span> <span class="nav-text">git flow协作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#稳定分支"><span class="nav-number">7.0.1.</span> <span class="nav-text">稳定分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时分支"><span class="nav-number">7.0.2.</span> <span class="nav-text">临时分支</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="麦田"
+    src="/images/custom_avatar.jpg">
+  <p class="site-author-name" itemprop="name">麦田</p>
+  <div class="site-description" itemprop="description">专注于写有深度的技术文章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">麦田</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">2:35</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
